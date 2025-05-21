@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/air/ea_assistant/generate_loop_dashboard.py", line 29, in <module>
+    metadata[key] = metadata[key].group(1)
+AttributeError: 'str' object has no attribute 'group'

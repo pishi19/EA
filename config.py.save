@@ -1,0 +1,20 @@
+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# === Ora Configuration ===
+
+# OpenAI API Key
+OPENAI_API_KEY = "sk-..."  # Replace with your actual API key
+
+# Obsidian Vault Path
+VAULT_PATH = "/Users/air/EA-Vault-Sandbox"
+
+# System Log Path
+LOG_PATH = f"{VAULT_PATH}/Logs/system-log.md"
+
+# Daily Notes Path
+DAILY_NOTES_PATH = f"{VAULT_PATH}/01 Periodic/Daily"
+
+# Classification Threshold for Task Importance
+TASK_CLASSIFICATION_THRESHOLD = 0.65
+
+# Ignored Email Senders
+IGNORED_SENDERS = []
+IGNORED_SENDERS.append('noreply@platform.test')
