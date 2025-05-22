@@ -1,88 +1,43 @@
+
 import os
-import re
-from datetime import datetime
 from pathlib import Path
-from collections import defaultdict
+import frontmatter
 
-RETRO_DIR = "/Users/air/AIR01/Retrospectives"
-DASHBOARD_PATH = "/Users/air/AIR01/0001 HQ/Loop Dashboard.md"
+PROJECTS_PATH = "/Users/air/AIR01/02 Workstreams/Projects"
+PROGRAMS_PATH = "/Users/air/AIR01/02 Workstreams/Programs"
+DASHBOARD_PATH = "/Users/air/AIR01/0001-HQ/Dashboards/loop_status.md"
 
-loop_data = []
+def collect_metadata(path, type_):
+    rows = []
+    for file in Path(path).glob("*.md"):
+        post = frontmatter.load(file)
+        rows.append({
+            "id": post.get("id", file.stem),
+            "type": type_,
+            "status": post.get("status", "unknown"),
+            "weight": post.get("weight", 0),
+            "name": file.stem
+        })
+    return rows
 
-for filename in os.listdir(RETRO_DIR):
-    if filename.startswith("loop-") and filename.endswith(".md"):
-        full_path = os.path.join(RETRO_DIR, filename)
-        with open(full_path, "r", encoding="utf-8") as f:
-            content = f.read()
+def generate_dashboard(rows):
+    open_items = [r for r in rows if r["status"] == "open"]
+    closed_items = [r for r in rows if r["status"] == "closed"]
 
-        metadata = {
-            "filename": filename.replace(".md", ""),
-            "status": re.search(r"^status:\s*(\w+)", content, re.M),
-            "type": re.search(r"^type:\s*(\w+)", content, re.M),
-            "topic": re.search(r"^topic:\s*(\w+)", content, re.M),
-            "summary": re.search(r"^summary:\s*(.+)", content, re.M),
-            "verified": re.search(r"^verified:\s*(\w+)", content, re.M)
-        }
+    with open(DASHBOARD_PATH, "w", encoding="utf-8") as f:
+        f.write("# 📊 Loop & Project Status Dashboard\n")
+        f.write("## 🔄 Open Items\n")
+        for item in sorted(open_items, key=lambda x: -x["weight"]):
+            f.write(f"- [{item['type']}] **{item['name']}** — weight: {item['weight']}\n")
 
-        for key in metadata:
-            if metadata[key]:
-                metadata[key] = metadata[key].group(1)
-            else:
-                metadata[key] = "unknown"
+        f.write("\n## ✅ Closed Items\n")
+        for item in sorted(closed_items, key=lambda x: -x["weight"]):
+            f.write(f"- [{item['type']}] **{item['name']}** — weight: {item['weight']}\n")
+    print(f"✅ Dashboard updated: {DASHBOARD_PATH}")
 
-        loop_data.append(metadata)
+def main():
+    rows = collect_metadata(PROGRAMS_PATH, "program") + collect_metadata(PROJECTS_PATH, "project")
+    generate_dashboard(rows)
 
-# Generate dashboard content
-lines = ["# 🔁 Loop Memory Dashboard", ""]
-
-# Open loops
-lines.append("## ✅ Open Loops")
-for loop in loop_data:
-    if loop["status"] == "open":
-        lines.append(f"- [[{loop['filename']}]] — {loop['summary']}")
-lines.append("")
-
-# Verified loops
-lines.append("## 🔏 Verified Loops")
-for loop in loop_data:
-    if loop["verified"] == "true":
-        lines.append(f"- [[{loop['filename']}]] — {loop['summary']}")
-lines.append("")
-
-# Closed but not verified
-lines.append("## 🧪 Closed but Unverified Loops")
-for loop in loop_data:
-    if loop["status"] == "closed" and loop["verified"] != "true":
-        lines.append(f"- [[{loop['filename']}]] — {loop['summary']}")
-lines.append("")
-
-# By type
-lines.append("## 📂 Loops by Type")
-type_groups = defaultdict(list)
-for loop in loop_data:
-    type_groups[loop["type"]].append(loop["filename"])
-
-for t, filenames in sorted(type_groups.items()):
-    lines.append(f"### {t}")
-    for f in filenames:
-        lines.append(f"- [[{f}]]")
-    lines.append("")
-
-# By topic
-lines.append("## 🧠 Topics")
-topic_groups = defaultdict(list)
-for loop in loop_data:
-    topic_groups[loop["topic"]].append(loop["filename"])
-
-for topic, filenames in sorted(topic_groups.items()):
-    lines.append(f"### {topic}")
-    for f in filenames:
-        lines.append(f"- [[{f}]]")
-    lines.append("")
-
-# Write dashboard file
-Path(os.path.dirname(DASHBOARD_PATH)).mkdir(parents=True, exist_ok=True)
-with open(DASHBOARD_PATH, "w", encoding="utf-8") as f:
-    f.write("\n".join(lines))
-
-print(f"✅ Loop dashboard written to: {DASHBOARD_PATH}")
+if __name__ == "__main__":
+    main()

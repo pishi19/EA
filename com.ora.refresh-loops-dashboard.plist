@@ -1,0 +1,30 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ora.refresh-loops-dashboard</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/air/ea_assistant/weight_loops.py</string>
+        <string>&&</string>
+        <string>/usr/bin/python3</string>
+        <string>/Users/air/ea_assistant/generate_loop_dashboard.py</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>5</integer>
+        <key>Minute</key>
+        <integer>10</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/air/Library/Logs/ora/loop_refresh.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/air/Library/Logs/ora/loop_refresh.log</string>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
