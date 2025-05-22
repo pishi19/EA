@@ -1,0 +1,10 @@
+streamlit
+openai
+qdrant-client
+python-frontmatter
+pytest
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+beautifulsoup4
+lxml
