@@ -7,25 +7,30 @@ mock_loops = {
     "loop-003": {"status": "draft", "verified": False},
 }
 
+
 def mark_loop_status(loop_id, new_status):
     if loop_id not in mock_loops:
         raise KeyError(f"Loop {loop_id} not found")
     mock_loops[loop_id]["status"] = new_status
+
 
 def toggle_verified(loop_id):
     if loop_id not in mock_loops:
         raise KeyError(f"Loop {loop_id} not found")
     mock_loops[loop_id]["verified"] = not mock_loops[loop_id]["verified"]
 
+
 def test_mark_loop_status_change():
     mark_loop_status("loop-001", "closed")
     assert mock_loops["loop-001"]["status"] == "closed"
+
 
 def test_toggle_verified_flag():
     toggle_verified("loop-003")
     assert mock_loops["loop-003"]["verified"] is True
     toggle_verified("loop-003")
     assert mock_loops["loop-003"]["verified"] is False
+
 
 def test_loop_control_invalid_loop():
     with pytest.raises(KeyError):

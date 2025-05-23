@@ -1,0 +1,3 @@
+"""
+EA Assistant Dashboard package
+""" 

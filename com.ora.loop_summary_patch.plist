@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ora.loop_summary_patch</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/air/ea_assistant/loop_summary_patch.py</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>5</integer>
+        <key>Minute</key>
+        <integer>25</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/tmp/loop_summary_patch.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/loop_summary_patch.err</string>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>

@@ -1,0 +1,691 @@
+{
+  "extract_loops.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 12,
+    "file_size": 738,
+    "last_modified": "2025-05-19T20:14:05.275020",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 738,
+    "component": "extract_loops",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "loop_dashboard_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 3,
+    "file_size": 222,
+    "last_modified": "2025-05-23T06:30:05.069592",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 222,
+    "component": "loop_dashboard",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "assistant_note_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 0,
+    "file_size": 0,
+    "last_modified": "2025-05-20T13:41:20.233763",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 0,
+    "component": "assistant",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "monitor.log": {
+    "error_count": 2,
+    "warning_count": 7,
+    "info_count": 515,
+    "debug_count": 0,
+    "total_lines": 528,
+    "file_size": 48615,
+    "last_modified": "2025-05-23T17:10:15.503837",
+    "rotation_count": 0,
+    "error_rate": 0.003787878787878788,
+    "warning_rate": 0.013257575757575758,
+    "growth_rate": 0.0,
+    "last_size": 48615,
+    "component": "monitor",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "generate_loop_dashboard_error.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 0,
+    "file_size": 0,
+    "last_modified": "2025-05-21T18:06:39.931898",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 0,
+    "component": "loop_dashboard",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "launchd_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 184,
+    "file_size": 15605,
+    "last_modified": "2025-05-23T14:53:48.431067",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 15605,
+    "component": "launchd",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "feedback_report_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 15,
+    "file_size": 420,
+    "last_modified": "2025-05-23T05:30:05.876623",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 420,
+    "component": "feedback",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "feedback_to_loops_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 4,
+    "file_size": 652,
+    "last_modified": "2025-05-23T06:48:09.776377",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 652,
+    "component": "feedback",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "cleanup_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 0,
+    "file_size": 0,
+    "last_modified": "2025-05-20T15:11:04.591373",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 0,
+    "component": "default",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "loop_dashboard_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 4,
+    "file_size": 214,
+    "last_modified": "2025-05-21T06:30:14.845257",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 214,
+    "component": "loop_dashboard",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "assistant_note_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 5,
+    "file_size": 459,
+    "last_modified": "2025-05-23T05:35:04.913193",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 459,
+    "component": "assistant",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "cleanup_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 4,
+    "file_size": 226,
+    "last_modified": "2025-05-23T07:15:05.061182",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 226,
+    "component": "default",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "feedback_to_loops_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 0,
+    "file_size": 0,
+    "last_modified": "2025-05-20T14:11:10.453521",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 0,
+    "component": "feedback",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "generate_loop_dashboard.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 4,
+    "file_size": 310,
+    "last_modified": "2025-05-23T05:51:58.753540",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 310,
+    "component": "loop_dashboard",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "feedback_report_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 0,
+    "file_size": 0,
+    "last_modified": "2025-05-20T13:37:54.621782",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 0,
+    "component": "feedback",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "launchd_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "total_lines": 245,
+    "file_size": 13739,
+    "last_modified": "2025-05-22T17:42:55.582160",
+    "rotation_count": 0,
+    "error_rate": 0.0,
+    "warning_rate": 0.0,
+    "growth_rate": 0.0,
+    "last_size": 13739,
+    "component": "launchd",
+    "last_cleanup": null,
+    "alert_history": [],
+    "growth_history": [],
+    "last_rotation": null,
+    "avg_growth_rate": 0.0,
+    "peak_growth_rate": 0.0,
+    "trend_analysis": {
+      "growth_trend": 0.0,
+      "error_trend": 0.0,
+      "warning_trend": 0.0,
+      "size_trend": 0.0
+    }
+  },
+  "cursor_sessions": {
+    "cursor_session_185928": {
+      "timestamp": "2025-05-23T18:59:28.411343",
+      "file_size": 710,
+      "metadata": {
+        "message_count": 3,
+        "user_messages": 2,
+        "assistant_messages": 1,
+        "duration": "3 seconds",
+        "files_modified": [
+          "session_manager.py",
+          "cursor_chat.py"
+        ],
+        "start_time": "2025-05-23T18:59:25.400638",
+        "end_time": "2025-05-23T18:59:28.410856",
+        "response_times": {
+          "average": 2.0,
+          "median": 2.0
+        },
+        "message_patterns": {
+          "avg_user_message_length": 24,
+          "avg_assistant_message_length": 48,
+          "avg_time_between_messages": 1.51,
+          "total_tokens_estimate": 17
+        },
+        "topic": "Code Review"
+      },
+      "last_modified": "2025-05-23T18:59:28.411061"
+    },
+    "cursor_session_185934": {
+      "timestamp": "2025-05-23T18:59:34.422331",
+      "file_size": 813,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "6 seconds",
+        "files_modified": [
+          "cursor_dashboard.py"
+        ],
+        "start_time": "2025-05-23T18:59:28.411759",
+        "end_time": "2025-05-23T18:59:34.421092",
+        "response_times": {
+          "average": 2.5,
+          "median": 2.5
+        },
+        "message_patterns": {
+          "avg_user_message_length": 38,
+          "avg_assistant_message_length": 58,
+          "avg_time_between_messages": 2.0,
+          "total_tokens_estimate": 38
+        },
+        "topic": "Bug Fix"
+      },
+      "last_modified": "2025-05-23T18:59:34.421873"
+    },
+    "cursor_session_185938": {
+      "timestamp": "2025-05-23T18:59:38.435818",
+      "file_size": 809,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "4 seconds",
+        "files_modified": [
+          "cursor_dashboard.py"
+        ],
+        "start_time": "2025-05-23T18:59:34.423983",
+        "end_time": "2025-05-23T18:59:38.434444",
+        "response_times": {
+          "average": 1.0,
+          "median": 1.0
+        },
+        "message_patterns": {
+          "avg_user_message_length": 34,
+          "avg_assistant_message_length": 56,
+          "avg_time_between_messages": 1.34,
+          "total_tokens_estimate": 33
+        },
+        "topic": "Feature Request"
+      },
+      "last_modified": "2025-05-23T18:59:38.435207"
+    },
+    "cursor_session_190053": {
+      "timestamp": "2025-05-23T19:00:53.100663",
+      "file_size": 748,
+      "metadata": {
+        "message_count": 3,
+        "user_messages": 2,
+        "assistant_messages": 1,
+        "duration": "3 seconds",
+        "files_modified": [
+          "session_manager.py",
+          "cursor_chat.py"
+        ],
+        "start_time": "2025-05-23T19:00:50.088771",
+        "end_time": "2025-05-23T19:00:53.098855",
+        "response_times": {
+          "average": 2.01,
+          "median": 2.01
+        },
+        "message_patterns": {
+          "avg_user_message_length": 24,
+          "avg_assistant_message_length": 48,
+          "avg_time_between_messages": 1.5,
+          "total_tokens_estimate": 17
+        },
+        "topic": "Code Review",
+        "complexity": "medium",
+        "success": true
+      },
+      "last_modified": "2025-05-23T19:00:53.099636"
+    },
+    "cursor_session_190059": {
+      "timestamp": "2025-05-23T19:00:59.115404",
+      "file_size": 848,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "6 seconds",
+        "files_modified": [
+          "cursor_dashboard.py"
+        ],
+        "start_time": "2025-05-23T19:00:53.102594",
+        "end_time": "2025-05-23T19:00:59.114699",
+        "response_times": {
+          "average": 2.5,
+          "median": 2.5
+        },
+        "message_patterns": {
+          "avg_user_message_length": 38,
+          "avg_assistant_message_length": 58,
+          "avg_time_between_messages": 2.0,
+          "total_tokens_estimate": 38
+        },
+        "topic": "Bug Fix",
+        "complexity": "high",
+        "success": true
+      },
+      "last_modified": "2025-05-23T19:00:59.115102"
+    },
+    "cursor_session_190103": {
+      "timestamp": "2025-05-23T19:01:03.129973",
+      "file_size": 843,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "4 seconds",
+        "files_modified": [
+          "cursor_dashboard.py"
+        ],
+        "start_time": "2025-05-23T19:00:59.115832",
+        "end_time": "2025-05-23T19:01:03.128897",
+        "response_times": {
+          "average": 1.0,
+          "median": 1.0
+        },
+        "message_patterns": {
+          "avg_user_message_length": 34,
+          "avg_assistant_message_length": 56,
+          "avg_time_between_messages": 1.34,
+          "total_tokens_estimate": 33
+        },
+        "topic": "Feature Request",
+        "complexity": "low",
+        "success": true
+      },
+      "last_modified": "2025-05-23T19:01:03.129494"
+    },
+    "cursor_session_190109": {
+      "timestamp": "2025-05-23T19:01:09.143103",
+      "file_size": 801,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "6 seconds",
+        "files_modified": [
+          "cursor_dashboard.py"
+        ],
+        "start_time": "2025-05-23T19:01:03.131606",
+        "end_time": "2025-05-23T19:01:09.142671",
+        "response_times": {
+          "average": 1.5,
+          "median": 1.5
+        },
+        "message_patterns": {
+          "avg_user_message_length": 27,
+          "avg_assistant_message_length": 44,
+          "avg_time_between_messages": 2.0,
+          "total_tokens_estimate": 23
+        },
+        "topic": "Performance",
+        "complexity": "high",
+        "success": true
+      },
+      "last_modified": "2025-05-23T19:01:09.142900"
+    },
+    "cursor_session_190113": {
+      "timestamp": "2025-05-23T19:01:13.156528",
+      "file_size": 803,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "4 seconds",
+        "files_modified": [
+          "api.md"
+        ],
+        "start_time": "2025-05-23T19:01:09.143706",
+        "end_time": "2025-05-23T19:01:13.155313",
+        "response_times": {
+          "average": 1.0,
+          "median": 1.0
+        },
+        "message_patterns": {
+          "avg_user_message_length": 36,
+          "avg_assistant_message_length": 40,
+          "avg_time_between_messages": 1.34,
+          "total_tokens_estimate": 22
+        },
+        "topic": "Documentation",
+        "complexity": "medium",
+        "success": true
+      },
+      "last_modified": "2025-05-23T19:01:13.155973"
+    },
+    "cursor_session_190117": {
+      "timestamp": "2025-05-23T19:01:17.174855",
+      "file_size": 799,
+      "metadata": {
+        "message_count": 4,
+        "user_messages": 2,
+        "assistant_messages": 2,
+        "duration": "4 seconds",
+        "files_modified": [],
+        "start_time": "2025-05-23T19:01:13.158088",
+        "end_time": "2025-05-23T19:01:17.173374",
+        "response_times": {
+          "average": 1.51,
+          "median": 1.51
+        },
+        "message_patterns": {
+          "avg_user_message_length": 26,
+          "avg_assistant_message_length": 48,
+          "avg_time_between_messages": 1.34,
+          "total_tokens_estimate": 25
+        },
+        "topic": "Feature Request",
+        "complexity": "unknown",
+        "success": false
+      },
+      "last_modified": "2025-05-23T19:01:17.173961"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"database": {"host": "localhost", "port": 5432, "name": "ora_db"}, "api": {"endpoints": ["/v1/loops", "/v1/projects"], "rate_limit": 1000}, "logging": {"level": "INFO", "rotation": "1MB"}}

@@ -1,8 +1,9 @@
 def render():
-    import streamlit as st
     import os
+
+    import streamlit as st
+    from loop_memory_reader import format_loops_for_gpt, get_open_loops
     from openai import OpenAI
-    from loop_memory_reader import get_open_loops, format_loops_for_gpt
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -15,14 +16,19 @@ def render():
         open_loops = get_open_loops()
         memory_context = format_loops_for_gpt(open_loops)
 
-        st.session_state.messages.append({
-            "role": "system",
-            "content": "You are Ora, a structured executive assistant with access to loop memory, system logs, and execution history."
-        })
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": memory_context + "\nIf a loop seems complete, suggest closing it using the loop controls in Obsidian or via CLI."
-        })
+        st.session_state.messages.append(
+            {
+                "role": "system",
+                "content": "You are Ora, a structured executive assistant with access to loop memory, system logs, and execution history.",
+            }
+        )
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": memory_context
+                + "\nIf a loop seems complete, suggest closing it using the loop controls in Obsidian or via CLI.",
+            }
+        )
 
     user_input = st.chat_input("Ask Ora anything...")
 
@@ -36,7 +42,9 @@ def render():
                     messages=st.session_state.messages,
                 )
                 assistant_message = response.choices[0].message.content
-                st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_message}
+                )
             except Exception as e:
                 st.error(f"OpenAI error: {e}")
                 return

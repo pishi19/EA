@@ -1,9 +1,10 @@
 def render():
-    import streamlit as st
-    import openai
-
     # 🔑 Load your OpenAI key (assumes it's already working in other scripts)
     import os
+
+    import openai
+    import streamlit as st
+
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     st.title("💬 Chat with Ora")
@@ -13,14 +14,17 @@ def render():
         st.session_state.messages = []
 
         # 🧠 Inject mock loop memory context
-        st.session_state.messages.append({
-            "role": "system",
-            "content": "You are Ora, a structured executive assistant. You have access to the user's loop memory. Current open loops:
-- loop-2025-05-14 (tagged #email, #false_positive)
-- loop-2025-05-16 (tagged #strategy)
-
-You should reflect on these when answering."
-        })
+        st.session_state.messages.append(
+            {
+                "role": "system",
+                "content": (
+                    "You are Ora, a structured executive assistant. You have access to the user's loop memory. Current open loops:\n"
+                    "- loop-2025-05-14 (tagged #email, #false_positive)\n"
+                    "- loop-2025-05-16 (tagged #strategy)\n\n"
+                    "You should reflect on these when answering."
+                ),
+            }
+        )
 
     user_input = st.chat_input("Ask Ora anything...")
 
@@ -34,7 +38,9 @@ You should reflect on these when answering."
                     messages=st.session_state.messages,
                 )
                 assistant_message = response["choices"][0]["message"]["content"]
-                st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_message}
+                )
             except Exception as e:
                 st.error(f"OpenAI error: {e}")
                 return

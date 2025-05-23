@@ -1,10 +1,11 @@
-import sys
 import os
+import sys
+
 import pytest
-from pathlib import Path
 
 # Add root path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 # Simulate feedback classifier or feedback tag extractor
 def extract_feedback_tags(text):
@@ -17,13 +18,17 @@ def extract_feedback_tags(text):
         tags.append("clarity_issue")
     return tags
 
-@pytest.mark.parametrize("input_text,expected", [
-    ("This was great #useful", ["useful"]),
-    ("Why did this show up? #false_positive", ["false_positive"]),
-    ("Too vague #clarity_issue", ["clarity_issue"]),
-    ("#useful #false_positive", ["useful", "false_positive"]),
-    ("No feedback tags here", []),
-])
+
+@pytest.mark.parametrize(
+    "input_text,expected",
+    [
+        ("This was great #useful", ["useful"]),
+        ("Why did this show up? #false_positive", ["false_positive"]),
+        ("Too vague #clarity_issue", ["clarity_issue"]),
+        ("#useful #false_positive", ["useful", "false_positive"]),
+        ("No feedback tags here", []),
+    ],
+)
 def test_extract_feedback_tags(input_text, expected):
     result = extract_feedback_tags(input_text)
     assert set(result) == set(expected)

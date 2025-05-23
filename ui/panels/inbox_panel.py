@@ -1,6 +1,7 @@
 def render():
-    import streamlit as st
     from pathlib import Path
+
+    import streamlit as st
 
     SIGNAL_TASKS_PATH = Path("/Users/air/AIR01/0001 HQ/Signal_Tasks.md")
 

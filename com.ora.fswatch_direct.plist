@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ora.fswatch_direct</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>/opt/homebrew/bin/fswatch -0 -r /Users/air/ea_assistant | xargs -0 -n 1 /usr/bin/python3 /Users/air/ea_assistant/fswatch_log_handler.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/fswatch_direct.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/fswatch_direct.err</string>
+</dict>
+</plist>

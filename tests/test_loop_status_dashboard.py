@@ -1,4 +1,3 @@
-import pytest
 from collections import Counter
 
 # Simulated loop metadata entries
@@ -10,12 +9,14 @@ sample_loops = [
     {"id": "loop-5", "status": "closed", "verified": False, "tags": ["#loop"]},
 ]
 
+
 def summarize_loop_status(loops):
     return {
         "status_counts": Counter(loop["status"] for loop in loops),
         "verified_counts": Counter(loop["verified"] for loop in loops),
-        "tag_counts": Counter(tag for loop in loops for tag in loop["tags"])
+        "tag_counts": Counter(tag for loop in loops for tag in loop["tags"]),
     }
+
 
 def test_loop_status_summary_counts():
     summary = summarize_loop_status(sample_loops)

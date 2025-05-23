@@ -1,0 +1,146 @@
+{
+  "extract_loops.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 738,
+    "rotation_count": 0
+  },
+  "loop_dashboard_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 222,
+    "rotation_count": 0
+  },
+  "assistant_note_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 0,
+    "rotation_count": 0
+  },
+  "generate_loop_dashboard_error.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 0,
+    "rotation_count": 0
+  },
+  "launchd_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 15605,
+    "rotation_count": 0
+  },
+  "feedback_report_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 420,
+    "rotation_count": 0
+  },
+  "feedback_to_loops_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 652,
+    "rotation_count": 0
+  },
+  "cleanup_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 0,
+    "rotation_count": 0
+  },
+  "loop_dashboard_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 214,
+    "rotation_count": 0
+  },
+  "assistant_note_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 459,
+    "rotation_count": 0
+  },
+  "cleanup_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 226,
+    "rotation_count": 0
+  },
+  "feedback_to_loops_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 0,
+    "rotation_count": 0
+  },
+  "generate_loop_dashboard.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 310,
+    "rotation_count": 0
+  },
+  "feedback_report_stderr.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 0,
+    "rotation_count": 0
+  },
+  "launchd_stdout.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 0,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 13739,
+    "rotation_count": 0
+  },
+  "scheduler.log": {
+    "error_count": 0,
+    "warning_count": 0,
+    "info_count": 262,
+    "debug_count": 0,
+    "last_check": "2025-05-23T20:58:15.553696",
+    "log_size": 482,
+    "rotation_count": 0
+  }
+}

@@ -1,8 +1,9 @@
 def render():
-    import streamlit as st
     import os
+
+    import streamlit as st
+    from loop_memory_reader import format_loops_for_gpt, get_open_loops
     from openai import OpenAI
-    from loop_memory_reader import get_open_loops, format_loops_for_gpt
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -27,8 +28,11 @@ Please summarize this memory to the user and suggest any loops that may be ready
             response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "You are Ora, a structured assistant with loop memory."},
-                    {"role": "user", "content": intro}
+                    {
+                        "role": "system",
+                        "content": "You are Ora, a structured assistant with loop memory.",
+                    },
+                    {"role": "user", "content": intro},
                 ],
             )
             assistant_message = response.choices[0].message.content
@@ -49,7 +53,9 @@ Please summarize this memory to the user and suggest any loops that may be ready
                     messages=st.session_state.messages,
                 )
                 assistant_message = response.choices[0].message.content
-                st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_message}
+                )
             except Exception as e:
                 st.error(f"OpenAI error: {e}")
                 return

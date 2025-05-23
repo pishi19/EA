@@ -1,12 +1,14 @@
-import streamlit as st
-import sys
 import os
+import sys
+
+import streamlit as st
 
 # Ensure access to parent directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from config import OPENAI_API_KEY
-from load_loops_for_prompt import get_recent_loops, format_loops_for_prompt
+from load_loops_for_prompt import format_loops_for_prompt, get_recent_loops
 from openai import OpenAI
+
+from config import OPENAI_API_KEY
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -25,23 +27,19 @@ if "chat_history" not in st.session_state:
 
 chat_input = st.text_input("Ask Ora something:", key="chat_input")
 
-if chat_input and (not st.session_state.chat_history or chat_input != st.session_state.chat_history[-2][1]):
+if chat_input and (
+    not st.session_state.chat_history or chat_input != st.session_state.chat_history[-2][1]
+):
     try:
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are Ora, a reflective executive assistant who incorporates historical loops into her thinking."
+                    "content": "You are Ora, a reflective executive assistant who incorporates historical loops into her thinking.",
                 },
-                {
-                    "role": "system",
-                    "content": f"Context from recent memory loops:\n{loop_context}"
-                },
-                {
-                    "role": "user",
-                    "content": chat_input
-                }
+                {"role": "system", "content": f"Context from recent memory loops:\n{loop_context}"},
+                {"role": "user", "content": chat_input},
             ],
             temperature=0.7,
             max_tokens=500,

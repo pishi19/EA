@@ -1,9 +1,9 @@
 def render():
-    import streamlit as st
     import os
-    from openai import OpenAI
 
-    from loop_memory_reader import get_open_loops, format_loops_for_gpt
+    import streamlit as st
+    from loop_memory_reader import format_loops_for_gpt, get_open_loops
+    from openai import OpenAI
     from vector_memory import query_vector_memory
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -16,10 +16,7 @@ def render():
         # Load loop memory
         loop_context = format_loops_for_gpt(get_open_loops())
 
-        st.session_state.memory_loaded = {
-            "loop_context": loop_context,
-            "vector_context": ""
-        }
+        st.session_state.memory_loaded = {"loop_context": loop_context, "vector_context": ""}
 
     user_input = st.chat_input("Ask Ora anything...")
 
@@ -29,8 +26,7 @@ def render():
         # 🧠 Vector memory injection based on user message
         try:
             vector_chunks = query_vector_memory(user_input, top_k=3)
-            vector_texts = [f"From {src}:
-{text}" for src, text in vector_chunks]
+            vector_texts = [f"From {src}:\n{text}" for src, text in vector_chunks]
             vector_context = "\n---\n".join(vector_texts)
         except Exception as e:
             vector_context = f"[Vector memory error: {e}]"
@@ -53,15 +49,22 @@ Relevant Past Knowledge:
                 response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "You are Ora, an executive assistant with loop memory and semantic recall."},
+                        {
+                            "role": "system",
+                            "content": "You are Ora, an executive assistant with loop memory and semantic recall.",
+                        },
                         {"role": "user", "content": user_input},
-                        {"role": "assistant", "content": initial_context}
+                        {"role": "assistant", "content": initial_context},
                     ],
                 )
                 assistant_message = response.choices[0].message.content
-                st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_message}
+                )
             except Exception as e:
-                st.session_state.messages.append({"role": "assistant", "content": f"OpenAI error: {e}"})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": f"OpenAI error: {e}"}
+                )
 
     for message in st.session_state.messages:
         if message["role"] == "user":

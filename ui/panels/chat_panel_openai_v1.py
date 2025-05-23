@@ -1,6 +1,7 @@
 def render():
-    import streamlit as st
     import os
+
+    import streamlit as st
     from openai import OpenAI
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -12,10 +13,12 @@ def render():
         st.session_state.messages = []
 
         # Inject mock loop memory context
-        st.session_state.messages.append({
-            "role": "system",
-            "content": "You are Ora, a structured executive assistant. You have access to the user's loop memory. Current open loops:\n- loop-2025-05-14 (tagged #email, #false_positive)\n- loop-2025-05-16 (tagged #strategy)\n\nYou should reflect on these when answering."
-        })
+        st.session_state.messages.append(
+            {
+                "role": "system",
+                "content": "You are Ora, a structured executive assistant. You have access to the user's loop memory. Current open loops:\n- loop-2025-05-14 (tagged #email, #false_positive)\n- loop-2025-05-16 (tagged #strategy)\n\nYou should reflect on these when answering.",
+            }
+        )
 
     user_input = st.chat_input("Ask Ora anything...")
 
@@ -29,7 +32,9 @@ def render():
                     messages=st.session_state.messages,
                 )
                 assistant_message = response.choices[0].message.content
-                st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_message}
+                )
             except Exception as e:
                 st.error(f"OpenAI error: {e}")
                 return

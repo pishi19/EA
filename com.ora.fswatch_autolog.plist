@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ora.fswatch_autolog</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/air/ea_assistant/fswatch_autolog.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>5</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/fswatch_autolog.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/fswatch_autolog.err</string>
+</dict>
+</plist>

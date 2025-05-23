@@ -1,0 +1,5 @@
+Backup created: 20250523_184701
+Components:
+- Qdrant data
+- Redis data
+- Application data

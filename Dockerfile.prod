@@ -1,0 +1,39 @@
+# Use Python 3.9 slim image as base
+FROM python:3.9-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Create non-root user
+RUN useradd -m -u 1000 app
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY pyproject.toml .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir ".[prod]"
+
+# Copy application code
+COPY src/ src/
+COPY .env.prod .env
+
+# Set proper permissions
+RUN chown -R app:app /app
+
+# Switch to non-root user
+USER app
+
+# Run with gunicorn
+CMD ["gunicorn", "src.app:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"] 
