@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Python
+*.pyc
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Editor/Tooling
+.cursor/
+.opencode/
+
+# Local DB and archives
+loop_memory.db
+*.zip 
