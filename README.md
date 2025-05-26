@@ -178,3 +178,7 @@ python3 route_email_signals.py \
   --programs_dir=config/programs/ \
   --vault_root=vault/
 ```
+
+## 📚 Docs
+- [System Pipeline Overview](docs/system/ea_signal_pipeline.md)
+- [Streamlit UI Guide](docs/system/streamlit_ui.md)
