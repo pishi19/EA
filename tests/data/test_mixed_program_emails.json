@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "from": "sarah.lee@retail.ailo.com",
+    "subject": "Store Opening in Sydney - Please confirm details",
+    "date": "2025-07-01",
+    "body": "We are planning a new store opening. Please confirm the site visit schedule.",
+    "has_attachment": false
+  },
+  {
+    "id": "2",
+    "from": "priya.patel@crm.ailo.com",
+    "subject": "Migration Update - Urgent Action Required",
+    "date": "2025-07-02",
+    "body": "The migration is on track. Please review the attached data import report.",
+    "has_attachment": true
+  },
+  {
+    "id": "3",
+    "from": "emily.zhang@partners.ailo.com",
+    "subject": "Enablement Session for New Partners",
+    "date": "2025-07-03",
+    "body": "Enablement session scheduled. Confirm your attendance.",
+    "has_attachment": false
+  },
+  {
+    "id": "4",
+    "from": "tom.nguyen@expansion.ailo.com",
+    "subject": "Market Research - Review findings",
+    "date": "2025-07-04",
+    "body": "Please review the attached market research findings for the new market.",
+    "has_attachment": true
+  },
+  {
+    "id": "5",
+    "from": "james.carter@tech.ailo.com",
+    "subject": "Integration Testing and Site Visit",
+    "date": "2025-07-05",
+    "body": "This message covers both integration testing and a site visit. Please confirm participation.",
+    "has_attachment": false
+  }
+] 

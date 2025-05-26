@@ -1,0 +1,17 @@
+program: CRM Migration
+area: Technology
+domains:
+  - crm.ailo.com
+  - tech.ailo.com
+keywords:
+  - migration
+  - data import
+  - integration
+projects:
+  - Data Migration
+  - Integration Testing
+contacts:
+  - name: Priya Patel
+    email: priya.patel@crm.ailo.com
+  - name: James Carter
+    email: james.carter@tech.ailo.com 
