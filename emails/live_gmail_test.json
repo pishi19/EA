@@ -1,0 +1,52 @@
+[
+  {
+    "id": "gmail-1",
+    "thread_id": "thread-1001",
+    "from": "alice@mecca.com.au",
+    "to": ["team@ailo.com"],
+    "subject": "RSVP for Mecca Client Night",
+    "date": "2025-06-01T10:00:00Z",
+    "body": "Please confirm your RSVP for the Mecca event on June 12.",
+    "has_attachment": false
+  },
+  {
+    "id": "gmail-2",
+    "thread_id": "thread-1002",
+    "from": "priya.patel@crm.ailo.com",
+    "to": ["migration@ailo.com"],
+    "subject": "Migration Update - Action Required",
+    "date": "2025-06-02T14:30:00Z",
+    "body": "The CRM migration is on track. Please review the attached data import report.",
+    "has_attachment": true
+  },
+  {
+    "id": "gmail-3",
+    "thread_id": "thread-1003",
+    "from": "sarah.lee@retail.ailo.com",
+    "to": ["expansion@ailo.com"],
+    "subject": "Store Opening - Confirm Site Visit",
+    "date": "2025-06-03T09:15:00Z",
+    "body": "We are planning a new store opening. Please confirm the site visit schedule.",
+    "has_attachment": false
+  },
+  {
+    "id": "gmail-4",
+    "thread_id": "thread-1004",
+    "from": "emily.zhang@partners.ailo.com",
+    "to": ["growth@ailo.com"],
+    "subject": "Enablement Session for New Partners",
+    "date": "2025-06-04T11:45:00Z",
+    "body": "Enablement session scheduled. Confirm your attendance.",
+    "has_attachment": false
+  },
+  {
+    "id": "gmail-5",
+    "thread_id": "thread-1005",
+    "from": "ambiguous.sender@crm.ailo.com",
+    "to": ["expansion@ailo.com", "mecca@mecca.com.au"],
+    "subject": "Event RSVP and Migration Update",
+    "date": "2025-06-05T16:20:00Z",
+    "body": "This message covers both RSVP for the Mecca event and a CRM migration update. Please review and confirm.",
+    "has_attachment": true
+  }
+] 

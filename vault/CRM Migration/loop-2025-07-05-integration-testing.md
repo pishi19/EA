@@ -23,6 +23,8 @@ ambiguous_projects:
 ---
 > **Subject:** Integration Testing and Site Visit #review ⚠️ Ambiguity detected  
 > **Body:** This message covers both integration testing and a site visit. Please confirm participation.
+> **Subject:** Integration Testing and Site Visit #review ⚠️ Ambiguity detected  
+> **Body:** This message covers both integration testing and a site visit. Please confirm participation.
 
 ### ✅ Tasks
 - [ ] Action required: Integration Testing and Site Visit

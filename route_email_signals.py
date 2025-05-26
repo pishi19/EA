@@ -2,7 +2,8 @@ import os
 import json
 import logging
 from pathlib import Path
-from classifiers.program_classifier import ProgramClassifier
+import yaml
+from classifiers.program_classifier import ProgramClassifier, validate_program_configs
 from loop_markdown import LoopMarkdown
 from datetime import datetime
 import re
@@ -99,7 +100,26 @@ def read_loop_file(path):
         content = f.read()
     return LoopMarkdown.parse(content)
 
-def write_loop_file(loop_md, path):
+REQUIRED_LOOP_FIELDS = [
+    'program', 'project', 'contacts', 'source_email_ids',
+    'confidence', 'priority', 'ambiguity', 'triage_required', 'last_updated'
+]
+
+def validate_loop_yaml(yaml_dict, path=None):
+    missing = [f for f in REQUIRED_LOOP_FIELDS if f not in yaml_dict]
+    if missing:
+        msg = f"[LOOP YAML WARNING] {path or ''} missing fields: {missing}"
+        print(msg)
+        logging.warning(msg)
+    return not missing
+
+def write_loop_file(loop_md, path, dry_run=False):
+    validate_loop_yaml(loop_md.yaml_dict, path)
+    if dry_run:
+        print(f"[DRY RUN] Would write loop file: {path}")
+        print("[DRY RUN] YAML block:")
+        print(yaml.safe_dump(loop_md.yaml_dict, sort_keys=False, allow_unicode=True))
+        return
     ensure_dir(os.path.dirname(path))
     with open(path, 'w', encoding='utf-8') as f:
         f.write(loop_md.render())
@@ -115,9 +135,11 @@ def process_emails(
     emails_path='emails/sample_mecca_emails.json',
     processed_ids_path='emails/processed_email_ids.json',
     config_dir='config/programs/',
-    vault_root='vault/02 Workstreams/Programs/'
+    vault_root='vault/02 Workstreams/Programs/',
+    dry_run=False
 ):
     logging.basicConfig(level=logging.INFO)
+    validate_program_configs(config_dir)
     emails = load_emails(emails_path)
     processed_ids = track_processed_ids(path=processed_ids_path)
     classifier = ProgramClassifier(config_dir)
@@ -131,9 +153,9 @@ def process_emails(
         if not program or not project:
             continue
         priority = calculate_priority(email)
-        # Route to correct loop file
+        # Path enforcement: exact program name, correct folder
         date = email.get('date') or datetime.now().strftime('%Y-%m-%d')
-        program_folder = program['program']  # Use exact name, with spaces/capitals
+        program_folder = program['program']
         project_slug = slugify(project)
         program_dir = os.path.join(vault_root, program_folder)
         ensure_dir(program_dir)
@@ -145,24 +167,28 @@ def process_emails(
         loop_md.yaml_dict = update_yaml_frontmatter(
             loop_md.yaml_dict, email, program, project, confidence, matched_fields, ambiguous, priority, ambiguous_programs, ambiguous_projects
         )
+        # Set triage_required and last_updated
+        loop_md.yaml_dict['triage_required'] = ambiguous or loop_md.yaml_dict.get('triage_required', False)
+        loop_md.yaml_dict['last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M')
         # Add signal
         loop_md.add_signal(
             email.get('subject', '').strip() if email.get('subject') else '',
             email.get('body', '').strip() if email.get('body') else ''
         )
-        # If ambiguous, tag the last signal
         if ambiguous and loop_md.signals:
             last_signal = loop_md.signals.pop()
             loop_md.signals.append({'subject': last_signal['subject'] + ' #review ⚠️ Ambiguity detected', 'body': last_signal['body']})
-        # Add task if present
         task = extract_task(email)
         loop_md.add_task(task)
         new_ids.add(eid)
     # Write all loop files
     for loop_path, loop_md in loop_files.items():
-        write_loop_file(loop_md, loop_path)
-    track_processed_ids(new_ids, path=processed_ids_path)
-    logging.info(f"Processed emails and updated {len(loop_files)} loop files.")
+        write_loop_file(loop_md, loop_path, dry_run=dry_run)
+    if not dry_run:
+        track_processed_ids(new_ids, path=processed_ids_path)
+        logging.info(f"Processed emails and updated {len(loop_files)} loop files.")
+    else:
+        print(f"[DRY RUN] Would process {len(loop_files)} loop files.")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process and classify emails for multiple programs.')
@@ -170,10 +196,12 @@ if __name__ == '__main__':
     parser.add_argument('--processed_ids_path', type=str, default='emails/processed_email_ids.json', help='Path to processed email IDs log')
     parser.add_argument('--programs_dir', type=str, default='config/programs/', help='Path to programs YAML config directory')
     parser.add_argument('--vault_root', type=str, default='vault/02 Workstreams/Programs/', help='Path to loop file vault root')
+    parser.add_argument('--dry_run', action='store_true', help='Run classification without writing files')
     args = parser.parse_args()
     process_emails(
         emails_path=args.emails_path,
         processed_ids_path=args.processed_ids_path,
         config_dir=args.programs_dir,
-        vault_root=args.vault_root
+        vault_root=args.vault_root,
+        dry_run=args.dry_run
     ) 

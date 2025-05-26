@@ -4,8 +4,41 @@ import glob
 import re
 from collections import defaultdict
 
+def validate_program_configs(config_dir='config/programs/'):
+    required_fields = ['program', 'area', 'domains', 'keywords']
+    errors = []
+    for path in glob.glob(os.path.join(config_dir, '*.yaml')):
+        with open(path, 'r', encoding='utf-8') as f:
+            try:
+                data = yaml.safe_load(f)
+            except Exception as e:
+                errors.append(f"{path}: YAML parse error: {e}")
+                continue
+            for field in required_fields:
+                if field not in data or not data[field]:
+                    errors.append(f"{path}: Missing required field '{field}'")
+            if 'projects' in data and not isinstance(data['projects'], list):
+                errors.append(f"{path}: 'projects' should be a list")
+            if 'contacts' in data:
+                if not isinstance(data['contacts'], list):
+                    errors.append(f"{path}: 'contacts' should be a list")
+                else:
+                    for c in data['contacts']:
+                        if isinstance(c, dict):
+                            if 'email' not in c or 'name' not in c:
+                                errors.append(f"{path}: contact dict missing 'name' or 'email'")
+                        elif not isinstance(c, str):
+                            errors.append(f"{path}: contact should be string or dict")
+    if errors:
+        for e in errors:
+            print(f"[CONFIG VALIDATION ERROR] {e}")
+        raise ValueError(f"Program config validation failed with {len(errors)} error(s). See above.")
+    else:
+        print("All program configs validated successfully.")
+
 class ProgramClassifier:
     def __init__(self, config_dir='config/programs/'):
+        validate_program_configs(config_dir)
         self.config_dir = config_dir
         self.programs = self.load_programs()
         self.contact_to_program = self._build_contact_index()
@@ -23,7 +56,6 @@ class ProgramClassifier:
         contact_map = defaultdict(list)
         for prog in self.programs:
             for contact in prog.get('contacts', []):
-                # Support both string and dict contact
                 if isinstance(contact, dict):
                     contact_email = contact.get('email', '').lower()
                 else:
@@ -34,18 +66,25 @@ class ProgramClassifier:
 
     def match_fields(self, program, email):
         sender = email.get('from', '').lower()
+        recipients = set()
+        for field in ['to', 'cc', 'bcc']:
+            val = email.get(field)
+            if isinstance(val, list):
+                recipients.update([v.lower() for v in val])
+            elif val:
+                recipients.add(val.lower())
         subject = email.get('subject', '').lower()
         body = email.get('body', '').lower()
         matched_fields = []
-        # Contact
+        # Contact (from or any recipient)
         for contact in program.get('contacts', []):
             contact_email = contact['email'].lower() if isinstance(contact, dict) else contact.lower()
-            if sender == contact_email:
+            if sender == contact_email or contact_email in recipients:
                 matched_fields.append('contact')
                 break
-        # Domain
+        # Domain (from or any recipient)
         for domain in program.get('domains', []):
-            if sender.endswith(domain.lower()):
+            if sender.endswith(domain.lower()) or any(r.endswith(domain.lower()) for r in recipients):
                 matched_fields.append('domain')
                 break
         # Keyword
@@ -66,17 +105,14 @@ class ProgramClassifier:
         for prog in self.programs:
             matched_fields = self.match_fields(prog, email)
             if matched_fields:
-                # Project selection
                 project = None
                 triggered_projects = []
-                # Try to match project by trigger
                 if 'project_trigger' in matched_fields:
                     for proj in prog.get('projects', []):
                         if proj.lower() in email.get('subject', '').lower() or proj.lower() in email.get('body', '').lower():
                             triggered_projects.append(proj)
                     if triggered_projects:
                         project = triggered_projects[0]
-                # Otherwise, match by keyword to project
                 if not project and 'keyword' in matched_fields:
                     for keyword in prog.get('keywords', []):
                         if keyword.lower() in email.get('subject', '').lower() or keyword.lower() in email.get('body', '').lower():
@@ -91,14 +127,12 @@ class ProgramClassifier:
                                 triggered_projects.append('General')
                                 project = 'General'
                             break
-                # Fallback
                 if not project and 'projects' in prog and prog['projects']:
                     triggered_projects.append(prog['projects'][0])
                     project = prog['projects'][0]
                 elif not project:
                     triggered_projects.append('General')
                     project = 'General'
-                # Confidence
                 total_possible = 4  # contact, domain, keyword, project_trigger
                 confidence = len(matched_fields) / total_possible
                 matches.append({
@@ -113,7 +147,6 @@ class ProgramClassifier:
         ambiguous_projects = list({proj for m in matches for proj in m.get('triggered_projects', [])}) if ambiguous else []
         if not matches:
             return None, None, 0.0, [], False, [], []
-        # If ambiguous, pick the highest confidence, but mark ambiguous and return context
         best = max(matches, key=lambda m: m['confidence'])
         return (
             best['program'],
