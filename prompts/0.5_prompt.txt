@@ -1,0 +1,14 @@
+You are in Cursor. Help the user implement this roadmap feature.
+
+## Feature
+Production Environment (ID: 0.5)
+
+## File Target
+deploy/prod_config.md
+
+## Instructions
+Describe the requirements and design for moving EA from dev to a production-grade deployment including database, auth, and backup handling.
+
+---
+
+Respond with clean, documented Python code ready to drop into the target file.

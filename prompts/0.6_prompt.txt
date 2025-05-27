@@ -1,0 +1,12 @@
+You are in Cursor. Help the user implement this roadmap feature.
+
+## Feature
+Additional Tasks (ID: 0.6)
+
+## File Target
+tasks/misc.md
+
+## Instructions
+Placeholder for exploratory tasks, small patches, and minor system improvements.
+
+Respond with clean, documented Python code ready to drop into the target file.

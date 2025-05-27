@@ -1,0 +1,14 @@
+You are in Cursor. Help the user implement this roadmap feature.
+
+## Feature
+Documentation (ID: 0.4)
+
+## File Target
+docs/architecture.md
+
+## Instructions
+Document the current system architecture, roadmap parser expectations, and interaction modes.
+
+---
+
+Respond with clean, documented Python code ready to drop into the target file.

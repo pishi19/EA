@@ -1,0 +1,44 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      streamlit:
+        image: python:3.10
+        ports:
+          - 8501:8501
+        options: >-
+          --health-cmd "curl --fail http://localhost:8501 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest requests beautifulsoup4
+
+    - name: Launch Streamlit app in background
+      run: |
+        nohup streamlit run src/cursor_dashboard.py > /dev/null 2>&1 &
+        sleep 10
+
+    - name: Run UI Tests
+      run: |
+        pytest tests/test_ui_render.py 
