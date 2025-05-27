@@ -6,6 +6,9 @@ import re
 from pathlib import Path
 from datetime import datetime, timedelta
 import json
+from summary_agent import generate_summary, generate_summary_with_gpt, retrain_summaries_based_on_feedback
+from loop_writer import update_loop_summary, update_summary_feedback
+from gpt_ora_chat import run_gpt_ora_chat, run_gpt_ora_chat_streaming
 
 def find_loop_files(vault_root='vault/'):
     return glob.glob(os.path.join(vault_root, '**', 'loop-*.md'), recursive=True)
@@ -287,6 +290,47 @@ def dashboard_tab(signals, triage_log, filtered_signals=None):
         with open(out_path, 'w', encoding='utf-8') as f:
             f.write(md)
         st.success(f"Ambiguity snapshot exported to {out_path}")
+    # --- Export All Summaries Button ---
+    if filtered_signals is not None and st.button("📤 Export All Summaries"):
+        now = dt.now().strftime('%Y-%m-%d %H:%M')
+        date_str = dt.now().strftime('%Y-%m-%d')
+        md = f"# 📄 EA Loop Summaries\n\n- **Export Time:** {now}\n- **Total Loops:** {len(filtered_signals)}\n\n"
+        for s in filtered_signals:
+            rel_path = os.path.relpath(s['path'], start='vault')
+            md += f"## {rel_path}\n- **Program:** {s['program']}\n- **Project:** {s['project']}\n- **Summary:**\n  "
+            summary = s['yaml'].get('summary')
+            if summary:
+                md += summary + "\n\n"
+            else:
+                md += "_No summary available_\n\n"
+        out_dir = os.path.join('vault', '0001 HQ')
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, f'summaries-{date_str}.md')
+        with open(out_path, 'w', encoding='utf-8') as f:
+            f.write(md)
+        st.success(f"All summaries exported to {out_path}")
+    # --- Batch Summarize All Missing Button ---
+    if filtered_signals is not None and st.button("💬 Summarize All Missing"):
+        now = dt.now().strftime('%Y-%m-%d %H:%M')
+        date_str = dt.now().strftime('%Y-%m-%d')
+        missing = [s for s in filtered_signals if not s['yaml'].get('summary')]
+        progress = st.progress(0)
+        for i, s in enumerate(missing):
+            try:
+                update_loop_summary(s['path'], use_gpt=True)
+                st.write(f"✅ {s['path']} summarized.")
+            except Exception as e:
+                st.write(f"❌ {s['path']} failed: {e}")
+            progress.progress((i+1)/len(missing))
+        st.success(f"Summarized {len(missing)} loops with GPT.")
+    # --- Retrain Low-Quality Summaries Button ---
+    if st.button("📈 Retrain Low-Quality Summaries"):
+        try:
+            with st.spinner("Retraining low-quality summaries with GPT..."):
+                retrained = retrain_summaries_based_on_feedback('vault')
+            st.success(f"Retrained {len(retrained)} summaries. See log in vault/0001 HQ/summary_retraining_log-{{YYYY-MM-DD}}.md")
+        except Exception as e:
+            st.error(f"Retraining failed: {e}")
 
 def update_loop_yaml_ambiguity_resolution(path, new_program, new_project, user='ash'):
     from datetime import datetime
@@ -309,7 +353,7 @@ def update_loop_yaml_ambiguity_resolution(path, new_program, new_project, user='
 
 def main():
     st.set_page_config(page_title="EA Signal Inbox", layout="wide")
-    tab_inbox, tab_dashboard = st.tabs(["📥 Inbox", "📊 Dashboard"])
+    tab_inbox, tab_dashboard, tab_chat = st.tabs(["📥 Inbox", "📊 Dashboard", "🧠 Ora Chat"])
     with tab_inbox:
         st.title("📥 EA Signal Review Inbox")
         vault_root = st.sidebar.text_input("Vault Root", value="vault/")
@@ -425,13 +469,38 @@ def main():
                                 st.warning("Ignored.")
                         if is_stale(s['last_updated_dt']):
                             st.markdown("<span style='color:#b8860b;font-weight:bold;'>⚠️ Stale</span>", unsafe_allow_html=True)
-                        if st.button("💬 Summarize Loop", key=key+"_summarize"):
-                            summary = summarize_loop(s['signals'], s['tasks'])
-                            update_loop_yaml_summary(s['path'], summary)
-                            st.success(f"Summary updated: {summary}")
+                        # Summarize Loop button (LLM stub)
+                        if st.button("💬 Generate Summary", key=key+"_gen_summary"):
+                            with open(s['path'], 'r', encoding='utf-8') as f:
+                                loop_md = f.read()
+                            summary = generate_summary(loop_md)
+                            update_loop_summary(s['path'], summary, use_gpt=False)
+                            st.success(f"Summary generated: {summary}")
+                        # GPT Summary button
+                        if st.button("💬 GPT Summary", key=key+"_gpt_summary"):
+                            try:
+                                update_loop_summary(s['path'], use_gpt=True)
+                                with open(s['path'], 'r', encoding='utf-8') as f:
+                                    loop_md = f.read()
+                                summary = re.search(r'summary:\s*(.*)', loop_md)
+                                summary = summary.group(1) if summary else None
+                                st.success(f"GPT summary generated: {summary}")
+                            except Exception as e:
+                                st.error(f"GPT summary failed: {e}")
+                        # Show summary if present
                         summary = s['yaml'].get('summary')
                         if summary:
                             st.markdown(f"**Summary:** {summary}")
+                            # Feedback section
+                            feedback = s['yaml'].get('summary_feedback', {})
+                            with st.form(key=key+"_feedback_form"):
+                                rating = st.selectbox("Summary Rating", options=[1,2,3,4,5], index=feedback.get('quality_rating', 4)-1 if feedback.get('quality_rating') else 4)
+                                flagged = st.checkbox("Flag this summary for review", value=feedback.get('flagged_for_review', False))
+                                comment = st.text_area("Optional comment", value=feedback.get('comment', ""))
+                                submitted = st.form_submit_button("Save Feedback")
+                                if submitted:
+                                    update_summary_feedback(s['path'], quality_rating=rating, flagged_for_review=flagged, comment=comment)
+                                    st.success("Feedback saved!")
                         st.markdown('</div>', unsafe_allow_html=True)
         if not filtered:
             st.info("No signals match the current filters.")
@@ -448,6 +517,128 @@ def main():
         log_path = 'ui/triage_log.json'
         triage_log = load_decision_log(log_path)
         dashboard_tab(signals, triage_log)
+    with tab_chat:
+        st.title("🧠 Ora Chat")
+        vault_root = st.text_input("Vault Root (Chat)", value="vault/")
+        loop_files = find_loop_files(vault_root)
+        signals = [parse_loop_file(f) for f in loop_files]
+        # Query history (in-session only)
+        if 'ora_query_history' not in st.session_state:
+            st.session_state['ora_query_history'] = []
+        query = st.text_input("Ask Ora", value=st.session_state.get('ora_query_to_rerun', ''))
+        # Sidebar: recent queries
+        with st.sidebar.expander("Recent Ora Queries", expanded=True):
+            history = st.session_state['ora_query_history']
+            if history:
+                selected_hist = st.selectbox("Select a recent query", history[::-1], key="ora_hist_select")
+                if st.button("Re-run Query"):
+                    st.session_state['ora_query_to_rerun'] = selected_hist
+                    st.experimental_rerun()
+            else:
+                st.write("No recent queries.")
+        results = []
+        if query:
+            q = query.lower().strip()
+            # Update history (no duplicates, max 5)
+            if q and (not st.session_state['ora_query_history'] or q != st.session_state['ora_query_history'][-1]):
+                if q in st.session_state['ora_query_history']:
+                    st.session_state['ora_query_history'].remove(q)
+                st.session_state['ora_query_history'].append(q)
+                if len(st.session_state['ora_query_history']) > 5:
+                    st.session_state['ora_query_history'] = st.session_state['ora_query_history'][-5:]
+            if "summary review" in q:
+                results = [s for s in signals if s['yaml'].get('summary_feedback', {}).get('flagged_for_review', False)]
+            elif "rated below 3" in q or "rating below 3" in q:
+                results = [s for s in signals if s['yaml'].get('summary_feedback', {}).get('quality_rating', 5) <= 3]
+            elif q.startswith("summaries for "):
+                prog = q.replace("summaries for ", "").strip().lower()
+                results = [s for s in signals if s['program'].lower() == prog]
+            elif "recent summaries" in q:
+                results = sorted([s for s in signals if s['yaml'].get('summary')], key=lambda s: s['last_updated_dt'], reverse=True)[:10]
+            elif "missing summaries" in q:
+                results = [s for s in signals if not s['yaml'].get('summary')]
+        if results:
+            for s in results:
+                st.markdown(f"### {os.path.relpath(s['path'], start=vault_root)}")
+                st.markdown(f"- **Program:** {s['program']}  |  **Project:** {s['project']}")
+                summary = s['yaml'].get('summary')
+                if summary:
+                    st.markdown(f"- **Summary:** {summary}")
+                feedback = s['yaml'].get('summary_feedback', {})
+                if feedback:
+                    st.markdown(f"- **Rating:** {feedback.get('quality_rating', 'N/A')}  |  **Flagged:** {feedback.get('flagged_for_review', False)}")
+                    if feedback.get('comment'):
+                        st.markdown(f"- **Comment:** {feedback.get('comment')}")
+            # Export Chat Results button
+            if st.button("📤 Export Chat Results"):
+                from datetime import datetime as dt
+                now = dt.now().strftime('%Y-%m-%d %H:%M')
+                date_str = dt.now().strftime('%Y-%m-%d')
+                md = f"# 🧠 Ora Chat Results\n\n- **Export Time:** {now}\n- **Query:** {query}\n- **Result Count:** {len(results)}\n\n"
+                for s in results:
+                    rel_path = os.path.relpath(s['path'], start=vault_root)
+                    md += f"## {rel_path}\n- **Program:** {s['program']}\n- **Project:** {s['project']}\n"
+                    summary = s['yaml'].get('summary')
+                    if summary:
+                        md += f"- **Summary:** {summary}\n"
+                    feedback = s['yaml'].get('summary_feedback', {})
+                    if feedback:
+                        md += f"- **Rating:** {feedback.get('quality_rating', 'N/A')}  |  **Flagged:** {feedback.get('flagged_for_review', False)}\n"
+                        if feedback.get('comment'):
+                            md += f"- **Comment:** {feedback.get('comment')}\n"
+                    md += "\n"
+                out_dir = os.path.join('vault', '0001 HQ')
+                os.makedirs(out_dir, exist_ok=True)
+                out_path = os.path.join(out_dir, f'ora_chat_results-{date_str}.md')
+                with open(out_path, 'w', encoding='utf-8') as f:
+                    f.write(md)
+                st.success(f"Chat results exported to {out_path}")
+            # GPT Response button (streaming)
+            if st.button("💬 GPT Response"):
+                import time
+                placeholder = st.empty()
+                try:
+                    with st.spinner("Generating GPT response..."):
+                        tokens = []
+                        for token in run_gpt_ora_chat_streaming(query, results):
+                            tokens.append(token)
+                            placeholder.markdown(''.join(tokens))
+                            time.sleep(0.01)
+                        gpt_response = ''.join(tokens)
+                except Exception as e:
+                    gpt_response = f"[GPT-4 ERROR: {e}]"
+                    placeholder.markdown(gpt_response)
+            if gpt_response:
+                with st.expander("GPT Response", expanded=True):
+                    st.markdown(gpt_response)
+        elif query:
+            st.info("No results found for your query.")
+
+        # Hardened query logic for summary review and rated below 3
+        if query:
+            q = query.lower().strip()
+            if "summary review" in q:
+                scanned = 0
+                matched = 0
+                safe_results = []
+                for s in signals:
+                    feedback = s['yaml'].get('summary_feedback', {})
+                    scanned += 1
+                    if feedback.get('flagged_for_review', False):
+                        safe_results.append(s)
+                        matched += 1
+                st.info(f"Scanned {scanned} loops, matched {matched} flagged for review.")
+            elif "rated below 3" in q or "rating below 3" in q:
+                scanned = 0
+                matched = 0
+                safe_results = []
+                for s in signals:
+                    feedback = s['yaml'].get('summary_feedback', {})
+                    scanned += 1
+                    if feedback.get('quality_rating', 5) <= 3:
+                        safe_results.append(s)
+                        matched += 1
+                st.info(f"Scanned {scanned} loops, matched {matched} with rating ≤ 3.")
 
 if __name__ == "__main__":
     main() 
