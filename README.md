@@ -182,3 +182,5 @@ python3 route_email_signals.py \
 ## 📚 Docs
 - [System Pipeline Overview](docs/system/ea_signal_pipeline.md)
 - [Streamlit UI Guide](docs/system/streamlit_ui.md)
+
+![CI](https://github.com/<your-username>/<your-repo>/actions/workflows/test.yml/badge.svg)
