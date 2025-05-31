@@ -9,8 +9,8 @@ page = st.sidebar.radio("Go to", ["Inbox", "Loops", "Logs", "Reports", "System H
 
 # Page logic with safe delayed imports
 if page == "Inbox":
-    from ui.panels import inbox_panel
-    inbox_panel.render()
+    from src.ui.inbox import render_inbox
+    render_inbox()
 
 elif page == "Loops":
     st.title("🔁 Loops")
@@ -33,8 +33,8 @@ elif page == "System Health":
     # TODO: Check background jobs and render system metrics
 
 elif page == "Chat":
-    from ui.panels import chat_panel
-    chat_panel.render()
+    from src.ui.chat import render_chat
+    render_chat()
 
 st.markdown("---")
 st.caption("Ora – GPT-powered local assistant system")

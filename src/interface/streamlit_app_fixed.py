@@ -1,7 +1,8 @@
 import streamlit as st
 import logging
 
-from ui.panels import chat_panel, inbox_panel
+from src.ui.inbox import render_inbox
+from src.ui.chat import render_chat
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ page = st.sidebar.radio("Go to", ["Inbox", "Loops", "Logs", "Reports", "System H
 # Page logic
 if page == "Inbox":
     logger.info("Rendering Inbox panel.")
-    inbox_panel.render()
+    render_inbox()
 
 elif page == "Loops":
     logger.info("Rendering Loops panel.")
@@ -44,7 +45,7 @@ elif page == "System Health":
 
 elif page == "Chat":
     logger.info("Rendering Chat panel.")
-    chat_panel.render()
+    render_chat()
 
 st.markdown("---")
 st.caption("Ora – GPT-powered local assistant system")

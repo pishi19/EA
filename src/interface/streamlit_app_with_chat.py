@@ -1,6 +1,7 @@
 import streamlit as st
 
-from ui.panels import chat_panel, inbox_panel
+from src.ui.inbox import render_inbox
+from src.ui.chat import render_chat
 
 st.set_page_config(page_title="Ora Assistant", layout="wide")
 
@@ -10,7 +11,7 @@ page = st.sidebar.radio("Go to", ["Inbox", "Loops", "Logs", "Reports", "System H
 
 # Page logic
 if page == "Inbox":
-    inbox_panel.render()
+    render_inbox()
 
 elif page == "Loops":
     st.title("🔁 Loops")
@@ -33,7 +34,7 @@ elif page == "System Health":
     # TODO: Check background jobs and render system metrics
 
 elif page == "Chat":
-    chat_panel.render()
+    render_chat()
 
 st.markdown("---")
 st.caption("Ora – GPT-powered local assistant system")
