@@ -1,15 +1,18 @@
 import streamlit as st
-st.set_page_config(page_title="Ora Assistant", layout="wide")
 
-from ui.slice import render_slice_view
-from ui.vault import render_vault_overview
+# from ui.panels import inbox_panel  # Removed: ui.panels does not exist
+
+# ✅ Must be the very first Streamlit call
+st.set_page_config(page_title="Ora Assistant", layout="wide")
 
 # Sidebar setup
 st.sidebar.title("Ora Navigation")
-page = st.sidebar.radio("Go to", ["Inbox", "Loops", "Loop Slice", "Logs", "Reports", "System Health", "Chat", "📂 Vault Overview"])
+page = st.sidebar.radio("Go to", ["Inbox", "Loops", "Logs", "Reports", "System Health", "Chat"])
 
 # Page logic with safe delayed imports
 if page == "Inbox":
+    # from ui.panels import inbox_panel
+    # inbox_panel.render()
     from ui.inbox import render_inbox
     render_inbox()
 
@@ -17,9 +20,6 @@ elif page == "Loops":
     st.title("🔁 Loops")
     st.write("Manage and reflect on loop memory entries.")
     # TODO: Load loop memory from SQLite or markdown
-
-elif page == "Loop Slice":
-    render_slice_view()
 
 elif page == "Logs":
     st.title("📄 Logs")
@@ -37,11 +37,10 @@ elif page == "System Health":
     # TODO: Check background jobs and render system metrics
 
 elif page == "Chat":
+    # from ui.panels import chat_panel
+    # chat_panel.render()
     from ui.chat import render_chat
     render_chat()
-
-elif page == "📂 Vault Overview":
-    render_vault_overview()
 
 st.markdown("---")
 st.caption("Ora - GPT-powered local assistant system")
