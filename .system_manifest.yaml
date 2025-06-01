@@ -1,0 +1,27 @@
+- path: src/interface/streamlit_app.py
+  created_by: restore
+  confirmed: true
+  location: local
+  hash: f9e72c02474f039a7d1bac1cf5e34cc44194ab27
+  summary: Streamlit UI entrypoint with sidebar navigation (Inbox, Roadmap, Vault)
+
+- path: src/ui/inbox.py
+  created_by: restore
+  confirmed: true
+  location: local
+  hash: 64399271e7432ce0c14a4869c7d3194606ea0e61
+  summary: GPT inbox UI module, fully rendering and validated
+
+- path: src/ui/slice.py
+  created_by: fix
+  confirmed: true
+  location: local
+  hash: 229efb6b11947f5f14f7a4f356f78cb0db9dcc95
+  summary: Fixed PYTHONPATH import errors and restored loop slice view
+
+- path: src/interface/deprecated_entrypoints/
+  created_by: quarantine
+  confirmed: true
+  location: local
+  hash: null
+  summary: Archived non-functional entrypoints to resolve pre-commit errors 
