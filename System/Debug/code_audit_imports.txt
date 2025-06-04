@@ -1,0 +1,14 @@
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/apply_logic_patch.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/chat_with_gpt.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/classify_loop_gpt.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/classify_loop_gpt_openai_v1.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/generate_logic_patch.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/load_loops_for_prompt.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/openai_test.py
+src/ea_assistant.egg-info/SOURCES.txt:src/gpt_supervised/test_chat_with_loop_memory.py
+src/ea_assistant.egg-info/top_level.txt:gpt_supervised
+src/organize_files.py:    'gpt_supervised': [
+src/organize_files.py:        'openai_test.py',
+System/Roadmap/Ora/ora_ui_recovery_plan.md:- Import audit (e.g. `gpt_supervised`, broken modules)
+System/Meta/EA_Path_Refactor_Checklist.md:- [ ] src/gpt_supervised/apply_logic_patch.py
+System/Meta/EA_Path_Refactor_Checklist.md:- [ ] src/gpt_supervised/load_loops_for_prompt.py

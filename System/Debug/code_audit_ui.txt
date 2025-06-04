@@ -1,0 +1,44 @@
+src/cursor_dashboard.py:    st.session_state["page_title"] = "Cursor Dashboard"
+src/cursor_dashboard.py:    st.session_state["page_icon"] = "🤖"
+src/cursor_dashboard.py:    st.session_state["layout"] = "wide"
+src/cursor_dashboard.py:    if 'page' not in st.session_state:
+src/cursor_dashboard.py:        st.session_state['page'] = '📍 Roadmap'
+src/cursor_dashboard.py:    page = st.sidebar.radio("Go to", ["📥 Inbox", "📊 Dashboard", "🧠 Ora Chat", "📍 Roadmap", "📘 Reflections", "📊 Reflection Insights"], index=["📥 Inbox", "📊 Dashboard", "🧠 Ora Chat", "📍 Roadmap", "📘 Reflections", "📊 Reflection Insights"].index(st.session_state['page']) if 'page' in st.session_state else 0)
+src/cursor_dashboard.py:    st.session_state['page'] = page
+src/cursor_dashboard.py:    if 'roadmap_errors' not in st.session_state:
+src/cursor_dashboard.py:        st.session_state['roadmap_errors'] = []
+src/cursor_dashboard.py:        st.session_state['roadmap_errors'].append(msg)
+src/cursor_dashboard.py:    if st.session_state['roadmap_errors']:
+src/cursor_dashboard.py:            for err in st.session_state['roadmap_errors']:
+src/cursor_dashboard.py:                if prompt_key not in st.session_state:
+src/cursor_dashboard.py:                    st.session_state[prompt_key] = ''
+src/cursor_dashboard.py:                if executed_key not in st.session_state:
+src/cursor_dashboard.py:                    st.session_state[executed_key] = executed
+src/cursor_dashboard.py:                        mark_disabled = st.session_state[executed_key] == 'yes'
+src/cursor_dashboard.py:                        if st.button("✔️ Mark Executed", key=f"mark_{id_val}", disabled=mark_disabled):
+src/cursor_dashboard.py:                            st.session_state[executed_key] = 'yes'
+src/cursor_dashboard.py:                        if st.button("🧠 Generate Prompt", key=f"promptbtn_{id_val}"):
+src/cursor_dashboard.py:                            st.session_state[prompt_key] = f"Prompt for {feature_title} (ID: {id_val})\n\n{instructions}"
+src/cursor_dashboard.py:                        if st.session_state[prompt_key]:
+src/cursor_dashboard.py:                            st.code(st.session_state[prompt_key], language='markdown')
+src/cursor_dashboard.py:                        if st.button("📝 View Reflection", key=f"viewrefl_{id_val}"):
+src/cursor_dashboard.py:        if "messages" not in st.session_state:
+src/cursor_dashboard.py:            st.session_state.messages = []
+src/cursor_dashboard.py:            st.session_state.messages.append(
+src/cursor_dashboard.py:            st.session_state.messages.append({"role": "user", "content": user_input})
+src/cursor_dashboard.py:                        messages=st.session_state.messages,
+src/cursor_dashboard.py:                    st.session_state.messages.append(
+src/cursor_dashboard.py:                    st.session_state.messages.append(
+src/cursor_dashboard.py:        for message in st.session_state.messages:
+src/cursor_dashboard.py:                tags_val = st.session_state.get(tag_state_key, "")
+src/cursor_dashboard.py:                        tag_clicked = st.button(f"🏷️ Tag with GPT", key=tag_button_key, disabled=tag_disabled, help=tag_help)
+src/cursor_dashboard.py:                                    tag_input = st.session_state.get(summary_state_key, body)
+src/cursor_dashboard.py:                                    st.session_state[tag_state_key] = tags
+src/cursor_dashboard.py:                        tags_val = st.session_state.get(tag_state_key, "")
+src/cursor_dashboard.py:                        suggest_clicked = st.button("🧠 Suggest Roadmap Item", key=suggest_key, disabled=suggest_disabled, help=suggest_help)
+src/cursor_dashboard.py:                                    st.session_state[suggested_block_key] = gpt_response
+src/cursor_dashboard.py:                        suggested_block = st.session_state.get(suggested_block_key, "")
+src/cursor_dashboard.py:                        st.button("📥 Add to Roadmap", key=add_key, disabled=add_disabled, help=add_help, on_click=(lambda: add_to_roadmap(suggested_block_key)) if not add_disabled else None)
+src/cursor_dashboard.py:                        if summary_state_key in st.session_state:
+src/cursor_dashboard.py:                            st.markdown(f"**Summary:**\n\n{st.session_state[summary_state_key]}")
+src/cursor_dashboard.py:            f.write("\n\n" + st.session_state[suggested_block_key].strip() + "\n")

@@ -1,0 +1,294 @@
+src/run_messageid_to_threadid_test.py:TOKEN_PATH = '/Users/air/ea_assistant/token.json'
+src/run_messageid_to_threadid_test.py:SIGNAL_TASKS_PATH = '/Users/air/AIR01/0001 HQ/Signal_Tasks.md'
+src/run_messageid_to_threadid_test.py:ARCHIVE_SCRIPT_PATH = '/Users/air/ea_assistant/archive_checked_emails.py'
+src/run_messageid_to_threadid_test.py:LOG_PATH = '/Users/air/AIR01/System/Logs/email-archive-log.md'
+src/quote_tags_patch.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md": [
+src/quote_tags_patch.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md": [
+src/quote_tags_patch.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md": [
+src/quote_tags_patch.py:LOG_PATH = "/Users/air/AIR01/System/Logs/quote_tags_patch_log.md"
+src/quote_tags_patch.py:        content = Path(file_path).read_text(encoding="utf-8")
+src/interface/generate_loop_dashboard.py:DASHBOARD_PATH = "/Users/air/AIR01/System/Dashboards"
+src/interface/generate_loop_dashboard.py:DB_PATH = "/Users/air/AIR01/System/data/loops.db"
+src/interface/generate_loop_dashboard.py:    for file in Path("/Users/air/AIR01/Retrospectives").glob("loop-*.md"):
+src/interface/generate_loop_impact_dashboard.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/interface/generate_loop_impact_dashboard.py:WEEKLY_PATH = Path("/Users/air/AIR01/0001-HQ/Weekly Assistant")
+src/interface/generate_loop_impact_dashboard.py:DASHBOARD_PATH = Path("/Users/air/AIR01/0001-HQ/Dashboards/loop_impact_dashboard.md")
+src/interface/generate_loop_impact_dashboard.py:FEEDBACK_LOG = Path("/Users/air/AIR01/System/Logs/feedback_trace_log.md")
+src/interface/generate_loop_impact_dashboard.py:        text = file.read_text(encoding="utf-8")
+src/interface/generate_loop_impact_dashboard.py:        for line in FEEDBACK_LOG.read_text(encoding="utf-8").splitlines():
+src/interface/loop_audit_dashboard.py:DASHBOARD_PATH = Path("/Users/air/AIR01/0001-HQ/Dashboards/loop_audit_dashboard.md")
+src/interface/generate_cursor_dashboard.py:log_path = Path("/Users/air/AIR01/System/Logs/system-log.md")
+src/interface/generate_cursor_dashboard.py:loop_dir = Path("/Users/air/AIR01/Retrospectives")
+src/interface/generate_cursor_dashboard.py:dashboard_path = Path("/Users/air/AIR01/System/Dashboards/cursor_environment.md")
+src/tasks/weight_loops.py:PROJECTS_PATH = "/Users/air/AIR01/02 Workstreams/Projects"
+src/tasks/weight_loops.py:PROGRAMS_PATH = "/Users/air/AIR01/02 Workstreams/Programs"
+src/tasks/weight_loops.py:LOOP_PATH = "/Users/air/AIR01/Retrospectives"
+src/tasks/weight_loops.py:LOG_PATH = "/Users/air/AIR01/System/Logs/loop_weights_log.md"
+src/tasks/weight_loops.py:    log_file = "/Users/air/AIR01/System/Logs/feedback_trace_log.md"
+src/tasks/promote_loop.py:RETRO_DIR = Path("/Users/air/AIR01/Retrospectives")
+src/tasks/promote_loop.py:PROJECT_DIR = Path("/Users/air/AIR01/02 Projects/Promoted")
+src/tasks/promote_loop.py:LOG_PATH = Path("/Users/air/AIR01/System/Logs/loop_promotions.md")
+src/tasks/promote_loop.py:    return loop_file.read_text(), loop_file
+src/tasks/promote_loop.py:    lines = loop_file_path.read_text().splitlines()
+src/tasks/cleanup_archived_tasks.py:TASKS_PATH = "/Users/air/AIR01/0001 HQ/Signal_Tasks.md"
+src/tasks/cleanup_archived_tasks.py:ARCHIVE_LOG_PATH = "/Users/air/AIR01/System/Logs/email-archive-log.md"
+src/tasks/cleanup_archived_tasks.py:CLEANUP_LOG_PATH = "/Users/air/AIR01/System/Logs/signal-task-cleanup.md"
+src/tasks/task_signal_router.py:SIGNAL_TASKS_PATH = "/Users/air/AIR01/0001 HQ/Signal_Tasks.md"
+src/tasks/promote_loops.py:LOOP_PATH = "/Users/air/AIR01/Retrospectives"
+src/tasks/promote_loops.py:PROJECT_PATH = "/Users/air/AIR01/02 Workstreams/Projects"
+src/tasks/promote_loops.py:LOG_PATH = "/Users/air/AIR01/System/Logs/loop_promotions.md"
+src/tasks/promote_loops.py:DB_PATH = "/Users/air/AIR01/System/data/loops.db"
+src/tasks/promote_loops.py:    post["linked_project"] = str(project_path.relative_to(Path("/Users/air/AIR01")))
+src/tasks/promote_loops.py:        content = file_path.read_text()
+src/tasks/route_tasks_to_programs_and_projects.py:SIGNAL_TASKS_PATH = "/Users/air/AIR01/0001-HQ/Signal_Tasks.md"
+src/tasks/route_tasks_to_programs_and_projects.py:PROGRAM_LOG_PATH = "/Users/air/AIR01/System/Logs/program_trace_log.md"
+src/tasks/route_tasks_to_programs_and_projects.py:PROJECT_LOG_PATH = "/Users/air/AIR01/System/Logs/project_trace_log.md"
+src/tasks/route_tasks_to_programs_and_projects.py:LOOP_LOG_PATH = "/Users/air/AIR01/System/Logs/task_trace_log.md"
+src/tasks/route_tasks_to_programs_and_projects.py:                loop_path = f"/Users/air/AIR01/Retrospectives/{loop_id}.md"
+src/tasks/feedback_trace_router.py:TASKS_PATH = "/Users/air/AIR01/0001-HQ/Signal_Tasks.md"
+src/tasks/feedback_trace_router.py:LOG_PATH = "/Users/air/AIR01/System/Logs/feedback_routed_log.md"
+src/ingestion/run_gmail_archival_test.py:SIGNAL_TASKS_PATH = "/Users/air/AIR01/0001 HQ/Signal_Tasks.md"
+src/ingestion/run_gmail_archival_test.py:ARCHIVE_SCRIPT_PATH = "/Users/air/ea_assistant/archive_checked_emails.py"
+src/ingestion/run_gmail_archival_test.py:LOG_PATH = "/Users/air/AIR01/System/Logs/email-archive-log.md"
+src/ingestion/verify_gmail_sync.py:TOKEN_PATH = '/Users/air/ea_assistant/token.json'
+src/ingestion/verify_gmail_sync.py:SIGNAL_TASKS_PATH = '/Users/air/AIR01/0001 HQ/Signal_Tasks.md'
+src/ingestion/verify_gmail_sync.py:SYNC_LOG_PATH = f'/Users/air/AIR01/System/Logs/gmail-sync-{datetime.now().strftime("%Y-%m-%d")}.md'
+src/ingestion/classify_email_tasks_to_loop.py:signal_tasks_path = Path("/Users/air/AIR01/0001 HQ/Signal_Tasks.md")
+src/ingestion/classify_email_tasks_to_loop.py:retrospective_path = Path("/Users/air/AIR01/Retrospectives")
+src/ingestion/classify_email_tasks_to_loop.py:    lines = file_path.read_text().splitlines()
+src/ingestion/classify_structured_email_tasks_with_reasoning_and_context.py:signal_tasks_path = Path("/Users/air/AIR01/0001 HQ/Signal_Tasks.md")
+src/ingestion/classify_structured_email_tasks_with_reasoning_and_context.py:retrospective_path = Path("/Users/air/AIR01/Retrospectives")
+src/ingestion/classify_structured_email_tasks_with_reasoning_and_context.py:        content = signal_tasks_path.read_text()
+src/ingestion/gmail_ingest_patch.py:            "/Users/air/ea_assistant/task_signal_router.py",
+src/ingestion/archive_checked_emails.py:TOKEN_PATH = '/Users/air/ea_assistant/token.json'
+src/ingestion/archive_checked_emails.py:CREDENTIALS_PATH = '/Users/air/ea_assistant/credentials_gmail.json'
+src/ingestion/archive_checked_emails.py:VAULT_LOG_PATH = '/Users/air/AIR01/System/Logs/email-archive-log.md'
+src/ingestion/archive_checked_emails.py:SIGNAL_TASKS_PATH = '/Users/air/AIR01/0001 HQ/Signal_Tasks.md'
+src/ingestion/classify_structured_email_tasks.py:SIGNAL_FILE = Path("/Users/air/AIR01/0001-HQ/Signal_Tasks.md")
+src/ingestion/classify_structured_email_tasks.py:RETRO_DIR = Path("/Users/air/AIR01/Retrospectives")
+src/ingestion/classify_structured_email_tasks.py:    trace_path = Path("/Users/air/AIR01/System/Logs/task_trace_log.md")
+src/ingestion/classify_structured_email_tasks.py:    lines = SIGNAL_FILE.read_text().splitlines()
+src/ingestion/classify_structured_email_tasks.py:                    loop_file.write_text(loop_file.read_text().strip() + related_task_block)
+src/ingestion/classify_structured_email_tasks.py:                    trace_path = Path("/Users/air/AIR01/System/Logs/task_trace_log.md")
+src/ingestion/classify_structured_email_tasks_with_reasoning.py:signal_tasks_path = Path("/Users/air/AIR01/0001 HQ/Signal_Tasks.md")
+src/ingestion/classify_structured_email_tasks_with_reasoning.py:retrospective_path = Path("/Users/air/AIR01/Retrospectives")
+src/ingestion/classify_structured_email_tasks_with_reasoning.py:        content = signal_tasks_path.read_text()
+src/ingestion/gmail_ingest_fixed.py:TOKEN_PATH = "/Users/air/ea_assistant/credentials/token_gmail.pkl"
+src/ingestion/gmail_ingest_fixed.py:SIGNAL_ROUTER = "/Users/air/ea_assistant/task_signal_router.py"
+src/ingestion/gmail_ingest_fixed.py:EMAIL_LOG_PATH = "/Users/air/AIR01/System/Inbox/EmailLog.md"
+src/tools/prompt_builder.py:ROADMAP_MD = PROJECT_ROOT / "System/Reference/ea_roadmap.md"
+src/tools/prompt_builder.py:content = ROADMAP_MD.read_text(encoding="utf-8")
+src/patch_weekly_summaries.py:WEEKLY_DIR = Path("/Users/air/AIR01/0001-HQ/Weekly Assistant")
+src/patch_weekly_summaries.py:        content = summary_file.read_text(encoding="utf-8")
+src/path_config.py:VAULT_ROOT = Path("/Users/air/AIR01/EA/ea_cursor_system_coupled")
+src/memory/vector_memory.py:    Path("/Users/air/AIR01/Retrospectives"),
+src/memory/vector_memory.py:    Path("/Users/air/AIR01/System"),
+src/memory/vector_memory.py:    Path("/Users/air/AIR01/0001 HQ")
+src/memory/vector_memory.py:INDEX_PATH = Path("/Users/air/ea_assistant/vector_index/faiss_index.idx")
+src/memory/vector_memory.py:META_PATH = Path("/Users/air/ea_assistant/vector_index/chunk_metadata.pkl")
+src/memory/vector_memory.py:    for line in file_path.read_text(errors="ignore").splitlines():
+src/memory/loop_memory_reader.py:DB_PATH = Path("/Users/air/ea_assistant/mcp_memory.db")
+src/memory/loop_memory_reader_status.py:DB_PATH = Path("/Users/air/ea_assistant/mcp_memory.db")
+src/memory/update_qdrant_embeddings.py:TRACK_FILE = "/Users/air/ea_assistant/.last_embed_sync"
+src/memory/update_qdrant_embeddings.py:    timestamp = Path(TRACK_FILE).read_text().strip()
+src/memory/update_qdrant_embeddings.py:    files = list(Path("/Users/air/AIR01/02 Workstreams/Programs").glob("*.md")) +             list(Path("/Users/air/AIR01/02 Workstreams/Projects").glob("*.md"))
+src/memory/update_qdrant_embeddings.py:            content = file.read_text()
+src/memory/embed_workstream_files.py:        text = file.read_text(encoding="utf-8")
+src/memory/embed_workstream_files.py:    process_directory("/Users/air/AIR01/02 Workstreams/Programs", "program")
+src/memory/embed_workstream_files.py:    process_directory("/Users/air/AIR01/02 Workstreams/Projects", "project")
+src/audit_orphans.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/audit_orphans.py:DAILY_PATH = Path("/Users/air/AIR01/0001-HQ/Daily Assistant")
+src/audit_orphans.py:WEEKLY_PATH = Path("/Users/air/AIR01/0001-HQ/Weekly Assistant")
+src/audit_orphans.py:TASKS_FILE = Path("/Users/air/AIR01/0001-HQ/Signal_Tasks.md")
+src/audit_orphans.py:            content = f.read_text(encoding="utf-8")
+src/find_real_signal_tasks.py:def find_files_with_thread_id(root_dir="/Users/air", filename="Signal_Tasks.md", keyword="threadId:"):
+Binary file src/vector_index/chunk_metadata.pkl matches
+src/clean_quoted_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md": [
+src/clean_quoted_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md": [
+src/clean_quoted_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md": [
+src/clean_quoted_tags.py:LOG_PATH = "/Users/air/AIR01/System/Logs/final_tag_cleanup_log.md"
+src/clean_quoted_tags.py:        content = Path(file_path).read_text(encoding="utf-8").splitlines()
+src/graph/build_dependency_graph.py:# /Users/air/ea_assistant/query_dependency_graph.py
+src/graph/build_dependency_graph.py:VAULT_PATH = Path("/Users/air/AIR01")
+src/graph/summarize_dependency_graph.py:DASHBOARD_MD = Path("/Users/air/AIR01/System/Dashboards/dependency_graph.md")
+src/tests/test_project_goals_output.py:OUTPUT_PATH = Path("/Users/air/AIR01/System/Data/project_goals.json")
+src/tests/test_task_trace_logging.py:RETRO_DIR = Path("/Users/air/AIR01/Retrospectives")
+src/tests/test_task_trace_logging.py:trace_path = Path("/Users/air/AIR01/System/Logs/task_trace_log.md")
+src/tests/test_task_trace_logging.py:    loop_file.write_text(loop_file.read_text().strip() + block)
+src/tests/test_loop_weights.py:db_path = "/Users/air/ea_assistant/loop_memory.db"
+src/auth_gmail_token.py:CREDS_PATH = "/Users/air/ea_assistant/credentials_gmail.json"
+src/auth_gmail_token.py:TOKEN_PATH = "/Users/air/ea_assistant/credentials/token_gmail.pkl"
+src/utils/generate_token.py:                '/Users/air/ea_assistant/credentials_gmail.json', SCOPES)
+src/utils/vision_context_loader.py:    Path("/Users/air/AIR01/System/Ora/Ora-System.md"),
+src/utils/vision_context_loader.py:    Path("/Users/air/AIR01/System/Reference/EA-Vision.md")
+src/utils/watch_and_log.py:WATCH_DIR = "/Users/air/ea_assistant"
+src/utils/watch_and_log.py:LOG_FILE = "/Users/air/AIR01/System/Logs/system-log.md"
+src/utils/watch_and_log.py:    relative_path = filepath.replace("/Users/air/", "")
+src/utils/rotate_system_log.py:LOG_FILE = Path("/Users/air/AIR01/System/Logs/system-log.md")
+src/utils/rotate_system_log.py:ARCHIVE_FILE = Path("/Users/air/AIR01/System/Logs/system-log-archive.md")
+src/utils/rotate_system_log.py:    for line in LOG_FILE.read_text().splitlines():
+src/utils/email.py:        self.failed_emails_dir = Path("/Users/air/AIR01/System/Logs/failed_emails")
+src/utils/fswatch_log_handler.py:LOG_FILE = "/Users/air/AIR01/System/Logs/system-log.md"
+src/utils/fswatch_log_handler.py:    relative_path = file_path.replace("/Users/air/", "")
+src/daily/log_daily_summary.py:VAULT_PATH = "/Users/air/AIR01"
+src/daily/log_daily_summary.py:LOG_PATH = Path("/Users/air/Library/Logs/ora/daily_refresh.log")
+src/daily/log_daily_summary.py:    lines = ADMIN_PATH.read_text(encoding="utf-8").splitlines()
+src/daily/generate_assistant_daily_note.py:VAULT_PATH = "/Users/air/AIR01"
+src/daily/daily_refresh.py:LOG_PATH = "/Users/air/Library/Logs/ora/daily_refresh.log"
+src/daily/daily_refresh.py:    ("Update Weights", "python3 /Users/air/ea_assistant/weight_loops.py"),
+src/daily/daily_refresh.py:    ("Generate Dashboard", "python3 /Users/air/ea_assistant/generate_loop_dashboard.py"),
+src/daily/daily_refresh.py:    ("Promote Loops", "python3 /Users/air/ea_assistant/promote_loops.py"),
+src/daily/daily_refresh.py:    ("Route Feedback", "python3 /Users/air/ea_assistant/feedback_trace_router.py"),
+src/daily/daily_refresh.py:    ("Log Summary to Obsidian", "python3 /Users/air/ea_assistant/log_daily_summary.py")
+src/feedback/process_feedback_tags.py:TASKS_PATH = "/Users/air/AIR01/0001-HQ/Signal_Tasks.md"
+src/feedback/process_feedback_tags.py:LOG_PATH = "/Users/air/AIR01/System/Logs/feedback_trace_log.md"
+src/feedback/feedback.py:DB_PATH = "/Users/air/ea_assistant/db/loop_feedback.db"
+src/feedback/feedback_patched.py:DB_PATH = "/Users/air/ea_assistant/db/loop_feedback.db"
+src/feedback/feedback_patched.py:UPDATE_SCRIPT_PATH = "/Users/air/ea_assistant/update_loop_file.py"
+src/feedback/generate_feedback_report.py:LOG_PATH = "/Users/air/AIR01/System/Logs/email-feedback-log.md"
+src/feedback/generate_feedback_report.py:REPORT_ROOT = "/Users/air/AIR01/Reports/Feedback"
+src/feedback/log_feedback_tags.py:SIGNAL_TASKS_PATH = "/Users/air/AIR01/0001 HQ/Signal_Tasks.md"
+src/feedback/log_feedback_tags.py:FEEDBACK_LOG_PATH = "/Users/air/AIR01/System/Logs/email-feedback-log.md"
+src/insert_loop_to_sqlite.py:DB_PATH = Path("/Users/air/ea_assistant/mcp_memory.db")
+src/insert_loop_to_sqlite.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/insert_loop_to_sqlite.py:    content = file_path.read_text()
+src/cursor_dashboard.py:                            roadmap_path = Path(__file__).parent.parent / "System/Reference/ea_roadmap.md"
+src/cursor_dashboard.py:                            content = roadmap_path.read_text()
+src/cursor_dashboard.py:                            roadmap_path.write_text(new_content)
+src/cursor_dashboard.py:                                content = retro_file.read_text(encoding="utf-8")
+src/cursor_dashboard.py:        log_path = "/Users/air/AIR01/System/Inbox/EmailLog.md"
+src/cursor_dashboard.py:                content = retro_file.read_text(encoding="utf-8")
+src/cursor_dashboard.py:        roadmap_path = Path(__file__).parent.parent / "System/Reference/ea_roadmap.md"
+src/cursor_dashboard.py:        if roadmap_path.exists():
+src/cursor_dashboard.py:            content = roadmap_path.read_text()
+src/cursor_dashboard.py:                content = retro_file.read_text(encoding="utf-8")
+src/cursor_dashboard.py:                content = retro_file.read_text(encoding="utf-8")
+src/cursor_dashboard.py:    roadmap_path = Path(__file__).parent.parent / "System/Reference/ea_roadmap.md"
+src/cursor_dashboard.py:        with open(roadmap_path, "a", encoding="utf-8") as f:
+src/cursor_dashboard.py:        st.toast("✅ Roadmap block added to ea_roadmap.md!", icon="✅")
+src/cursor_dashboard.py:    roadmap_path = Path(__file__).parent.parent / "System/Reference/ea_roadmap.md"
+src/cursor_dashboard.py:    if roadmap_path.exists():
+src/cursor_dashboard.py:        content = roadmap_path.read_text()
+src/update_insight_panel.py:    panel_dir = Path("/Users/air/AIR01/0001-HQ/Insights")
+src/generate_weekly_summary.py:DAILY_DIR = Path("/Users/air/AIR01/0001-HQ/Daily Assistant")
+src/generate_weekly_summary.py:WEEKLY_DIR = Path("/Users/air/AIR01/0001-HQ/Weekly Assistant")
+src/generate_weekly_summary.py:                content = f.read_text(encoding="utf-8")
+src/yaml/fix_final_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md",
+src/yaml/fix_final_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md",
+src/yaml/fix_final_tags.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/fix_final_tags.py:LOG_PATH = "/Users/air/AIR01/System/Logs/final_tag_fix_log.md"
+src/yaml/fix_tags_in_retrospectives.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md",
+src/yaml/fix_tags_in_retrospectives.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md",
+src/yaml/fix_tags_in_retrospectives.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/fix_tags_in_retrospectives.py:LOG_PATH = "/Users/air/AIR01/System/Logs/yaml_tag_autofix_log.md"
+src/yaml/fix_created_at_field.py:FILE = "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/fix_created_at_field.py:LOG = "/Users/air/AIR01/System/Logs/yaml_created_at_fix_log.md"
+src/yaml/find_yaml_errors.py:    "/Users/air/AIR01/02 Workstreams/Programs",
+src/yaml/find_yaml_errors.py:    "/Users/air/AIR01/02 Workstreams/Projects",
+src/yaml/find_yaml_errors.py:    "/Users/air/AIR01/Retrospectives",
+src/yaml/fix_email_yaml.py:FILE_PATH = "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/fix_email_yaml.py:LOG_PATH = "/Users/air/AIR01/System/Logs/yaml_email_hardfix_log.md"
+src/yaml/dump_raw_yaml_blocks.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md",
+src/yaml/dump_raw_yaml_blocks.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md",
+src/yaml/dump_raw_yaml_blocks.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/force_yaml_overwrite.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md": """---
+src/yaml/force_yaml_overwrite.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md": """---
+src/yaml/force_yaml_overwrite.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md": """---
+src/yaml/force_yaml_overwrite.py:LOG_PATH = "/Users/air/AIR01/System/Logs/raw_yaml_repair_log.md"
+src/yaml/force_yaml_overwrite.py:        content = Path(file_path).read_text(encoding="utf-8")
+src/yaml/fix_loop_file_1.py:FILE_PATH = "/Users/air/AIR01/Retrospectives/loop-2025-05-21-**summary:**-trial-users-are-e.md"
+src/yaml/fix_loop_file_1.py:FIXED_PATH = "/Users/air/AIR01/Retrospectives/loop-2025-05-21-summary-trial-users-are-e.md"
+src/yaml/autofix_yaml_retrospectives.py:RETRO_PATH = "/Users/air/AIR01/Retrospectives"
+src/yaml/autofix_yaml_retrospectives.py:LOG_PATH = "/Users/air/AIR01/System/Logs/yaml_autofix_log.md"
+src/yaml/extract_yaml_debug.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-**summary:**-trial-users-are-e.md",
+src/yaml/extract_yaml_debug.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md",
+src/yaml/extract_yaml_debug.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md",
+src/yaml/extract_yaml_debug.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/fix_source_fields.py:RETRO_PATH = "/Users/air/AIR01/Retrospectives"
+src/yaml/fix_source_fields.py:LOG_PATH = "/Users/air/AIR01/System/Logs/yaml_source_autofix_log.md"
+src/yaml/normalize_yaml_metadata.py:    "/Users/air/AIR01/02 Workstreams/Programs",
+src/yaml/normalize_yaml_metadata.py:    "/Users/air/AIR01/02 Workstreams/Projects"
+src/yaml/dump_yaml_lines.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-assistant.md",
+src/yaml/dump_yaml_lines.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-21-assistant.md",
+src/yaml/dump_yaml_lines.py:    "/Users/air/AIR01/Retrospectives/loop-2025-05-20-email.md"
+src/yaml/audit_yaml.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/yaml/audit_yaml.py:REPORT = Path("/Users/air/AIR01/System/Dashboards/loop_audit_dashboard.md")
+src/loops/generate_loop_from_email_step1.py:STARRED_LOG_PATH = "/Users/air/AIR01/System/Logs/email-starred-log.md"
+src/loops/generate_loop_from_email_step1.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/loops/write_loop_file.py:    path = Path("/Users/air/AIR01/Retrospectives") / filename
+src/loops/update_loop_file.py:LOOP_DIR = "/Users/air/AIR01/Retrospectives/loops"
+src/loops/loop_summary_patch.py:loop_dir = Path("/Users/air/AIR01/Retrospectives")
+src/loops/loop_summary_patch.py:dashboard_path = Path("/Users/air/AIR01/System/Dashboards/cursor_environment.md")
+src/loops/generate_loop_from_email_step2.py:STARRED_LOG_PATH = "/Users/air/AIR01/System/Logs/email-starred-log.md"
+src/loops/generate_loop_from_email_step2.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/loops/validate_loop.py:DB_PATH = "/Users/air/ea_assistant/loop_memory.db"
+src/loops/validate_loop.py:LOG_PATH = Path("/Users/air/AIR01/System/Logs/loop_feedback_log.md")
+src/loops/validate_loop.py:RETRO_DIR = Path("/Users/air/AIR01/Retrospectives")
+src/loops/validate_loop.py:    lines = loop_file.read_text().splitlines()
+src/loops/generate_loop_status.py:DB_PATH = "/Users/air/ea_assistant/db/loop_feedback.db"
+src/loops/generate_loop_status.py:LOOP_DIR = "/Users/air/AIR01/Retrospectives/loops"
+src/loops/generate_loop_status.py:OUTPUT_FILE = "/Users/air/AIR01/System/Dashboards/loop-status.md"
+src/loops/generate_loop_from_email.py:STARRED_LOG_PATH = "/Users/air/AIR01/System/Logs/email-starred-log.md"
+src/loops/generate_loop_from_email.py:RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
+src/loops/query_loops.py:DB_PATH = "/Users/air/ea_assistant/loop_memory.db"
+src/loops/query_loops.py:LOG_PATH = Path("/Users/air/AIR01/0001-HQ/Insights/loop_queries.md")
+src/gpt_supervised/apply_logic_patch.py:PATCH_DIR = "/Users/air/AIR01/System/GPT_Patches/"
+src/gpt_supervised/apply_logic_patch.py:CONFIG_PATH = "/Users/air/ea_assistant/config.py"
+src/gpt_supervised/load_loops_for_prompt.py:DB_PATH = os.getenv("LOOP_DB_PATH", "/Users/air/ea_assistant/mcp_memory/loop_memory.db")
+src/gpt_supervised/classify_loop_gpt_openai_v1.py:    file_path = Path("/Users/air/AIR01/Retrospectives") / sys.argv[1]
+src/gpt_supervised/classify_loop_gpt_openai_v1.py:    text = file_path.read_text()
+src/gpt_supervised/classify_loop_gpt.py:    file_path = Path("/Users/air/AIR01/Retrospectives") / sys.argv[1]
+src/gpt_supervised/classify_loop_gpt.py:    text = file_path.read_text()
+src/gpt_supervised/generate_logic_patch.py:FEEDBACK_SUMMARY_PATH = "/Users/air/AIR01/System/Logs/feedback-summary.md"
+src/gpt_supervised/generate_logic_patch.py:PATCH_OUTPUT_DIR = "/Users/air/AIR01/System/GPT_Patches/"
+src/extract_project_goals.py:VAULT_PATH = Path("/Users/air/AIR01")
+src/insert_to_sqlite.py:DB_PATH = "/Users/air/ea_assistant/loop_memory.db"
+src/generate_logic_patch.py:FEEDBACK_SUMMARY_PATH = "/Users/air/AIR01/System/Logs/feedback-summary.md"
+src/generate_logic_patch.py:PATCH_OUTPUT_DIR = "/Users/air/AIR01/System/GPT_Patches/"
+src/run_rfc822msgid_to_archive.py:TOKEN_PATH = '/Users/air/ea_assistant/token.json'
+src/run_rfc822msgid_to_archive.py:SIGNAL_TASKS_PATH = '/Users/air/AIR01/0001 HQ/Signal_Tasks.md'
+src/run_rfc822msgid_to_archive.py:ARCHIVE_SCRIPT_PATH = '/Users/air/ea_assistant/archive_checked_emails.py'
+src/run_rfc822msgid_to_archive.py:LOG_PATH = '/Users/air/AIR01/System/Logs/email-archive-log.md'
+src/check_token_scopes.py:TOKEN_PATH = "/Users/air/ea_assistant/credentials/token_gmail.pkl"
+src/mcp_server/interface/extract_loops_from_note.py:retros_dir = Path("/Users/air/AIR01/Retrospectives/")
+src/mcp_server/interface/extract_loops_from_note.py:json_path = Path("/Users/air/ea_assistant/mcp_server/loops/loop_memory.json")
+src/mcp_server/interface/extract_loops_from_note.py:sync_script = "/Users/air/ea_assistant/mcp_server/interface/write_loops_to_files.py"
+src/mcp_server/interface/extract_loops_from_note.py:log_path = Path("/Users/air/ea_assistant/logs/extract_loops.log")
+src/mcp_server/interface/extract_loops_from_note.py:    note_text = latest_note.read_text()
+src/mcp_server/interface/add_loop_and_sync.py:json_path = Path("/Users/air/ea_assistant/mcp_server/loops/loop_memory.json")
+src/mcp_server/interface/add_loop_and_sync.py:sync_script = "/Users/air/ea_assistant/mcp_server/interface/sync_loops_to_markdown.py"
+src/mcp_server/interface/mcp_memory_context.py:DB_PATH = Path("/Users/air/ea_assistant/mcp_server/loops/mcp_memory.db")
+src/mcp_server/interface/archive_old_loops.py:loops_dir = Path("/Users/air/AIR01/MCP/Loops")
+src/mcp_server/interface/import_loops_to_db.py:json_path = Path("/Users/air/ea_assistant/mcp_server/loops/loop_memory.json")
+src/mcp_server/interface/import_loops_to_db.py:db_path = Path("/Users/air/ea_assistant/mcp_server/loops/mcp_memory.db")
+src/mcp_server/interface/write_loops_to_files.py:json_path = Path("/Users/air/ea_assistant/mcp_server/loops/loop_memory.json")
+src/mcp_server/interface/write_loops_to_files.py:output_dir = Path("/Users/air/AIR01/MCP/Loops")
+src/mcp_server/interface/sync_loops_to_markdown.py:json_path = Path("/Users/air/ea_assistant/mcp_server/loops/loop_memory.json")
+src/mcp_server/interface/sync_loops_to_markdown.py:md_path = Path("/Users/air/AIR01/MCP/loop_memory.md")
+src/mcp_server/interface/sync_loops_to_markdown.py:log_out_path = Path("/Users/air/ea_assistant/logs/sync_loops.out")
+src/mcp_server/interface/sync_loops_to_markdown.py:log_copy_path = Path("/Users/air/AIR01/MCP/sync_log.md")
+src/mcp_server/interface/sync_loops_to_markdown.py:    content = md_path.read_text()
+src/mcp_server/interface/mcp_memory.py:VAULT_PATH = "/Users/air/AIR01/Retrospectives"
+src/gmail/gmail_ingest.py:        self.vault_path = Path("/Users/air/AIR01/0001-HQ/Signal_Tasks.md")
+src/gmail/gmail_auth.py:CRED_PATH = "/Users/air/ea_assistant/credentials_gmail.json"
+src/gmail/gmail_auth.py:TOKEN_PATH = "/Users/air/ea_assistant/token.json"
+Binary file src/gmail/gmail_ingest_patch.zip matches
+System/Roadmap/Ora/ora_ui_recovery_plan.md:- Path audit (`read_text()`, `System/Reference`, `Users/air`)
+System/Roadmap/Ora/ora_roadmap_system.md:ea_roadmap.md ─▶ Cursor UI ─▶ Prompt Generation ─▶ Execution ─▶ Reflection Loop
+System/Roadmap/Ora/ora_roadmap_system.md:- **`ea_roadmap.md`** is the source of truth (human-readable, structured)
+System/Roadmap/Ora/ora_roadmap_system.md:### 1. `ea_roadmap.md`
+System/Roadmap/Ora/ora_roadmap_system.md:- Pulls directly from `ea_roadmap.md`
+System/Meta/EA_Path_Refactor_Checklist.md:Track files that contain hardcoded references to `/Users/air/ea_assistant`. Each should be updated to use `resolve(...)` or constants from `path_config.py`.
+System/Reference/still_skipped_files.md:- /Users/air/AIR01/Loop_Validation_Test.md.md
+System/Reference/still_skipped_files.md:- /Users/air/AIR01/01 Periodic/Daily/archive/March 2025/2025-03-11.md
+System/Reference/still_skipped_files.md:- /Users/air/AIR01/Templates/Contact Template.md
+System/Reference/ora_code_guide.md:/Users/air/ea_assistant/
+System/Reference/memory_system.md:    Path("/Users/air/AIR01/Retrospectives"),
+System/Reference/memory_system.md:    Path("/Users/air/AIR01/System"),
+System/Reference/memory_system.md:    Path("/Users/air/AIR01/0001 HQ")
+System/Reference/memory_system.md:INDEX_PATH = Path("/Users/air/ea_assistant/vector_index/faiss_index.idx")
+System/Reference/memory_system.md:META_PATH = Path("/Users/air/ea_assistant/vector_index/chunk_metadata.pkl")
+System/Reference/build_dependency_graph.py:VAULT_PATH = Path("/Users/air/AIR01")
+Binary file System/Reference/dependency_graph.db matches
+System/Reference/ea_system_overview.md:VAULT_PATH = Path("/Users/air/AIR01")
+System/Reference/ea_system_overview.md:See [ea_roadmap.md](ea_roadmap.md) for the current roadmap and progress tracking.

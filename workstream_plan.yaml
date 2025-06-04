@@ -1,0 +1,41 @@
+- id: 5.1
+  phase: 5.1
+  title: Signal-to-loop pipeline
+  description: Automate creation of loop files from retrospective and triage signals. Route to correct project and phase using tag and embedding similarity.
+  origin: loop-2025-06-02-data-migration.md
+  project: Ora Executive Assistant
+  status: complete
+  priority: high
+  effort: 3
+  feedback_score: 1.8
+  tags: [signal, loops, automation]
+  created: 2025-06-01
+  updated: 2025-06-02
+
+- id: 5.2.1
+  phase: 5.2
+  title: Feedback scoring from loops
+  description: Extract feedback_tags from loop frontmatter and score them using weight mappings. Store results in feedback_scores.yaml for roadmap influence.
+  origin: test-loop.md
+  project: Ora Executive Assistant
+  status: complete
+  priority: medium
+  effort: 2
+  feedback_score: 0.5
+  tags: [feedback, scoring, loop]
+  created: 2025-06-02
+  updated: 2025-06-03
+
+- id: 5.2.2
+  phase: 5.2
+  title: Roadmap phase weighting from feedback
+  description: Propagate scored loop feedback into roadmap weights. Adjust priority or visibility of roadmap items based on cumulative loop scores per phase.
+  origin: derived-from feedback_scores.yaml
+  project: Ora Executive Assistant
+  status: in_progress
+  priority: high
+  effort: 2
+  feedback_score: null
+  tags: [roadmap, weighting, dashboard]
+  created: 2025-06-03
+  updated: 2025-06-03 
