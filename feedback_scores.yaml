@@ -1,0 +1,48 @@
+- uuid: f6e600f9-7fbe-5e5d-a0cc-9a52f1df6df4
+  score: 0.5
+  filename: test-loop.md
+  project: null
+  phase: null
+  feedback_tags:
+  - '#confusing'
+  - '#useful'
+- uuid: 5e3fdb29-b49f-5931-b287-27eafecdd20f
+  score: 1.0
+  filename: loop-2025-07-05-integration-testing.md
+  project: Integration Testing
+  phase: null
+  feedback_tags:
+  - '#confusing'
+  - '#insightful'
+- uuid: a4593d55-39c1-5ca9-b13e-f2da55541b7d
+  score: -1.5
+  filename: loop-2025-07-03-enablement-sessions.md
+  project: Enablement Sessions
+  phase: null
+  feedback_tags:
+  - '#confusing'
+  - '#false_positive'
+- uuid: 7f0277f0-19b2-5628-8fc5-a4cfba06144a
+  score: 0.5
+  filename: loop-with-summary.md
+  project: null
+  phase: null
+  feedback_tags:
+  - '#confusing'
+  - '#useful'
+- uuid: 7919169d-2ada-559f-ba7d-0e568cc400b0
+  score: 0.5
+  filename: loop-2025-07-02-data-migration.md
+  project: Integration Testing
+  phase: null
+  feedback_tags:
+  - '#useful'
+  - '#confusing'
+- uuid: 92bf823b-c847-599f-8850-52b61f3ba9a4
+  score: 0.5
+  filename: loop-2025-06-02-test-loop-content.md
+  project: null
+  phase: null
+  feedback_tags:
+  - '#insightful'
+  - '#false_positive'

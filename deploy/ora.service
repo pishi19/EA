@@ -1,0 +1,14 @@
+[Unit]
+Description=Ora Streamlit Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ubuntu/ea_cursor_system_coupled
+ExecStart=/bin/bash launch_streamlit.sh
+Restart=always
+RestartSec=5
+User=ubuntu
+Environment=PYTHONPATH=.
+
+[Install]
+WantedBy=multi-user.target
