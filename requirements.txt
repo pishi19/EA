@@ -1,1 +1,5 @@
-streamlit==1.23.0 openai==1.6.1 markdown python-frontmatter
+streamlit==1.45.1
+python-dotenv
+openai
+qdrant-client
+PyYAML
