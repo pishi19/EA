@@ -2,8 +2,9 @@ from pathlib import Path
 import hashlib
 import yaml
 
-# Use the absolute path as defined by the user for system-specific configurations
-SYSTEM_DIR = Path("/root/ea_cursor_system_coupled/src/system")
+# Define project root relative to this file's location (src/system/trust.py)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+SYSTEM_DIR = PROJECT_ROOT / "runtime/system"
 MANIFEST_PATH = SYSTEM_DIR / ".system_manifest.yaml"
 MODE_FILE = SYSTEM_DIR / "mode.yaml"
 

@@ -73,14 +73,16 @@ def is_valid_uuid(val):
 
 def get_qdrant_id(metadata: dict, file_stem: str) -> str:
     """Determines the ID to use for Qdrant (UUID preferably)."""
-    # Prefer id from frontmatter if it's a valid UUID
-    if 'id' in metadata and is_valid_uuid(metadata['id']):
-        return str(metadata['id'])
-    # Fallback: generate a new UUID based on file_stem to keep it somewhat deterministic if needed,
-    # or just a random new one if that's preferred.
-    # For simplicity, let's use a namespace and the file stem to generate a deterministic UUID.
-    # If a loop is re-processed, it should get the same UUID this way.
-    # If truly random unique IDs are needed each time (even for same file), use uuid.uuid4()
+    # Prefer id or uuid from frontmatter
+    q_id = metadata.get('uuid') or metadata.get('id')
+    if q_id:
+        # If it's a valid UUID, use it directly.
+        if is_valid_uuid(q_id):
+            return str(q_id)
+        # Otherwise, generate a deterministic UUID from the string identifier.
+        return str(uuid.uuid5(uuid.NAMESPACE_DNS, q_id))
+
+    # Fallback: generate a new UUID based on the file stem if no id/uuid is present.
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, file_stem))
 
 
@@ -136,7 +138,7 @@ def process_and_embed_loop_file(file_path_str: str):
             "tags": metadata.get("tags", []),
             "created_at": metadata.get("created_at", datetime.now().isoformat()),
             "content_hash": current_hash,
-            **{k: v for k, v in metadata.items() if k not in ["title", "tags", "created_at", "id"]}
+            **{k: v for k, v in metadata.items() if k not in ["title", "tags", "created_at", "id", "uuid"]}
         }
 
         qdrant.upsert(

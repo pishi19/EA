@@ -35,9 +35,14 @@ def get_inbox_entries() -> list[dict]:
     return _load_from_dir(path_config.INBOX_DIR)
 
 def _load_from_dir(directory: Path) -> list[dict]:
+    """
+    Loads all .md files from a directory.
+    If the directory does not exist, it will be created.
+    """
     items = []
     if not directory.exists():
-        print(f"[data_loader] Directory does not exist: {directory}")
+        print(f"[data_loader] Directory does not exist, creating: {directory}")
+        directory.mkdir(parents=True, exist_ok=True)
         return []
 
     for file in sorted(directory.iterdir()):
@@ -79,6 +84,4 @@ def get_loop_summaries() -> list[dict]:
 def get_insights() -> list[dict]:
     from src.system import path_config
     print(f"[DEBUG] Loading insights from: {path_config.INSIGHTS_DIR}")
-    for f in path_config.INSIGHTS_DIR.iterdir():
-        print(f"[DEBUG] Found file: {f}")
     return _load_from_dir(path_config.INSIGHTS_DIR) 
