@@ -27,4 +27,9 @@
   action: build_feedback_volatility_surface
   result: success
   timestamp: <AUTOFILL>
-  note: Feedback scores and volatility metrics now visualized in UI and accessible to assistant via /summarize_volatility 
+  note: Feedback scores and volatility metrics now visualized in UI and accessible to assistant via /summarize_volatility
+- phase: 7.1.6
+  action: build_task_similarity_index
+  result: success
+  timestamp: <AUTOFILL>
+  note: Assistant can now detect semantic task matches across workstreams using vector similarity 

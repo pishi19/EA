@@ -18,4 +18,12 @@ CREATE TABLE IF NOT EXISTS loop_feedback (
     uuid TEXT,
     tag TEXT,
     FOREIGN KEY (uuid) REFERENCES loop_metadata (uuid)
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+  uuid TEXT PRIMARY KEY,
+  workstream TEXT,
+  verb TEXT,
+  vector BLOB,
+  source_loop_id TEXT
 ); 
