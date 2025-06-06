@@ -1,11 +1,13 @@
 import datetime
 import os
-
-from config import DAILY_NOTES_PATH, LOG_PATH, OPENAI_API_KEY
+import pickle
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from openai import OpenAI
+
+from src.system.path_config import CREDENTIALS, TOKEN_PATH
+from src.utils.config import OPENAI_API_KEY, DAILY_NOTES_PATH, LOG_PATH
 
 # Initialize OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -19,14 +21,13 @@ SCOPES = [
 
 def get_calendar_events():
     creds = None
-    token_path = "token.json"
 
-    if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+    if os.path.exists(TOKEN_PATH):
+        creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
     else:
-        flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+        flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
         creds = flow.run_local_server(port=0)
-        with open(token_path, "w") as token:
+        with open(TOKEN_PATH, "w") as token:
             token.write(creds.to_json())
 
     service = build("calendar", "v3", credentials=creds)
