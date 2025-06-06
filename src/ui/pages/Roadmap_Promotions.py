@@ -2,28 +2,42 @@ import streamlit as st
 import sqlite3
 import os
 import frontmatter
+from pathlib import Path
 
 st.set_page_config(page_title="Promote Loops", layout="wide")
+
+# --- Robust Pathing ---
+def find_project_root(marker=".git"):
+    """Finds the project root by searching upwards for a marker file/directory."""
+    path = Path(__file__).resolve()
+    while path.parent != path:
+        if (path / marker).exists():
+            return path
+        path = path.parent
+    raise FileNotFoundError("Project root with marker '.git' not found.")
+
+PROJECT_ROOT = find_project_root()
+# ---
 
 def load_promotable_loops():
     """
     Loads loops from the database that have not yet been promoted to the roadmap.
     """
     promoted = set()
-    roadmap_path = "runtime/roadmap"
-    if os.path.exists(roadmap_path):
+    roadmap_path = PROJECT_ROOT / "runtime/roadmap"
+    if roadmap_path.exists():
         for fname in os.listdir(roadmap_path):
             if fname.endswith(".md"):
                 try:
-                    post = frontmatter.load(os.path.join(roadmap_path, fname))
+                    post = frontmatter.load(roadmap_path / fname)
                     if "origin_loop" in post:
                         promoted.add(post["origin_loop"])
                 except Exception:
                     # Ignore malformed or unparseable files
                     continue
 
-    db_path = "runtime/db/ora.db"
-    if not os.path.exists(db_path):
+    db_path = PROJECT_ROOT / "runtime/db/ora.db"
+    if not db_path.exists():
         st.error(f"Database not found at: {db_path}")
         return []
         
@@ -62,8 +76,9 @@ else:
                 # Trigger assistant command by writing to a file queue
                 # This assumes an external process is watching this file.
                 try:
-                    os.makedirs(".cursor", exist_ok=True)
-                    with open(".cursor/prompt_queue.txt", "a") as f:
+                    queue_dir = PROJECT_ROOT / ".cursor"
+                    queue_dir.mkdir(exist_ok=True)
+                    with open(queue_dir / "prompt_queue.txt", "a") as f:
                         f.write(f"/promote_loop {loop['uuid']}\\n")
                     st.success(f"✅ Promotion for loop `{loop['uuid']}` queued.")
                     st.experimental_rerun()
