@@ -11,9 +11,20 @@ import os
 from src.tasks.similarity import find_similar_tasks
 
 # --- Constants ---
-# Resolve the project root from the script's location to ensure robust paths
-# The script is in src/agent/commands, so we go up three levels.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+def find_project_root(marker=".git"):
+    """Finds the project root by searching upwards for a marker file/directory."""
+    path = Path.cwd()
+    while path.parent != path:
+        if (path / marker).exists():
+            return path
+        path = path.parent
+    # Fallback for environments where CWD is not the project root (like some deployments)
+    script_path_fallback = Path(__file__).resolve().parent.parent.parent
+    if (script_path_fallback / marker).exists():
+        return script_path_fallback
+    raise FileNotFoundError(f"Project root with marker '{marker}' not found.")
+
+PROJECT_ROOT = find_project_root()
 
 def find_loop_file_by_uuid(loop_uuid: str) -> Path | None:
     """Finds the markdown file for a loop by its UUID."""

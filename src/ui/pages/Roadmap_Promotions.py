@@ -44,13 +44,13 @@ def load_promotable_loops(db_path="runtime/db/ora.db"):
 
     # 3. Filter out loops that have already been promoted
     if not loops_df.empty:
-        promotable_loops_df = loops_df[~loops_df['uuid'].isin(promoted_loop_uuids)].copy()
+        unpromoted_df = loops_df[~loops_df['uuid'].isin(promoted_loop_uuids)].copy()
         
         # 4. Ensure a source .md file exists for the loop to be promotable
-        promotable_loops_df['file_exists'] = promotable_loops_df['uuid'].apply(
+        unpromoted_df['file_exists'] = unpromoted_df['uuid'].apply(
             lambda uuid: find_loop_file_by_uuid(uuid) is not None
         )
-        return promotable_loops_df[promotable_loops_df['file_exists']]
+        return unpromoted_df[unpromoted_df['file_exists']]
     
     return pd.DataFrame()
 
