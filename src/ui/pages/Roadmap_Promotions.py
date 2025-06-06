@@ -1,127 +1,71 @@
 import streamlit as st
-import pandas as pd
-from pathlib import Path
-import frontmatter
 import sqlite3
 import os
+import frontmatter
 
-from src.agent.commands.promote_loop import promote_loop_to_roadmap
+st.set_page_config(page_title="Promote Loops", layout="wide")
 
-# --- Constants ---
-# Use a robust method to find the project root, starting from the CWD
-def find_project_root(marker=".git"):
-    path = Path.cwd()
-    for _ in range(8): # Limit upward search to 8 levels
-        if (path / marker).exists():
-            return path
-        path = path.parent
-    # Fallback if CWD is not in the project
-    script_path = Path(__file__).resolve()
-    for _ in range(8):
-        if (script_path / marker).exists():
-            return script_path
-        script_path = script_path.parent
-    raise FileNotFoundError("Project root not found.")
-
-PROJECT_ROOT = find_project_root()
-ROADMAP_DIR = PROJECT_ROOT / "runtime/roadmap"
-LOOPS_DIR = PROJECT_ROOT / "runtime/loops"
-
-
-st.set_page_config(page_title="Roadmap Promotions", layout="wide")
-st.title("💡 Proposable Loops")
-st.caption("Promote high-signal loops to the official roadmap.")
-
-
-@st.cache_data(ttl=15)
-def load_promotable_loops(db_path="runtime/db/ora.db"):
+def load_promotable_loops():
     """
-    Finds loops that have a workstream assigned, have a corresponding .md file,
-    and have not yet been promoted to a roadmap item.
+    Loads loops from the database that have not yet been promoted to the roadmap.
     """
-    # 1. Get all roadmap items that have an origin loop
-    promoted_loop_uuids = set()
-    if ROADMAP_DIR.exists():
-        for md_file in ROADMAP_DIR.glob("*.md"):
-            try:
-                post = frontmatter.load(md_file)
-                if origin_loop := post.get("origin_loop"):
-                    promoted_loop_uuids.add(origin_loop)
-            except Exception:
-                continue
-
-    # 2. Get all loops with a workstream from the database
-    try:
-        conn = sqlite3.connect(PROJECT_ROOT / db_path)
-        loops_df = pd.read_sql(
-            "SELECT uuid, title, workstream, score, status FROM loop_metadata WHERE workstream IS NOT NULL",
-            conn
-        )
-        conn.close()
-    except Exception as e:
-        st.error(f"Failed to load loops from database: {e}")
-        return pd.DataFrame()
-
-    # 3. Filter loops using a standard Python loop for robustness
-    promotable_rows = []
-    for index, row in loops_df.iterrows():
-        if row['uuid'] in promoted_loop_uuids:
-            continue
-        
-        # 4. Directly check for the corresponding file's existence
-        found_file = False
-        if LOOPS_DIR.exists():
-            for loop_file in LOOPS_DIR.glob("*.md"):
+    promoted = set()
+    roadmap_path = "runtime/roadmap"
+    if os.path.exists(roadmap_path):
+        for fname in os.listdir(roadmap_path):
+            if fname.endswith(".md"):
                 try:
-                    post = frontmatter.load(loop_file)
-                    if post.get("uuid") == row['uuid']:
-                        found_file = True
-                        break
+                    post = frontmatter.load(os.path.join(roadmap_path, fname))
+                    if "origin_loop" in post:
+                        promoted.add(post["origin_loop"])
                 except Exception:
+                    # Ignore malformed or unparseable files
                     continue
-        
-        if found_file:
-            promotable_rows.append(row)
 
-    return pd.DataFrame(promotable_rows)
+    db_path = "runtime/db/ora.db"
+    if not os.path.exists(db_path):
+        st.error(f"Database not found at: {db_path}")
+        return []
+        
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT uuid, title, workstream, score FROM loop_metadata WHERE workstream IS NOT NULL")
+        rows = cur.fetchall()
+    except sqlite3.OperationalError:
+        st.warning("`loop_metadata` table not found in database.")
+        rows = []
+    conn.close()
+
+    # Filter out loops that are already promoted
+    return [
+        {"uuid": r[0], "title": r[1], "workstream": r[2], "score": r[3]}
+        for r in rows
+        if r[0] not in promoted
+    ]
 
 # --- Main UI ---
+st.header("🔁 Promote Loops to Roadmap")
+st.caption("Select loops to promote into active workstream items.")
+
 promotable_loops = load_promotable_loops()
 
-if promotable_loops.empty:
-    st.info("✅ No promotable loops found. All recent tasks have been promoted or resolved.")
-    # Add a debug section to provide info when the list is empty
-    with st.expander("Why might this be empty?"):
-        st.markdown(
-            """
-            This panel shows loops that meet three criteria:
-            1.  They exist in the **database** (`loop_metadata` table).
-            2.  They have a corresponding **`.md` file** in `runtime/loops/`.
-            3.  They have **not** already been promoted to a roadmap item (i.e., no roadmap file lists their UUID as `origin_loop`).
-
-            If a loop you expect to see is missing, it's likely failing one of these checks.
-            """
-        )
-    st.stop()
-
-st.metric("Loops Ready to Promote", len(promotable_loops))
-
-for index, loop in promotable_loops.iterrows():
-    st.divider()
-    col1, col2 = st.columns([5, 1])
-    
-    with col1:
-        st.subheader(loop['title'])
-        st.markdown(f"**Workstream:** `{loop['workstream']}` | **Status:** `{loop['status']}` | **Score:** {loop['score']:.2f if loop['score'] else 'N/A'}")
-        st.caption(f"Loop UUID: {loop['uuid']}")
-
-    if col2.button("Promote", key=f"promote_{loop['uuid']}", use_container_width=True):
-        with st.spinner("Promoting loop to roadmap..."):
-            result = promote_loop_to_roadmap(loop['uuid'])
-        
-        if result.get("status") == "success":
-            st.toast(f"✅ Promoted: {loop['title']}", icon="🚀")
-            st.cache_data.clear()
-            st.experimental_rerun()
-        else:
-            st.error(f"Failed to promote: {result.get('error')}") 
+if not promotable_loops:
+    st.success("✅ No promotable loops found. All recent loops have been promoted.")
+else:
+    for loop in promotable_loops:
+        with st.expander(f"{loop['title']} (Workstream: {loop.get('workstream', 'N/A')})"):
+            st.markdown(f"**UUID:** `{loop['uuid']}`")
+            st.markdown(f"**Workstream:** `{loop['workstream']}`")
+            st.markdown(f"**Score:** `{loop.get('score', 'N/A')}`")
+            if st.button("Promote This Loop", key=loop['uuid']):
+                # Trigger assistant command by writing to a file queue
+                # This assumes an external process is watching this file.
+                try:
+                    os.makedirs(".cursor", exist_ok=True)
+                    with open(".cursor/prompt_queue.txt", "a") as f:
+                        f.write(f"/promote_loop {loop['uuid']}\\n")
+                    st.success(f"✅ Promotion for loop `{loop['uuid']}` queued.")
+                    st.experimental_rerun()
+                except Exception as e:
+                    st.error(f"Failed to queue promotion command: {e}") 
