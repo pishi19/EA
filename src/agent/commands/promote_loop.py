@@ -10,9 +10,14 @@ import os
 # This might need adjustment based on final project structure.
 from src.tasks.similarity import find_similar_tasks
 
+# --- Constants ---
+# Resolve the project root from the script's location to ensure robust paths
+# The script is in src/agent/commands, so we go up three levels.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
 def find_loop_file_by_uuid(loop_uuid: str) -> Path | None:
     """Finds the markdown file for a loop by its UUID."""
-    loop_dir = Path("runtime/loops")
+    loop_dir = PROJECT_ROOT / "runtime/loops"
     if not loop_dir.exists():
         return None
     for loop_file in loop_dir.glob("*.md"):
@@ -50,7 +55,7 @@ def promote_loop_to_roadmap(loop_uuid: str):
     new_post['created'] = today
     new_post['workstream'] = post.get('workstream')
 
-    roadmap_dir = Path("runtime/roadmap")
+    roadmap_dir = PROJECT_ROOT / "runtime/roadmap"
     roadmap_dir.mkdir(exist_ok=True)
     new_filename = roadmap_dir / f"roadmap-from-loop-{loop_uuid[:8]}.md"
     
