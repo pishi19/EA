@@ -4,8 +4,8 @@ from pathlib import Path
 import frontmatter
 import sqlite3
 
-# Import the promotion function from the agent commands
-from src.agent.commands.promote_loop import promote_loop_to_roadmap
+# Import the promotion function and the file finder
+from src.agent.commands.promote_loop import promote_loop_to_roadmap, find_loop_file_by_uuid
 
 st.set_page_config(page_title="Roadmap Promotions", layout="wide")
 st.title("💡 Proposable Loops")
@@ -44,8 +44,13 @@ def load_promotable_loops(db_path="runtime/db/ora.db"):
 
     # 3. Filter out loops that have already been promoted
     if not loops_df.empty:
-        promotable_loops_df = loops_df[~loops_df['uuid'].isin(promoted_loop_uuids)]
-        return promotable_loops_df
+        promotable_loops_df = loops_df[~loops_df['uuid'].isin(promoted_loop_uuids)].copy()
+        
+        # 4. Ensure a source .md file exists for the loop to be promotable
+        promotable_loops_df['file_exists'] = promotable_loops_df['uuid'].apply(
+            lambda uuid: find_loop_file_by_uuid(uuid) is not None
+        )
+        return promotable_loops_df[promotable_loops_df['file_exists']]
     
     return pd.DataFrame()
 
