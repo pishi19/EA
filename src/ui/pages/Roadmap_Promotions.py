@@ -33,6 +33,7 @@ def load_promotable_loops(db_path="runtime/db/ora.db"):
     # 2. Get all loops with a workstream from the database
     try:
         conn = sqlite3.connect(db_path)
+        # Fetch as a list of dictionaries for easier processing
         loops_df = pd.read_sql(
             "SELECT uuid, title, workstream, score, status FROM loop_metadata WHERE workstream IS NOT NULL",
             conn
@@ -42,17 +43,18 @@ def load_promotable_loops(db_path="runtime/db/ora.db"):
         st.error(f"Failed to load loops from database: {e}")
         return pd.DataFrame()
 
-    # 3. Filter out loops that have already been promoted
-    if not loops_df.empty:
-        unpromoted_df = loops_df[~loops_df['uuid'].isin(promoted_loop_uuids)].copy()
+    # 3. Filter loops using a standard Python loop for robustness
+    promotable_rows = []
+    for index, row in loops_df.iterrows():
+        # Skip if already promoted
+        if row['uuid'] in promoted_loop_uuids:
+            continue
         
-        # 4. Ensure a source .md file exists for the loop to be promotable
-        unpromoted_df['file_exists'] = unpromoted_df['uuid'].apply(
-            lambda uuid: find_loop_file_by_uuid(uuid) is not None
-        )
-        return unpromoted_df[unpromoted_df['file_exists']]
-    
-    return pd.DataFrame()
+        # Check if the source file exists
+        if find_loop_file_by_uuid(row['uuid']) is not None:
+            promotable_rows.append(row)
+
+    return pd.DataFrame(promotable_rows)
 
 # --- Main UI ---
 promotable_loops = load_promotable_loops()
