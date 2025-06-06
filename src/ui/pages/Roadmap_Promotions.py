@@ -1,23 +1,31 @@
+import sys
+from pathlib import Path
+
+# Add project root to the Python path BEFORE any other imports
+# This ensures that `from src...` works correctly.
+try:
+    PROJECT_ROOT = Path(__file__).resolve().parents[3]
+    sys.path.append(str(PROJECT_ROOT))
+except IndexError:
+    # If the structure is different, fallback to current dir, but this might fail.
+    PROJECT_ROOT = Path.cwd()
+    sys.path.append(str(PROJECT_ROOT))
+
 import streamlit as st
 import sqlite3
 import os
 import frontmatter
-from pathlib import Path
-
-# 1. Import the function directly
 from src.agent.commands.promote_loop import promote_loop_to_roadmap
 
 st.set_page_config(page_title="Promote Loops", layout="wide")
 
 # --- Final, Correct Implementation ---
 try:
-    # 2. Correctly find project root
-    PROJECT_ROOT = Path(__file__).resolve().parents[3]
     ROADMAP_DIR = PROJECT_ROOT / "runtime" / "roadmap"
     DB_PATH = PROJECT_ROOT / "runtime" / "db" / "ora.db"
     LOOPS_DIR = PROJECT_ROOT / "runtime" / "loops"
 
-    # 3. Load promoted UUIDs
+    # Load promoted UUIDs
     promoted_loop_uuids = set()
     if ROADMAP_DIR.exists():
         for fname in os.listdir(ROADMAP_DIR):
@@ -28,8 +36,8 @@ try:
                         promoted_loop_uuids.add(post["origin_loop"])
                 except Exception:
                     pass
-
-    # 4. Load all loops from DB
+    
+    # Load all loops from DB
     all_loops = []
     if DB_PATH.exists():
         conn = sqlite3.connect(DB_PATH)
@@ -43,10 +51,19 @@ try:
             if r[2]  # must have a workstream
         ]
 
-    # 5. Filter for loops that exist in the filesystem and are not promoted
+    # Filter for loops that exist in the filesystem and are not promoted
     promotable_loops = []
     if LOOPS_DIR.exists():
-        all_loop_files_by_uuid = {frontmatter.load(LOOPS_DIR / f).get("uuid"): f for f in os.listdir(LOOPS_DIR) if f.endswith(".md")}
+        all_loop_files_by_uuid = {}
+        for f in os.listdir(LOOPS_DIR):
+            if f.endswith(".md"):
+                try:
+                    post = frontmatter.load(LOOPS_DIR / f)
+                    if "uuid" in post:
+                        all_loop_files_by_uuid[post.get("uuid")] = f
+                except Exception:
+                    continue
+        
         for loop in all_loops:
             if loop["uuid"] in all_loop_files_by_uuid and loop["uuid"] not in promoted_loop_uuids:
                 promotable_loops.append(loop)
@@ -65,7 +82,6 @@ try:
                 st.markdown(f"**Score:** `{loop.get('score', 'N/A')}`")
                 if st.button("Promote", key=loop["uuid"]):
                     with st.spinner("Promoting loop..."):
-                        # 6. Call the function directly
                         result = promote_loop_to_roadmap(loop["uuid"])
                     if result.get("status") == "success":
                         st.success(f"Loop promoted! New file at: {result.get('file_path')}")
