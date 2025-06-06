@@ -1,20 +1,13 @@
 from pathlib import Path
+from datetime import datetime
 
-import frontmatter
 import yaml
+import frontmatter
 
-loop_dir = Path("runtime/loops")
-tag_map_path = Path("suggested_feedback_tags.yaml")
-
-if not tag_map_path.exists():
-    raise FileNotFoundError("❌ suggested_feedback_tags.yaml not found.")
-
-tag_map = yaml.safe_load(tag_map_path.read_text())
-
-def apply_tags_to_file(file_path, tags_to_apply):
+def apply_tags_to_file(file_path, tags_to_apply, log_path):
     """Applies a list of tags to the frontmatter of a markdown file."""
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             post = frontmatter.load(f)
 
         if "tags" not in post.metadata:
@@ -26,31 +19,31 @@ def apply_tags_to_file(file_path, tags_to_apply):
 
         with open(file_path, "w", encoding="utf-8") as f:
             frontmatter.dump(post, f)
+        
+        with open(log_path, "a", encoding="utf-8") as log:
+            log.write(f"{datetime.now().isoformat()} - Applied tags to: {file_path}\n")
 
         print(f"✅ Applied tags to {Path(file_path).name}")
 
     except Exception as e:
         print(f"❌ Error applying tags to {Path(file_path).name}: {e}")
 
-for file in loop_dir.glob("*.md"):
-    content = file.read_text()
-    if not content.startswith("---"):
-        print(f"⚠️ Skipping {file.name} (no YAML frontmatter)")
-        continue
+def main(loop_dir, tag_map_path, log_path):
+    if not tag_map_path.exists():
+        raise FileNotFoundError("❌ suggested_feedback_tags.yaml not found.")
 
-    fm_end = content.index("---", 3)
-    frontmatter_content = yaml.safe_load(content[3:fm_end])
-    if not isinstance(frontmatter_content, dict):
-        frontmatter_content = {}
+    tag_map = yaml.safe_load(tag_map_path.read_text())
 
-    suggestion = tag_map.get(file.name)
-    if suggestion:
-        frontmatter_content["feedback_tags"] = suggestion.strip()
-        updated = (
-            f"---\n{yaml.safe_dump(frontmatter_content, sort_keys=False)}---\n"
-            f"{content[fm_end+3:].lstrip()}"
-        )
-        file.write_text(updated)
-        print(f"✅ Injected feedback_tags into {file.name}: {suggestion.strip()}")
-    else:
-        print(f"⚠️ No tag suggestion found for {file.name}")
+    for file in loop_dir.glob("*.md"):
+        suggestion = tag_map.get(file.name)
+        if suggestion:
+            apply_tags_to_file(file, [suggestion.strip()], log_path)
+        else:
+            print(f"⚠️ No tag suggestion found for {file.name}")
+
+if __name__ == "__main__":
+    loop_dir = Path("runtime/loops")
+    tag_map_path = Path("suggested_feedback_tags.yaml")
+    log_path = Path("logs/apply_feedback_tags.log")
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    main(loop_dir, tag_map_path, log_path)

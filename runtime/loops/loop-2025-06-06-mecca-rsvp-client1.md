@@ -6,7 +6,7 @@ tags:
 - VIP
 - '#useful'
 title: VIP Guest RSVP Received
-uuid: 9318dc9f-d9a5-49bd-a588-7f6adfcd4604
+uuid: 62006c98-0aef-4924-9acb-dabfe0794386
 ---
 
 Client confirmed attendance for Friday's in-store event. Needs consultant welcome.
