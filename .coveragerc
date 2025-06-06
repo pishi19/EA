@@ -1,0 +1,13 @@
+[run]
+source = src
+omit =
+    # Omit test files from the report
+    */tests/*
+    # Omit vendored/external libraries
+    */.venv/*
+    # Omit generated files or stubs
+    src/interface/*
+
+[report]
+show_missing = True
+skip_covered = True 

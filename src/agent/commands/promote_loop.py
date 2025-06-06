@@ -45,7 +45,7 @@ def promote_loop_to_roadmap(loop_uuid: str):
     """Creates a new roadmap markdown file from an existing loop."""
     loop_file = find_loop_file_by_uuid(loop_uuid)
     if not loop_file:
-        return {"error": f"Loop with UUID '{loop_uuid}' not found in any .md file."}
+        return {"status": "error", "error": f"Loop with UUID '{loop_uuid}' not found in any .md file."}
 
     post = frontmatter.load(loop_file)
     
