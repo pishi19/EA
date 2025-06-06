@@ -32,4 +32,9 @@
   action: build_task_similarity_index
   result: success
   timestamp: <AUTOFILL>
-  note: Assistant can now detect semantic task matches across workstreams using vector similarity 
+  note: Assistant can now detect semantic task matches across workstreams using vector similarity
+- phase: 7.1.7
+  action: assistant_loop_to_roadmap_promotion
+  result: success
+  timestamp: <AUTOFILL>
+  note: Assistant can now generate roadmap.md items directly from loop and task patterns 
