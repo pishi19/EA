@@ -4,68 +4,75 @@ import os
 import frontmatter
 from pathlib import Path
 
+# 1. Import the function directly
+from src.agent.commands.promote_loop import promote_loop_to_roadmap
+
 st.set_page_config(page_title="Promote Loops", layout="wide")
-st.header("🔁 Promote Loops to Roadmap")
-st.caption("Select loops to promote into active workstream items.")
 
-# ---
-# Final, Proven, Linear Logic - No Functions, No Caching
-# ---
-final_list = []
+# --- Final, Correct Implementation ---
 try:
+    # 2. Correctly find project root
     PROJECT_ROOT = Path(__file__).resolve().parents[3]
-    roadmap_dir = PROJECT_ROOT / "runtime/roadmap"
-    db_path = PROJECT_ROOT / "runtime/db/ora.db"
-    loops_dir = PROJECT_ROOT / "runtime/loops"
+    ROADMAP_DIR = PROJECT_ROOT / "runtime" / "roadmap"
+    DB_PATH = PROJECT_ROOT / "runtime" / "db" / "ora.db"
+    LOOPS_DIR = PROJECT_ROOT / "runtime" / "loops"
 
-    promoted_uuids = set()
-    if roadmap_dir.exists():
-        for fname in os.listdir(roadmap_dir):
+    # 3. Load promoted UUIDs
+    promoted_loop_uuids = set()
+    if ROADMAP_DIR.exists():
+        for fname in os.listdir(ROADMAP_DIR):
             if fname.endswith(".md"):
                 try:
-                    post = frontmatter.load(roadmap_dir / fname)
+                    post = frontmatter.load(ROADMAP_DIR / fname)
                     if "origin_loop" in post:
-                        promoted_uuids.add(post["origin_loop"])
+                        promoted_loop_uuids.add(post["origin_loop"])
                 except Exception:
-                    continue
+                    pass
 
-    all_db_loops = []
-    if db_path.exists():
-        conn = sqlite3.connect(db_path)
+    # 4. Load all loops from DB
+    all_loops = []
+    if DB_PATH.exists():
+        conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
-        cur.execute("SELECT uuid, title, workstream, score FROM loop_metadata WHERE workstream IS NOT NULL")
+        cur.execute("SELECT uuid, title, workstream, score FROM loop_metadata")
         rows = cur.fetchall()
         conn.close()
-        all_db_loops = [{"uuid": r[0], "title": r[1], "workstream": r[2], "score": r[3]} for r in rows]
+        all_loops = [
+            {"uuid": r[0], "title": r[1], "workstream": r[2], "score": r[3]}
+            for r in rows
+            if r[2]  # must have a workstream
+        ]
 
-    filesystem_uuids = set()
-    if loops_dir.exists():
-        for fname in os.listdir(loops_dir):
-            if fname.endswith(".md"):
-                try:
-                    post = frontmatter.load(loops_dir / fname)
-                    if "uuid" in post:
-                        filesystem_uuids.add(post["uuid"])
-                except Exception:
-                    continue
+    # 5. Filter for loops that exist in the filesystem and are not promoted
+    promotable_loops = []
+    if LOOPS_DIR.exists():
+        all_loop_files_by_uuid = {frontmatter.load(LOOPS_DIR / f).get("uuid"): f for f in os.listdir(LOOPS_DIR) if f.endswith(".md")}
+        for loop in all_loops:
+            if loop["uuid"] in all_loop_files_by_uuid and loop["uuid"] not in promoted_loop_uuids:
+                promotable_loops.append(loop)
 
-    valid_loops = [loop for loop in all_db_loops if loop["uuid"] in filesystem_uuids]
-    final_list = [loop for loop in valid_loops if loop["uuid"] not in promoted_uuids]
+    # --- UI Rendering ---
+    st.header("🔁 Promote Loops to Roadmap")
+
+    if not promotable_loops:
+        st.success("✅ No promotable loops found. All have been promoted.")
+    else:
+        st.metric("Loops Ready to Promote", len(promotable_loops))
+        for loop in promotable_loops:
+            with st.expander(f"{loop['title']} (Workstream: {loop.get('workstream', 'N/A')})"):
+                st.markdown(f"**UUID:** `{loop['uuid']}`")
+                st.markdown(f"**Workstream:** `{loop['workstream']}`")
+                st.markdown(f"**Score:** `{loop.get('score', 'N/A')}`")
+                if st.button("Promote", key=loop["uuid"]):
+                    with st.spinner("Promoting loop..."):
+                        # 6. Call the function directly
+                        result = promote_loop_to_roadmap(loop["uuid"])
+                    if result.get("status") == "success":
+                        st.success(f"Loop promoted! New file at: {result.get('file_path')}")
+                        st.experimental_rerun()
+                    else:
+                        st.error(f"Promotion failed: {result.get('error')}")
 
 except Exception as e:
-    st.error(f"An error occurred during data loading: {e}")
-    st.exception(e)
-
-
-# --- Final UI Rendering ---
-if not final_list:
-    st.success("✅ No promotable loops found.")
-else:
-    st.metric("Loops Ready to Promote", len(final_list))
-    for loop in final_list:
-        with st.expander(f"{loop['title']} (Workstream: {loop.get('workstream', 'N/A')})"):
-            st.markdown(f"**UUID:** `{loop['uuid']}`")
-            st.markdown(f"**Workstream:** `{loop.get('workstream', 'N/A')}`")
-            st.markdown(f"**Score:** `{loop.get('score', 'N/A')}`")
-            if st.button("Promote", key=loop['uuid']):
-                st.info("Promotion logic would be triggered here.") 
+    st.error("A critical error occurred while loading the page.")
+    st.exception(e) 
