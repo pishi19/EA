@@ -1,55 +1,29 @@
 import streamlit as st
-import sqlite3
-import os
-import frontmatter
 from pathlib import Path
+import sys
+
+# Add project root for imports
+try:
+    PROJECT_ROOT = Path(__file__).resolve().parents[3]
+    sys.path.append(str(PROJECT_ROOT))
+except IndexError:
+    PROJECT_ROOT = Path.cwd()
+    sys.path.append(str(PROJECT_ROOT))
+
+from src.data.ui_loaders import load_workstream_view_data
 
 st.set_page_config(page_title="Workstream View", layout="wide")
 st.title("🔎 Workstream View")
 
-# ---
-# Final, Proven, Linear Logic
-# ---
-workstreams = []
-all_loops = []
-
+# --- Data Loading ---
 try:
-    PROJECT_ROOT = Path(__file__).resolve().parents[3]
-    db_path = PROJECT_ROOT / "runtime/db/ora.db"
-    loops_dir = PROJECT_ROOT / "runtime/loops"
-
-    # 1. Load Workstreams from DB
-    if db_path.exists():
-        conn = sqlite3.connect(db_path)
-        cur = conn.cursor()
-        cur.execute("SELECT id, title, tags, goals, owners FROM workstreams")
-        rows = cur.fetchall()
-        conn.close()
-        workstreams = [
-            {"id": r[0], "title": r[1], "tags": r[2], "goals": r[3], "owners": r[4]}
-            for r in rows
-        ]
-
-    # 2. Load all loops from filesystem
-    if loops_dir.exists():
-        for fname in os.listdir(loops_dir):
-            if fname.endswith(".md"):
-                try:
-                    post = frontmatter.load(loops_dir / fname)
-                    metadata = post.metadata
-                    all_loops.append({
-                        "uuid": metadata.get("uuid"),
-                        "title": metadata.get("title", "Untitled"),
-                        "workstream": metadata.get("workstream"),
-                        "status": metadata.get("status", "unknown"),
-                        "tags": metadata.get("tags", []),
-                        "content": post.content
-                    })
-                except Exception:
-                    continue
-
+    workstreams, all_loops = load_workstream_view_data(
+        db_path=PROJECT_ROOT / "runtime/db/ora.db",
+        loops_dir=PROJECT_ROOT / "runtime/loops"
+    )
 except Exception as e:
     st.error(f"A critical error occurred: {e}")
+    workstreams, all_loops = [], []
 
 # --- UI Rendering ---
 if not workstreams:
@@ -65,7 +39,6 @@ if selected_title:
     if selected_ws:
         st.divider()
         st.write(f"### Goals for {selected_ws['title']}")
-        # Goals are stored as a string, need to be split
         goals = selected_ws.get("goals", "").split(", ")
         for goal in goals:
             if goal: st.markdown(f"- {goal}")
@@ -81,7 +54,7 @@ if selected_title:
                 with st.container():
                     st.subheader(loop['title'])
                     tags_html = " ".join([f"`{tag}`" for tag in loop.get('tags', [])])
-                    st.markdown(f"**Status:** `{loop['status'].upper()}` | **Tags:** {tags_html}")
+                    st.markdown(f"**Status:** `{loop.get('status', 'unknown').upper()}` | **Tags:** {tags_html}")
                     with st.expander("Details"):
                         st.markdown(loop['content'])
                     st.divider()

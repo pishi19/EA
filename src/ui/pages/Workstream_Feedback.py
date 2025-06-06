@@ -1,33 +1,28 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
 from pathlib import Path
+import sys
+
+# Add project root for imports
+try:
+    PROJECT_ROOT = Path(__file__).resolve().parents[3]
+    sys.path.append(str(PROJECT_ROOT))
+except IndexError:
+    PROJECT_ROOT = Path.cwd()
+    sys.path.append(str(PROJECT_ROOT))
+
+from src.data.ui_loaders import load_workstream_feedback_data
 
 st.set_page_config(page_title="Workstream Feedback", layout="wide")
 st.title("🔎 Workstream Feedback & Volatility")
 
-# ---
-# Final, Proven, Linear Logic
-# ---
-workstreams_df = pd.DataFrame()
-loops_df = pd.DataFrame()
-feedback_df = pd.DataFrame()
-
+# --- Data Loading ---
 try:
-    PROJECT_ROOT = Path(__file__).resolve().parents[3]
     db_path = PROJECT_ROOT / "runtime/db/ora.db"
-
-    if db_path.exists():
-        conn = sqlite3.connect(db_path)
-        workstreams_df = pd.read_sql("SELECT id, title FROM workstreams", conn)
-        loops_df = pd.read_sql("SELECT uuid, title, workstream, score FROM loop_metadata", conn)
-        feedback_df = pd.read_sql("SELECT uuid, tag FROM loop_feedback", conn)
-        conn.close()
-    else:
-        st.error("Database file not found.")
-
+    workstreams_df, loops_df, feedback_df = load_workstream_feedback_data(db_path)
 except Exception as e:
     st.error(f"A critical error occurred: {e}")
+    workstreams_df, loops_df, feedback_df = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
 # --- UI Rendering ---
 if workstreams_df.empty or loops_df.empty:
