@@ -7,16 +7,16 @@ Query Ora's loop memory and log results to /0001-HQ/Insights/loop_queries.md
 import argparse
 import sqlite3
 from datetime import datetime
-from pathlib import Path
 
 from openai import OpenAI
 from qdrant_client import QdrantClient
-from src.path_config import LOOP_MEMORY_DB
+
+from src.system.path_config import LOG_DIR, LOOP_MEMORY_DB
 
 client = OpenAI()
 qdrant = QdrantClient(host="localhost", port=6333)
 COLLECTION_NAME = "loop_embeddings"
-LOG_PATH = Path("/Users/air/AIR01/0001-HQ/Insights/loop_queries.md")
+LOG_PATH = LOG_DIR / "loop_queries.md"
 
 
 def embed_query(text):

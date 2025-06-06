@@ -1,5 +1,4 @@
 from pathlib import Path
-import streamlit as st # Added for Home.py content
 
 # Path adjusted to be relative to project root for execution in local context
 project_root = Path(__file__).resolve().parent.parent.parent # Assuming this script itself is in src/utils or similar
@@ -52,6 +51,6 @@ st.write(\"This tool helps convert retrospective loops into roadmap items.\")
 print(f"Created/Updated: {pages_dir / '1_Promote_Loops.py'}")
 
 print("\nStreamlit UI scaffold created/updated in src/ui/")
-print(f"Main entry point for Streamlit app: src/ui/Home.py")
+print("Main entry point for Streamlit app: src/ui/Home.py")
 print("Other pages are in src/ui/pages/")
-print("To run: streamlit run src/ui/Home.py") 
+print("To run: streamlit run src/ui/Home.py")

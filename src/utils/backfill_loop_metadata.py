@@ -1,9 +1,9 @@
-import yaml
 import hashlib
-import uuid
 import random
+import uuid
 from pathlib import Path
-from typing import Dict, Any
+
+import yaml
 
 # Determine project root assuming this script is in src/utils/backfill_loop_metadata.py
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -41,7 +41,7 @@ def backfill_loop_metadata():
             except yaml.YAMLError as e:
                 print(f"Error parsing YAML frontmatter in {path.name}: {e}. Skipping.")
                 continue
-            
+
             body = parts[2].strip() # Ensure body is stripped
             original_frontmatter_str = parts[1] # Keep original frontmatter string for comparison if needed
 
@@ -69,7 +69,7 @@ def backfill_loop_metadata():
                 # Preserve comments if any by careful reconstruction (advanced)
                 # For simplicity here, we just use safe_dump which might lose comments.
                 new_frontmatter_str = yaml.safe_dump(frontmatter, sort_keys=False, indent=2).strip()
-                
+
                 # Only write if the dumped new frontmatter is different from original (besides stripping)
                 # This avoids rewriting files just due to YAML formatting changes if no actual data changed.
                 # However, simple string comparison might be tricky due to potential minor formatting diffs from safe_load then safe_dump.
@@ -90,7 +90,7 @@ def backfill_loop_metadata():
             import traceback
             traceback.print_exc()
             continue
-    
+
     print(f"\nBackfill process complete. {updated_count} file(s) updated.")
 
 if __name__ == "__main__":
@@ -110,4 +110,4 @@ if __name__ == "__main__":
             (LOOP_DIR / name).write_text(text_content, encoding="utf-8")
             print(f"Created dummy file: {name}")
 
-    backfill_loop_metadata() 
+    backfill_loop_metadata()

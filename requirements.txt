@@ -1,6 +1,0 @@
-streamlit==1.45.1
-python-dotenv
-openai
-qdrant-client
-PyYAML
-python-frontmatter

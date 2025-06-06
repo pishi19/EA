@@ -7,11 +7,11 @@ Adds feedback to a loop (useful, false_positive, etc.), updates SQLite, YAML, an
 import argparse
 import sqlite3
 from datetime import datetime
-from pathlib import Path
-from src.path_config import LOOP_MEMORY_DB
 
-LOG_PATH = Path("/Users/air/AIR01/System/Logs/loop_feedback_log.md")
-RETRO_DIR = Path("/Users/air/AIR01/Retrospectives")
+from src.system.path_config import LOG_DIR, LOOP_MEMORY_DB, RETRO_PATH
+
+LOG_PATH = LOG_DIR / "loop_feedback_log.md"
+RETRO_DIR = RETRO_PATH
 
 
 def update_sqlite_feedback(loop_id, feedback):

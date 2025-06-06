@@ -1,15 +1,16 @@
 # ✍️ Loop Writer – Save Updated Markdown
 
-import frontmatter
-import os
 import subprocess
+
+import frontmatter
+
 
 def save_loop_file(path, new_content, new_metadata):
     post = frontmatter.loads(new_content)
     post.metadata.update(new_metadata)
     with open(path, 'w') as f:
         f.write(frontmatter.dumps(post))
-    
+
     # Add call to update Qdrant embeddings
     try:
         # Ensure the path to the script is correct relative to the execution context of loop_writer.py

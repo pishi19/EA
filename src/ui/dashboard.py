@@ -1,5 +1,7 @@
-from src.system.data_loader import get_all_loops, get_all_roadmaps
 import streamlit as st
+
+from src.system.data_loader import get_all_loops, get_all_roadmaps
+
 
 def render_dashboard():
     st.title("📊 Ora Dashboard")
@@ -22,4 +24,4 @@ def render_dashboard():
         st.warning("No roadmap entries found.")
     else:
         for item in roadmap[:5]:
-            st.markdown(f"- [ ] {item['metadata'].get('title', 'Untitled')} ({item['metadata'].get('id', 'N/A')})") 
+            st.markdown(f"- [ ] {item['metadata'].get('title', 'Untitled')} ({item['metadata'].get('id', 'N/A')})")

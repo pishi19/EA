@@ -1,4 +1,5 @@
 import streamlit as st
+
 st.set_page_config(page_title="Ora Assistant", layout="wide")
 
 from ui.slice import render_slice_view

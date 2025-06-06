@@ -6,6 +6,8 @@ import pandas as pd
 import streamlit as st
 from gpt_supervised.config import OPENAI_API_KEY
 
+from src.system.path_config import EMAIL_LOG_PATH
+
 openai.api_key = OPENAI_API_KEY
 
 
@@ -17,7 +19,7 @@ class CursorDashboard:
         self.sessions_dir = Path(__file__).parent.parent / "sessions"
         self.metrics_path = self.sessions_dir / "2025-05-23" / "metrics" / "metrics.json"
         self.roadmap_path = self.sessions_dir.parent / "System" / "Reference" / "ea_roadmap.md"
-        self.email_log_path = Path("/Users/air/AIR01/System/Inbox/EmailLog.md")
+        self.email_log_path = EMAIL_LOG_PATH
 
     def load_metrics(self) -> pd.DataFrame:
         """Aggregate session metadata from markdown files in the sessions directory."""

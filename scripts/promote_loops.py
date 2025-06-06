@@ -1,8 +1,9 @@
-import sqlite3
 import os
-import frontmatter
-from pathlib import Path
+import sqlite3
 import sys
+from pathlib import Path
+
+import frontmatter
 
 # Add project root to path to allow importing from src
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -10,14 +11,22 @@ sys.path.append(str(PROJECT_ROOT))
 
 from src.agent.commands.promote_loop import promote_loop_to_roadmap
 
-def find_promotable_loops():
+
+def find_promotable_loops(
+    roadmap_dir=None,
+    db_path=None,
+    loops_dir=None,
+):
     """
     Finds loops that are eligible for promotion.
     This is the proven logic from our standalone tests.
     """
-    roadmap_dir = PROJECT_ROOT / "runtime/roadmap"
-    db_path = PROJECT_ROOT / "runtime/db/ora.db"
-    loops_dir = PROJECT_ROOT / "runtime/loops"
+    if roadmap_dir is None:
+        roadmap_dir = PROJECT_ROOT / "runtime/roadmap"
+    if db_path is None:
+        db_path = PROJECT_ROOT / "runtime/db/ora.db"
+    if loops_dir is None:
+        loops_dir = PROJECT_ROOT / "runtime/loops"
 
     promoted_uuids = set()
     if roadmap_dir.exists():
@@ -53,9 +62,9 @@ def find_promotable_loops():
         for loop_data in all_db_loops:
             if loop_data["uuid"] in all_loop_files_by_uuid:
                 db_loops_with_files.add(loop_data["uuid"])
-    
+
     final_list = [
-        loop for loop in all_db_loops 
+        loop for loop in all_db_loops
         if loop["uuid"] in db_loops_with_files and loop["uuid"] not in promoted_uuids
     ]
     return final_list
@@ -80,7 +89,7 @@ def main():
             choice = input("\nEnter the number of the loop to promote (or 'q' to quit): ")
             if choice.lower() == 'q':
                 break
-            
+
             choice_index = int(choice) - 1
             if 0 <= choice_index < len(promotable):
                 loop_to_promote = promotable[choice_index]
@@ -102,4 +111,4 @@ def main():
     print("\nExiting promotion tool.")
 
 if __name__ == "__main__":
-    main() 
+    main()

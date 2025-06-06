@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+
 from src.path_config import MCP_MEMORY_JSON
 
 # Paths

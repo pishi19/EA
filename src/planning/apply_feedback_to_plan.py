@@ -1,10 +1,16 @@
-import yaml
 from pathlib import Path
-from src.data.workstream_loader import load_plan, load_feedback, merge_plan_with_feedback
-from typing import List, Dict, Any # Added for type hinting
+from typing import Any, Dict, List  # Added for type hinting
+
+import yaml
+
+from src.data.workstream_loader import (
+    load_feedback,
+    load_plan,
+    merge_plan_with_feedback,
+)
 
 # Assuming this file is in src/planning/apply_feedback_to_plan.py
-project_root = Path(__file__).resolve().parent.parent.parent 
+project_root = Path(__file__).resolve().parent.parent.parent
 PLAN_PATH = project_root / "workstream_plan.yaml" # Made project-root relative
 
 def save_plan(plan: List[Dict[str, Any]]):
@@ -16,10 +22,10 @@ def save_plan(plan: List[Dict[str, Any]]):
         print(f"❌ Error saving updated plan to {PLAN_PATH}: {e}")
 
 def main():
-    print(f"Starting plan update process...")
+    print("Starting plan update process...")
     print(f"Loading plan from: {PLAN_PATH}")
     plan = load_plan()
-    
+
     if not plan:
         # load_plan() already prints warnings if file not found or empty/invalid.
         print("No plan items loaded or plan file is empty/invalid. Exiting update process.")
@@ -38,7 +44,7 @@ def main():
     # merge_plan_with_feedback is expected to return a new list or modified copy
     merged_plan = merge_plan_with_feedback(plan, feedback)
     print("Merge process complete.")
-    
+
     print("\nSaving updated plan...")
     save_plan(merged_plan)
 
@@ -65,4 +71,4 @@ if __name__ == "__main__":
         ]
         feedback_loader_feedback_path.write_text(yaml.safe_dump(dummy_feedback_data, indent=2), encoding="utf-8")
 
-    main() 
+    main()

@@ -1,7 +1,9 @@
-import yaml
 import hashlib
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import yaml
+
 
 def calculate_sha1(filepath):
     """Calculates the SHA-1 hash of a file."""
@@ -28,7 +30,7 @@ def main():
         sys.exit(1)
 
     try:
-        with open(manifest_path, 'r') as f:
+        with open(manifest_path) as f:
             manifest_data = yaml.safe_load(f)
     except Exception as e:
         print(f"Error loading manifest YAML: {e}")
@@ -45,21 +47,21 @@ def main():
             if not file_path_str:
                 print(f"Skipping entry with no path: {entry.get('summary', '<no summary>')}")
                 continue
-            
+
             # Paths in manifest are relative to project root
             file_to_check = project_root / file_path_str
             recorded_hash = entry['hash']
-            
+
             if not file_to_check.exists():
                 if file_to_check.is_dir() and file_path_str.endswith('/'): # Allow directory entries with null hash
                     if recorded_hash is None or recorded_hash == 'null':
                          print(f"  Directory: {file_path_str} (hash not applicable)")
                          continue
                 print(f"  Path: {file_path_str}")
-                print(f"  Status: FILE_NOT_FOUND")
+                print("  Status: FILE_NOT_FOUND")
                 mismatches_found = True
                 continue
-            
+
             # Skip hash check for directories if hash is null (as per user's YAML)
             if file_to_check.is_dir():
                 if recorded_hash is None or recorded_hash == 'null':
@@ -68,8 +70,8 @@ def main():
                 else:
                     print(f"  Path: {file_path_str} (Directory with unexpected hash value)")
                     print(f"  Expected: {recorded_hash}")
-                    print(f"  Actual: N/A (Directory)")
-                    print(f"  Status: MISMATCH")
+                    print("  Actual: N/A (Directory)")
+                    print("  Status: MISMATCH")
                     mismatches_found = True
                     continue
 
@@ -84,7 +86,7 @@ def main():
                 print(f"  Path: {file_path_str}")
                 print(f"  Expected SHA-1: {recorded_hash}")
                 print(f"  Actual SHA-1:   {actual_hash}")
-                print(f"  Status: MISMATCH")
+                print("  Status: MISMATCH")
                 mismatches_found = True
             else:
                 print(f"  Path: {file_path_str} - ✅ MATCH")
@@ -97,4 +99,4 @@ def main():
         sys.exit(0)
 
 if __name__ == "__main__":
-    main() 
+    main()

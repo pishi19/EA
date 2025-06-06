@@ -1,10 +1,10 @@
 import re
-from pathlib import Path
 
-RETRO_PATH = Path("/Users/air/AIR01/Retrospectives")
-DAILY_PATH = Path("/Users/air/AIR01/0001-HQ/Daily Assistant")
-WEEKLY_PATH = Path("/Users/air/AIR01/0001-HQ/Weekly Assistant")
-TASKS_FILE = Path("/Users/air/AIR01/0001-HQ/Signal_Tasks.md")
+from src.system.path_config import RETRO_PATH, VAULT_PATH
+
+DAILY_PATH = VAULT_PATH / "0001 HQ" / "Daily Assistant"
+WEEKLY_PATH = VAULT_PATH / "0001 HQ" / "Weekly Assistant"
+TASKS_FILE = VAULT_PATH / "0001 HQ" / "Signal_Tasks.md"
 
 
 def find_referenced_loops():

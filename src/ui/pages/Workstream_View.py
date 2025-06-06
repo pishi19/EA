@@ -1,6 +1,7 @@
-import streamlit as st
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import streamlit as st
 
 # Add project root for imports
 try:
@@ -35,18 +36,18 @@ selected_title = st.selectbox("Choose a Workstream", titles)
 
 if selected_title:
     selected_ws = next((ws for ws in workstreams if ws["title"] == selected_title), None)
-    
+
     if selected_ws:
         st.divider()
         st.write(f"### Goals for {selected_ws['title']}")
         goals = selected_ws.get("goals", "").split(", ")
         for goal in goals:
             if goal: st.markdown(f"- {goal}")
-        
+
         st.divider()
         st.write("### Assigned Loops")
         assigned_loops = [loop for loop in all_loops if loop.get("workstream") == selected_ws["id"]]
-        
+
         if not assigned_loops:
             st.warning("No loops found for this workstream.")
         else:
@@ -63,4 +64,4 @@ if selected_title:
 else:
     st.info("Select a workstream to view details.")
 
-st.caption("End of workstream view.") 
+st.caption("End of workstream view.")

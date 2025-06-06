@@ -1,10 +1,9 @@
 import datetime
 from pathlib import Path
 
+from config import DAILY_NOTES_PATH, LOG_PATH, OPENAI_API_KEY
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
-
-from config import DAILY_NOTES_PATH, LOG_PATH, OPENAI_API_KEY
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 

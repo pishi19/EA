@@ -1,5 +1,7 @@
-import hashlib, os, yaml
+import hashlib
 from pathlib import Path
+
+import yaml
 
 base_dir = Path(__file__).resolve().parents[1]
 manifest_path = base_dir / ".system_manifest.yaml"
@@ -22,4 +24,4 @@ for ext in [".py", ".yaml", ".md"]:
 with open(manifest_path, "w") as f:
     yaml.dump({"phase": "phase-5.4-scaffolded", "files": tracked}, f)
 
-print(f"✅ Manifest written to {manifest_path}") 
+print(f"✅ Manifest written to {manifest_path}")

@@ -1,8 +1,8 @@
 import subprocess
-from pathlib import Path
-from datetime import datetime
 import sys
-import os
+from datetime import datetime
+from pathlib import Path
+
 
 def run_git_command(command_parts, cwd_path):
     """Runs a Git command and returns (return_code, stdout, stderr)."""
@@ -17,7 +17,7 @@ def run_git_command(command_parts, cwd_path):
         # For git commit, "nothing to commit" might be in stdout for some git versions
         is_commit_cmd = len(command_parts) > 1 and command_parts[1] == "commit"
         nothing_to_commit_msg = "nothing to commit"
-        
+
         if process.returncode != 0 and not (is_commit_cmd and nothing_to_commit_msg in (process.stdout + process.stderr).lower()):
             print(f"Error running git command '{' '.join(command_parts)}':")
             if process.stdout:
@@ -26,7 +26,7 @@ def run_git_command(command_parts, cwd_path):
                 print(f"  Stderr: {process.stderr.strip()}")
         return process.returncode, process.stdout.strip(), process.stderr.strip()
     except FileNotFoundError:
-        print(f"Error: git command not found. Ensure git is installed and in PATH.")
+        print("Error: git command not found. Ensure git is installed and in PATH.")
         sys.exit(1)
     except Exception as e:
         print(f"An unexpected error occurred while running git command '{' '.join(command_parts)}': {e}")
@@ -52,7 +52,7 @@ def main():
     # 1. Stage .system_manifest.yaml and any updated tracked files
     print(f"🔍 Staging {manifest_file}...")
     run_git_command(["git", "add", str(manifest_file)], cwd_path=project_root)
-    
+
     print("🔍 Staging updated tracked files (-u)...")
     run_git_command(["git", "add", "-u"], cwd_path=project_root)
 
@@ -61,7 +61,7 @@ def main():
     if ret_code != 0:
         print(f"Error checking for staged files: {err_staged}")
         sys.exit(1)
-    
+
     staged_files_list = [f for f in staged_files_str.splitlines() if f]
     if not staged_files_list:
         print("✅ No changes staged for snapshot. Exiting.")
@@ -71,15 +71,15 @@ def main():
     commit_message = f"snapshot: [auto] system snapshot {timestamp_msg_format}"
     print(f"📝 Committing with message: '{commit_message}'...")
     ret_code, commit_stdout, commit_stderr = run_git_command(["git", "commit", "-m", commit_message], cwd_path=project_root)
-    
+
     if ret_code != 0:
         if "nothing to commit" in (commit_stdout + commit_stderr).lower():
             print("✅ No changes to commit for snapshot. Exiting.")
             sys.exit(0)
         else:
-            print(f"Error during git commit.") # Specific error already printed by run_git_command
+            print("Error during git commit.") # Specific error already printed by run_git_command
             sys.exit(1)
-    
+
     # Get commit ID
     ret_code, commit_id, err_rev = run_git_command(["git", "rev-parse", "HEAD"], cwd_path=project_root)
     if ret_code != 0:
@@ -102,10 +102,10 @@ def main():
     # 4. Log System Snapshot
     log_file_path_rel = Path("System/Meta/system_state_view.md")
     log_file_abs_path = project_root / log_file_path_rel
-    
+
     log_entry_header = f"### Snapshot {timestamp_log_header_format}"
     log_entry_files_md = "\n".join([f"       - {f}" for f in staged_files_list]) # Indented for markdown list
-    
+
     log_entry_content = (
         f"\n{log_entry_header}\n"
         f"- Files committed:\n{log_entry_files_md}\n"
@@ -122,10 +122,10 @@ def main():
         print(f"Error writing to log file {log_file_abs_path}: {e}")
         sys.exit(1) # Consider this critical
 
-    print(f"\n✅ System snapshot created successfully.")
+    print("\n✅ System snapshot created successfully.")
     print(f"  Commit: {commit_id}")
     print(f"  Tag: {tag_name}")
     print(f"  Log updated: {log_file_path_rel}")
 
 if __name__ == "__main__":
-    main() 
+    main()

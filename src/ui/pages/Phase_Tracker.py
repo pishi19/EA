@@ -1,7 +1,8 @@
-import streamlit as st
-import pandas as pd
-import yaml
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+import yaml
 
 st.set_page_config(page_title="Phase Tracker", layout="wide")
 st.title("🛤️ Phase Execution Tracker")
@@ -20,7 +21,7 @@ if not log_file.exists():
     st.error("`runtime/phase_execution_log.yaml` not found.")
     st.stop()
 
-with open(log_file, "r") as f:
+with open(log_file) as f:
     log_data = yaml.safe_load(f)
 
 if not log_data or not isinstance(log_data, list):
@@ -41,4 +42,4 @@ df = df[cols]
 # Reverse the dataframe to show the latest entries first
 df = df.iloc[::-1]
 
-st.dataframe(df, use_container_width=True) 
+st.dataframe(df, use_container_width=True)

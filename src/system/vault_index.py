@@ -1,12 +1,11 @@
 import json
-import frontmatter
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
-VAULT_PATH = Path("vault")
-LOOPS_DIR = VAULT_PATH / "Retrospectives" / "Loops"
-INSIGHTS_DIR = VAULT_PATH / "Retrospectives" / "Insights"
-INDEX_OUT = Path("System/vault_index.json")
+import frontmatter
+
+from src.system.path_config import INSIGHTS_DIR, LOOPS_DIR, VAULT_INDEX_FILE
+
 
 def _format_created(value):
     if isinstance(value, datetime):
@@ -30,13 +29,13 @@ def _parse_md(file: Path) -> dict:
     except Exception as e:
         return {"error": str(e), "path": str(file)}
 
-def generate_vault_index():
+def generate_vault_index(loops_dir=LOOPS_DIR, insights_dir=INSIGHTS_DIR, index_out=VAULT_INDEX_FILE):
     items = []
-    for f in LOOPS_DIR.glob("*.md"):
+    for f in loops_dir.glob("*.md"):
         items.append(_parse_md(f))
-    for f in INSIGHTS_DIR.glob("*.md"):
+    for f in insights_dir.glob("*.md"):
         items.append(_parse_md(f))
     items = sorted(items, key=lambda x: x.get("created", ""), reverse=True)
-    INDEX_OUT.parent.mkdir(parents=True, exist_ok=True)
-    INDEX_OUT.write_text(json.dumps(items, indent=2))
-    return INDEX_OUT
+    index_out.parent.mkdir(parents=True, exist_ok=True)
+    index_out.write_text(json.dumps(items, indent=2))
+    return index_out

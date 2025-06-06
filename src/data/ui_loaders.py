@@ -1,8 +1,9 @@
-import sqlite3
 import os
+import sqlite3
+
 import frontmatter
-from pathlib import Path
 import pandas as pd
+
 
 def load_promotable_loops(db_path, loops_dir, roadmap_dir):
     """
@@ -42,7 +43,7 @@ def load_promotable_loops(db_path, loops_dir, roadmap_dir):
                         all_loop_files_by_uuid[post.get("uuid")] = f
                 except Exception:
                     continue # Ignore malformed files
-        
+
         for loop in all_loops:
             if loop["uuid"] in all_loop_files_by_uuid and loop["uuid"] not in promoted_uuids:
                 promotable_loops.append(loop)
@@ -86,7 +87,7 @@ def load_workstream_view_data(db_path, loops_dir):
                 except Exception as e:
                     print(f"DEBUG: Error loading {fname}: {e}") # DEBUG
                     continue
-    
+
     return workstreams, all_loops
 
 def load_workstream_feedback_data(db_path):
@@ -101,4 +102,4 @@ def load_workstream_feedback_data(db_path):
     loops = pd.read_sql("SELECT uuid, title, workstream, score FROM loop_metadata", conn)
     feedback = pd.read_sql("SELECT uuid, tag FROM loop_feedback", conn)
     conn.close()
-    return workstreams, loops, feedback 
+    return workstreams, loops, feedback

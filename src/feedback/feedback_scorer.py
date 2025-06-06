@@ -1,7 +1,8 @@
-import yaml
+from datetime import datetime  # For dummy file creation in __main__
 from pathlib import Path
-from typing import List, Dict, Any # Added for type hinting
-from datetime import datetime # For dummy file creation in __main__
+from typing import Any, Dict, List  # Added for type hinting
+
+import yaml
 
 # Determine project root assuming this script is in src/feedback/feedback_scorer.py
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -29,13 +30,13 @@ def score_feedback_from_loops() -> List[Dict[str, Any]]:
             if len(parts) < 3:
                 print(f"Warning: Malformed file (no valid frontmatter section): {path.name}")
                 continue
-            
+
             frontmatter = yaml.safe_load(parts[1])
             if not isinstance(frontmatter, dict):
                 print(f"Warning: Frontmatter in {path.name} is not a dictionary. Skipping.")
                 frontmatter = {} # Ensure frontmatter is a dict to avoid errors on .get
                 # Or skip this file if frontmatter is critical and invalid:
-                # continue 
+                # continue
 
         except yaml.YAMLError as e:
             print(f"Error parsing YAML frontmatter in {path.name}: {e}. Skipping.")
@@ -92,27 +93,27 @@ if __name__ == "__main__":
         print("Creating dummy loop files for testing feedback scoring...")
         dummy_files_data = [
             {
-                "name": "dummy_loop_useful.md", 
+                "name": "dummy_loop_useful.md",
                 "uuid": "d1f8f9c6-1a7b-4b3c-8e6a-3c8a5b9e0d1f",
-                "feedback_tags": ["#useful", "#insightful"], 
+                "feedback_tags": ["#useful", "#insightful"],
                 "content": "This is a very useful loop."
             },
             {
-                "name": "dummy_loop_negative.md", 
+                "name": "dummy_loop_negative.md",
                 "uuid": "e2g9f8d5-2b8c-5c4d-9f7b-4d9b6c0f1e2g",
-                "feedback_tags": ["#false_positive", "#confusing"], 
+                "feedback_tags": ["#false_positive", "#confusing"],
                 "content": "This loop was confusing and a false positive."
             },
             {
-                "name": "dummy_loop_no_feedback.md", 
+                "name": "dummy_loop_no_feedback.md",
                 "uuid": "f3h0g7e4-3c9d-6d5e-0g8c-5e0c7d1g2f3h",
-                "feedback_tags": [], 
+                "feedback_tags": [],
                 "content": "This loop has no specific feedback tags yet."
             },
             {
-                "name": "dummy_loop_mixed.md", 
+                "name": "dummy_loop_mixed.md",
                 "uuid": "g4i1h6f3-4d0e-7e6f-1h9d-6f1d8e2h3g4i",
-                "feedback_tags": ["#useful", "#confusing"], 
+                "feedback_tags": ["#useful", "#confusing"],
                 "content": "This loop was useful but also a bit confusing."
             }
         ]
@@ -141,7 +142,7 @@ if __name__ == "__main__":
             print(f"  Sample {i+1}: File: {res['filename']}, UUID: {res['uuid']}, Score: {res['score']}, Tags: {res['feedback_tags']}")
         if len(scored_results) > 3:
             print("  ...")
-        
+
         try:
             with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
                 yaml.safe_dump(scored_results, f, sort_keys=False, indent=2)
@@ -149,4 +150,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"\n❌ Error saving feedback scores to {OUTPUT_FILE}: {e}")
     else:
-        print("\nNo loop files were scored. Ensure *.md files with frontmatter exist in the loop directory.") 
+        print("\nNo loop files were scored. Ensure *.md files with frontmatter exist in the loop directory.")

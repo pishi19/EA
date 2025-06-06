@@ -1,6 +1,5 @@
-import os
-import pathlib
 import fileinput
+import pathlib
 
 # Paths are relative to the project root where this script will be run from.
 project_root = pathlib.Path(".") # Current directory, assuming script is run from project root
@@ -30,7 +29,7 @@ def refactor_email_module_name():
     # Define old and new module import strings
     old_import_1 = f"from utils import {old_name[:-3]}" # from utils import email_signals
     new_import_1 = f"from utils import {new_name[:-3]}" # from utils import email_signals_signals
-    
+
     old_import_2 = f"import utils.{old_name[:-3]}"    # import utils.email_signals
     new_import_2 = f"import utils.{new_name[:-3]}"    # import utils.email_signals_signals
 
@@ -39,7 +38,7 @@ def refactor_email_module_name():
             # Skip the script itself and backup files
             if py_file.name == __file__ or str(py_file).endswith(".bak") or "site-packages" in str(py_file) or ".venv" in str(py_file):
                 continue
-            
+
             files_checked += 1
             modified_in_file = False
             try:
@@ -60,7 +59,7 @@ def refactor_email_module_name():
                         print(f"    🔄 Modified: {py_file}")
                         files_modified += 1
             except FileNotFoundError:
-                print(f"    ⚠️ File not found during rglob scan (should not happen): {py_file}")            
+                print(f"    ⚠️ File not found during rglob scan (should not happen): {py_file}")
             except UnicodeDecodeError as ude:
                 print(f"    ⚠️ UnicodeDecodeError reading {py_file}: {ude}. Skipping this file for replacements.")
             except Exception as e:
@@ -69,10 +68,10 @@ def refactor_email_module_name():
     except Exception as e:
         print(f"❌ An error occurred during project file scan: {e}")
 
-    print(f"\nImport update process complete.")
+    print("\nImport update process complete.")
     print(f"Files checked: {files_checked}")
     print(f"Files modified (imports updated): {files_modified}")
-    print(f"Backup files (if any) were created with a '.bak' extension.")
+    print("Backup files (if any) were created with a '.bak' extension.")
 
 if __name__ == "__main__":
-    refactor_email_module_name() 
+    refactor_email_module_name()

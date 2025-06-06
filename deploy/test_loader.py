@@ -2,9 +2,10 @@ from src.system.data_loader import (
     get_all_loops,
     get_all_roadmaps,
     get_inbox_entries,
-    get_loop_summaries,
     get_insights,
+    get_loop_summaries,
 )
+
 
 def print_summary(label, count):
     print(f"[✓] {label}: {count} entries")

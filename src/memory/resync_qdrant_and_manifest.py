@@ -1,12 +1,16 @@
-import yaml
 import hashlib
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any # Added for type hinting
+from pathlib import Path
+from typing import Any, Dict  # Added for type hinting
+
+import yaml
+from qdrant_client.http import models  # For PointStruct if needed later
 
 # Assuming src.qdrant.query handles OpenAI and Qdrant client initialization
-from src.qdrant.query import embed_text, get_qdrant_client # Changed to import get_qdrant_client
-from qdrant_client.http import models # For PointStruct if needed later
+from src.qdrant.query import (  # Changed to import get_qdrant_client
+    embed_text,
+    get_qdrant_client,
+)
 
 # Determine project root assuming this script is in src/memory/resync_qdrant_and_manifest.py
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -54,7 +58,7 @@ def update_manifest_entry(manifest: Dict[str, Any], file_path: Path, uuid: str, 
     }
 
 def main():
-    print(f"Starting Qdrant and Manifest resync process.")
+    print("Starting Qdrant and Manifest resync process.")
     print(f"Monitoring loop directory: {LOOP_DIR}")
     print(f"Manifest file: {MANIFEST_PATH}")
 
@@ -79,19 +83,19 @@ def main():
     if not LOOP_DIR.exists():
         print(f"⚠️ Loop directory {LOOP_DIR} does not exist. Creating it.")
         LOOP_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     processed_files = 0
     for file_path in LOOP_DIR.glob("*.md"):
         print(f"\nProcessing file: {file_path.name}")
         try:
             content = file_path.read_text(encoding="utf-8")
             frontmatter = extract_frontmatter(file_path)
-            
+
             uuid = frontmatter.get("uuid")
             if not uuid:
                 print(f"⚠️ Skipping {file_path.name}, no UUID in frontmatter.")
                 continue
-            
+
             # Check if file needs update based on hash (optional optimization)
             current_hash = sha256_text(content)
             relative_path_str = str(file_path.relative_to(project_root))
@@ -103,7 +107,7 @@ def main():
 
             print(f"  Embedding content for {file_path.name} (UUID: {uuid})...")
             embedding = embed_text(content) # This can raise exceptions if OpenAI key is missing or API fails
-            
+
             point_payload = {
                 "filename": str(file_path.name), # Storing only filename, not full path
                 "uuid": uuid,
@@ -122,8 +126,8 @@ def main():
                 collection_name=COLLECTION_NAME,
                 points=[
                     models.PointStruct(
-                        id=uuid, 
-                        vector=embedding, 
+                        id=uuid,
+                        vector=embedding,
                         payload=point_payload
                     )
                 ]
@@ -175,4 +179,4 @@ if __name__ == "__main__":
             #     print(f"Created dummy file: {dummy_file_path}")
             # except Exception as e:
             #     print(f"Error creating dummy file: {e}")
-        main() 
+        main()

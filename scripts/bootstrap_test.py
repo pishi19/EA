@@ -1,6 +1,6 @@
 # bootstrap_test.py
-from src.system import status_writer, vault_index, path_config
-from src.ui import inbox, dashboard, slice
+from src.system import status_writer, vault_index
+
 
 def main():
     print("✅ Modules loaded.")

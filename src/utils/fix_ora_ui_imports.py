@@ -9,7 +9,7 @@ def fix_imports_in_ora_ui():
     if ORA_UI_PATH.exists():
         try:
             original_text = ORA_UI_PATH.read_text(encoding="utf-8")
-            
+
             # Perform replacements
             # It's important that these replacements are specific enough not to cause unintended changes.
             # For example, ensure that "ui." is not part of a longer word or a comment accidentally.
@@ -32,7 +32,7 @@ def fix_imports_in_ora_ui():
     else:
         print(f"❌ File not found: {ORA_UI_PATH}. Cannot fix imports.")
         # The user script had `raise FileNotFoundError`, but for a utility, printing might be friendlier.
-        # raise FileNotFoundError(f"{ORA_UI_PATH} not found at expected path.") 
+        # raise FileNotFoundError(f"{ORA_UI_PATH} not found at expected path.")
 
 if __name__ == "__main__":
-    fix_imports_in_ora_ui() 
+    fix_imports_in_ora_ui()

@@ -1,8 +1,9 @@
-import streamlit as st
-from pathlib import Path
-import yaml
 import uuid
 from datetime import datetime
+from pathlib import Path
+
+import streamlit as st
+import yaml
 
 st.set_page_config(page_title="Assistant Inbox", layout="wide")
 st.title("📥 Assistant Inbox")
@@ -15,7 +16,7 @@ loop_path.mkdir(parents=True, exist_ok=True)
 # Load inbox signals
 def load_yaml(file_path):
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             return yaml.safe_load(f) or {}
     except Exception as e:
         return {"error": str(e)}
@@ -58,4 +59,4 @@ if st.button("🚀 Promote to Loop"):
     st.success(f"✅ Created loop: {loop_filename}")
 
 st.markdown("---")
-st.caption("Routing and loop promotion features coming soon.") 
+st.caption("Routing and loop promotion features coming soon.")

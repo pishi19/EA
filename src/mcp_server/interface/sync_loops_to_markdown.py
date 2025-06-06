@@ -2,7 +2,8 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
-from src.path_config import MCP_MEMORY_JSON, MCP_LOG
+
+from src.path_config import MCP_LOG, MCP_MEMORY_JSON
 
 # Paths
 md_path = Path("/Users/air/AIR01/MCP/loop_memory.md")

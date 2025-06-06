@@ -1,6 +1,5 @@
+import os  # For checking if the target script exists
 import subprocess
-import signal # signal module was imported in user script but not used; can be removed.
-import os # For checking if the target script exists
 from pathlib import Path
 
 # Script assumes it's run from the project root.
@@ -48,7 +47,7 @@ def restart_ora_ui():
             "--server.enableCORS", "false" # Note: often it's true for CORS
         ]
         print(f"Executing: {' '.join(command)}")
-        
+
         # start_new_session=True on POSIX creates a new process group, detaching it.
         # On Windows, it uses DETACHED_PROCESS and CREATE_NEW_PROCESS_GROUP.
         # Use Popen for non-blocking execution.
@@ -58,9 +57,9 @@ def restart_ora_ui():
         print("   Check http://localhost:8501 or the appropriate network URL.")
 
     except FileNotFoundError:
-        print(f"Error: 'streamlit' command not found. Is Streamlit installed and in your PATH?")
+        print("Error: 'streamlit' command not found. Is Streamlit installed and in your PATH?")
     except Exception as e:
         print(f"❌ Error relaunching Ora UI: {e}")
 
 if __name__ == "__main__":
-    restart_ora_ui() 
+    restart_ora_ui()

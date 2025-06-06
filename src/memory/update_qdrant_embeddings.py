@@ -1,14 +1,15 @@
 import argparse
+import hashlib
+import uuid  # Added for UUID generation
 from datetime import datetime
 from pathlib import Path
-import frontmatter
-import hashlib
-import uuid # Added for UUID generation
 
+import frontmatter
 from openai import OpenAI
-from qdrant_client import QdrantClient, models
+from qdrant_client import QdrantClient
 from qdrant_client.http.exceptions import UnexpectedResponse as QdrantUnexpectedResponse
-from qdrant_client.models import PointStruct, VectorParams, Distance
+from qdrant_client.models import Distance, PointStruct, VectorParams
+
 # Assuming EMBED_TRACK_FILE is not strictly needed for single file updates,
 # but will keep it if resync logic is maintained.
 # from src.path_config import EMBED_TRACK_FILE # Commented out for now, revise if resync needed
@@ -98,7 +99,7 @@ def process_and_embed_loop_file(file_path_str: str):
         content = post.content
         metadata = post.metadata
         file_stem = file_path.stem # Original filename stem for reference
-        
+
         qdrant_id = get_qdrant_id(metadata, file_stem)
         print(f"ℹ️ Using Qdrant ID: {qdrant_id} for file: {file_path.name}")
 
@@ -111,7 +112,7 @@ def process_and_embed_loop_file(file_path_str: str):
         try:
             retrieved_points = qdrant.retrieve(collection_name=QDRANT_COLLECTION_NAME, ids=[qdrant_id])
             existing_point = retrieved_points[0] if retrieved_points else None
-            
+
             if existing_point and existing_point.payload and existing_point.payload.get("content_hash") == current_hash:
                 print(f"ℹ️ Loop ID {qdrant_id} ({file_stem}) already up-to-date in Qdrant. Skipping.")
                 return
@@ -123,7 +124,7 @@ def process_and_embed_loop_file(file_path_str: str):
                 return
             else:
                 print(f"⚠️ Could not verify existing point for ID {qdrant_id} ({file_stem}) due to Qdrant error: {qe}. Proceeding with upsert attempt.")
-        except Exception as e: 
+        except Exception as e:
             print(f"⚠️ Could not verify existing point for ID {qdrant_id} ({file_stem}) due to general error: {e}. Proceeding with upsert attempt.")
 
         vector = embed_text(content)
@@ -134,7 +135,7 @@ def process_and_embed_loop_file(file_path_str: str):
         payload = {
             "path": str(file_path),
             "file_stem": file_stem, # Store original file stem
-            "title": metadata.get("title", file_stem), 
+            "title": metadata.get("title", file_stem),
             "tags": metadata.get("tags", []),
             "created_at": metadata.get("created_at", datetime.now().isoformat()),
             "content_hash": current_hash,
@@ -195,7 +196,7 @@ def resync_embeddings():
                 if not content.strip():
                     print(f"⚠️ Skipped resync for {file_path.name} (empty content).")
                     continue
-                
+
                 vector = embed_text(content)
                 if vector:
                     qdrant.upsert(
@@ -213,7 +214,7 @@ def resync_embeddings():
 
         except Exception as e:
             print(f"❌ Error resyncing {file_path.name}: {e}")
-    
+
     if processed_count > 0:
         update_last_sync()
     print(f"✅ Resync complete. Processed {processed_count} modified files.")

@@ -2,9 +2,10 @@ import hashlib
 import uuid
 from datetime import datetime
 from pathlib import Path
+
 import yaml
 
-from src.signals.collector import Signal # Corrected import
+from src.signals.collector import Signal  # Corrected import
 
 # Determine project root assuming this script is in src/loops/loop_creator.py
 # project_root will be /path/to/ea_cursor_system_coupled
@@ -27,13 +28,13 @@ def slugify(text: str, max_length: int = 32) -> str:
 
 def create_loop_from_signal(signal: Signal) -> Path:
     LOOP_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     uid = deterministic_uuid(signal.content)
     # Use the first line of content for slug, or "untitled" if content is empty/whitespace
     first_line = signal.content.strip().splitlines()[0] if signal.content.strip() else "untitled"
     slug = slugify(first_line)
     date_str = signal.timestamp.strftime("%Y-%m-%d")
-    
+
     # Ensure filename is not too long and handle potential empty slug
     filename_base = f"loop-{date_str}-{slug if slug else 'untitled'}"
     filename = f"{filename_base[:200]}.md" # Cap filename length before .md
@@ -69,7 +70,7 @@ if __name__ == "__main__":
         print(f"Successfully created loop file: {loop_file_path.resolve()}")
         print("\nFile content:")
         print(loop_file_path.read_text(encoding="utf-8"))
-        
+
         # Create another signal with minimal content to test slugify
         minimal_signal = Signal(
             content="  ", # Whitespace content
@@ -84,4 +85,4 @@ if __name__ == "__main__":
         print(minimal_loop_path.read_text(encoding="utf-8"))
 
     except Exception as e:
-        print(f"Error creating loop file: {e}") 
+        print(f"Error creating loop file: {e}")

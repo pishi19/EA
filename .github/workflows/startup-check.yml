@@ -18,7 +18,4 @@ jobs:
         python-version: '3.11'
 
     - name: Run Ora startup check
-      run: python startup_check.py
-
-    - name: Run UI module import check
-      run: python startup_check_ui.py 
+      run: python scripts/startup_check.py 

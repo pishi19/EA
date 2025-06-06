@@ -5,7 +5,8 @@ from datetime import datetime
 from pathlib import Path
 
 from googleapiclient.discovery import build
-from src.path_config import TOKEN_PATH, SIGNAL_ROUTER
+
+from src.path_config import SIGNAL_ROUTER, TOKEN_PATH
 
 # Paths
 TOKEN_PATH = str(TOKEN_PATH)

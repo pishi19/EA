@@ -1,7 +1,8 @@
 import os
 import sqlite3
 from datetime import datetime, timedelta
-from src.path_config import LOOP_MEMORY_DB
+
+from src.system.path_config import LOOP_MEMORY_DB
 
 # Allow test override via environment variable
 DB_PATH = os.getenv("LOOP_DB_PATH", str(LOOP_MEMORY_DB))

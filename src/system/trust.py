@@ -1,5 +1,6 @@
-from pathlib import Path
 import hashlib
+from pathlib import Path
+
 import yaml
 
 # Define project root relative to this file's location (src/system/trust.py)
@@ -14,7 +15,7 @@ SYSTEM_DIR.mkdir(parents=True, exist_ok=True)
 def get_execution_mode():
     if MODE_FILE.exists():
         try:
-            with open(MODE_FILE, "r") as f:
+            with open(MODE_FILE) as f:
                 data = yaml.safe_load(f)
                 # Handle empty or malformed yaml
                 return data.get("execution_mode", "droplet") if isinstance(data, dict) else "droplet"
@@ -33,7 +34,7 @@ def hash_file_content(content: str) -> str:
 
 def safe_write(path: str | Path, content: str, trust_enforced: bool = False):
     current_mode = get_execution_mode()
-    
+
     path_str = str(path) # Use the path as provided for the check
 
     if current_mode == "droplet" and not path_str.startswith("/root/"):
@@ -41,14 +42,14 @@ def safe_write(path: str | Path, content: str, trust_enforced: bool = False):
         # In a general context, this might use project relative paths or other checks.
         raise RuntimeError(f"Trust enforcement failed: path '{path_str}' not permitted in mode '{current_mode}'")
 
-    file_path_obj = Path(path) 
+    file_path_obj = Path(path)
     file_path_obj.parent.mkdir(parents=True, exist_ok=True)
 
     pre_hash = hash_file_content(content)
     with open(file_path_obj, "w", encoding="utf-8") as f:
         f.write(content)
 
-    with open(file_path_obj, "r", encoding="utf-8") as f_read:
+    with open(file_path_obj, encoding="utf-8") as f_read:
         read_back_content = f_read.read()
     post_hash = hash_file_content(read_back_content)
 
@@ -79,4 +80,4 @@ def checkpoint(tag: str):
 set_execution_mode("droplet")
 # Print message indicating the trust layer is active.
 # This mimics the user's original script's output.
-print(f"🔐 Trust layer installed via src.system.trust. Execution mode: {get_execution_mode()}.") 
+print(f"🔐 Trust layer installed via src.system.trust. Execution mode: {get_execution_mode()}.")

@@ -1,6 +1,7 @@
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
 from src.path_config import resolve
 
 LOG_PATH = "/Users/air/Library/Logs/ora/daily_refresh.log"

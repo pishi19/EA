@@ -1,6 +1,7 @@
+import os
 import re
 from datetime import datetime
-import os
+
 
 def generate_summary(loop_markdown: str) -> str:
     # Parse all subject lines from signals
@@ -61,10 +62,11 @@ def generate_summary_with_gpt(markdown: str) -> str:
 # --- Retrain summaries based on feedback ---
 def retrain_summaries_based_on_feedback(vault_path: str):
     import glob
+
     import yaml
     retrained = []
     for path in glob.glob(os.path.join(vault_path, '**', 'loop-*.md'), recursive=True):
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, encoding='utf-8') as f:
             content = f.read()
         yaml_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
         yaml_block = yaml_match.group(1) if yaml_match else ''
@@ -96,4 +98,4 @@ def retrain_summaries_based_on_feedback(vault_path: str):
             f.write(f"# 🧠 Summary Retraining Log\n\n- **Date:** {date_str}\n- **Total retrained:** {len(retrained)}\n\n")
             for r in retrained:
                 f.write(f"## {os.path.relpath(r['path'], start=vault_path)}\n- Feedback: {r['feedback']}\n- New summary: {r['new_summary']}\n\n")
-    return retrained 
+    return retrained

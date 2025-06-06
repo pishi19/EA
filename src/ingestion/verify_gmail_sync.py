@@ -4,6 +4,7 @@ from datetime import datetime
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+
 from src.path_config import TOKEN_PATH
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]

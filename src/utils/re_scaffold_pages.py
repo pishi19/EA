@@ -55,4 +55,4 @@ st.markdown(\"Run manifest validation and check system status.\")
     print("\nStreamlit pages re-scaffolded in src/ui/pages/")
 
 if __name__ == "__main__":
-    rescaffold_streamlit_pages() 
+    rescaffold_streamlit_pages()

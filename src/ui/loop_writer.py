@@ -1,10 +1,12 @@
 import re
-import yaml
 from datetime import datetime
-from summary_agent import generate_summary_with_gpt, generate_summary
+
+import yaml
+from summary_agent import generate_summary, generate_summary_with_gpt
+
 
 def update_loop_summary(path, summary=None, use_gpt=False):
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         content = f.read()
     yaml_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
     yaml_block = yaml_match.group(1) if yaml_match else ''
@@ -25,7 +27,7 @@ def update_loop_summary(path, summary=None, use_gpt=False):
         f.write(new_content)
 
 def update_summary_feedback(path, quality_rating=None, flagged_for_review=None, comment=None):
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, encoding='utf-8') as f:
         content = f.read()
     yaml_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
     yaml_block = yaml_match.group(1) if yaml_match else ''
@@ -42,4 +44,4 @@ def update_summary_feedback(path, quality_rating=None, flagged_for_review=None, 
     rest = content[yaml_match.end():] if yaml_match else content
     new_content = f"---\n{new_yaml}\n---\n{rest}"
     with open(path, 'w', encoding='utf-8') as f:
-        f.write(new_content) 
+        f.write(new_content)

@@ -1,13 +1,15 @@
-import yaml
-from pathlib import Path
-from typing import Dict, List, Any # Added for type hinting
-
-from src.qdrant.query import find_nearest_project_match  # fallback via Qdrant
-
 # For example usage (if __name__ == "__main__"):
-from datetime import datetime # Keep for __main__ if it uses it
-from src.signals.collector import Signal # Keep for __main__
-from src.loops.loop_creator import create_loop_from_signal, LOOP_DIR as creator_loop_dir # Keep for __main__
+import traceback
+from datetime import datetime  # Keep for __main__ if it uses it
+from pathlib import Path
+from typing import Any, Dict, List  # Added for type hinting
+
+import yaml
+
+from src.loops.loop_creator import LOOP_DIR as creator_loop_dir
+from src.loops.loop_creator import create_loop_from_signal  # Keep for __main__
+from src.qdrant.query import find_nearest_project_match  # fallback via Qdrant
+from src.signals.collector import Signal  # Keep for __main__
 
 TAG_PROJECT_MAP: Dict[str, str] = {
     "#ora": "Ora Executive Assistant",
@@ -29,7 +31,7 @@ def route_loop_to_project(loop_path: Path) -> Dict[str, Any]:
     parts = raw.split("---", 2)
     if len(parts) < 3:
         raise ValueError(f"Malformed loop file (could not split frontmatter and body): {loop_path}")
-    
+
     try:
         frontmatter = yaml.safe_load(parts[1])
         if not isinstance(frontmatter, dict):
@@ -38,14 +40,14 @@ def route_loop_to_project(loop_path: Path) -> Dict[str, Any]:
             frontmatter = {}
     except yaml.YAMLError as e:
         raise ValueError(f"Invalid YAML frontmatter in {loop_path}: {e}")
-    
+
     body = parts[2].strip() # Ensure body is stripped here
-    
+
     # Extract tags from the main body content first
     body_tags = extract_tags(body)
     project = None
     phase = None
-    
+
     # Combine body_tags with tags from frontmatter (if they exist and are a list)
     all_tags_for_routing = set(body_tags)
     if "tags" in frontmatter and isinstance(frontmatter["tags"], list):
@@ -62,7 +64,7 @@ def route_loop_to_project(loop_path: Path) -> Dict[str, Any]:
     # Fallback to embedding if tags not found
     if not project or not phase:
         # Directly call the imported find_nearest_project_match
-        vector_result = find_nearest_project_match(body) 
+        vector_result = find_nearest_project_match(body)
         project = project or vector_result.get("project")
         phase = phase or vector_result.get("phase")
         score = vector_result.get("score", 0.0)
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     print("NOTE: This __main__ block will now attempt to use the REAL Qdrant connection.")
     print("Ensure Qdrant is running and OPENAI_API_KEY is set.")
 
-    # To test purely routing logic with a mock, you'd need to temporarily modify 
+    # To test purely routing logic with a mock, you'd need to temporarily modify
     # route_loop_to_project to accept a function or call a local mock directly.
 
     # Test Case 1: Loop with explicit tags in content
@@ -129,11 +131,11 @@ if __name__ == "__main__":
         content="This loop is for #ora and specifically targets #phase-5.1 of the project.",
         source="test_router_explicit_tags",
         timestamp=datetime.now(),
-        tags=[] 
+        tags=[]
     )
     loop_path_with_tags = create_loop_from_signal(signal_with_tags)
     print(f"\nCreated test loop (with tags): {loop_path_with_tags.name}")
-    
+
     try:
         print("Routing loop with explicit tags (real Qdrant attempt)...")
         updated_frontmatter_1 = route_loop_to_project(loop_path_with_tags) # No match_func argument
@@ -148,7 +150,7 @@ if __name__ == "__main__":
         content="This loop discusses a critical database migration strategy and its implications.",
         source="test_router_fallback",
         timestamp=datetime.now(),
-        tags=["#urgent"] 
+        tags=["#urgent"]
     )
     loop_path_fallback = create_loop_from_signal(signal_for_fallback)
     print(f"\nCreated test loop (for fallback): {loop_path_fallback.name}")
@@ -178,4 +180,4 @@ if __name__ == "__main__":
         print(f"Full content (project tag only):\n{loop_path_project_only.read_text(encoding='utf-8')}")
     except Exception as e:
         print(f"Error during Test Case 3: {e}")
-        traceback.print_exc() 
+        traceback.print_exc()

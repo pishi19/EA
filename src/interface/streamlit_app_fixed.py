@@ -1,7 +1,6 @@
 import logging
 
 import streamlit as st
-
 from ui.panels import chat_panel, inbox_panel
 
 logging.basicConfig(

@@ -1,7 +1,8 @@
-import streamlit as st
-import pandas as pd
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
 
 # Add project root for imports
 try:
@@ -45,22 +46,22 @@ else:
 if not feedback_df.empty:
     feedback_counts = feedback_df.groupby('uuid')['tag'].value_counts().unstack(fill_value=0)
     feedback_counts.columns = [f"{col}_count" for col in feedback_counts.columns]
-    
+
     loops_with_feedback = pd.merge(loops_df, feedback_counts, on='uuid', how='left').fillna(0)
 
     useful = loops_with_feedback.get('useful_count', 0)
     false_positive = loops_with_feedback.get('false_positive_count', 0)
     total_feedback = useful + false_positive
-    
+
     loops_with_feedback['total_feedback'] = total_feedback
     loops_with_feedback['volatility'] = ((useful - false_positive).abs() / total_feedback).fillna(0)
-    
+
     def get_skew(row):
         if row['total_feedback'] == 0: return "No Feedback"
         if row['useful_count'] > row['false_positive_count']: return "Positive"
         if row['false_positive_count'] > row['useful_count']: return "Negative"
         return "Neutral"
-    
+
     loops_with_feedback['skew'] = loops_with_feedback.apply(get_skew, axis=1)
 else:
     loops_with_feedback = loops_df.copy()
@@ -87,4 +88,4 @@ final_df = filtered_df[['uuid', 'title', 'score', 'total_feedback', 'volatility'
 
 st.dataframe(final_df.style.apply(style_skew, subset=['Feedback Skew']), use_container_width=True)
 
-st.caption("Further filtering and styling coming soon.") 
+st.caption("Further filtering and styling coming soon.")

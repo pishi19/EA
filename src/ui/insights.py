@@ -1,5 +1,7 @@
-from src.system.data_loader import get_insights
 import streamlit as st
+
+from src.system.data_loader import get_insights
+
 
 def render_insights():
     st.title("📈 Reflection Insights")
@@ -19,4 +21,4 @@ def render_insights():
         st.markdown(f"### {title}")
         st.caption(f"📅 {created.strftime('%Y-%m-%d %H:%M')} | Tags: {', '.join(tags)}")
         st.markdown(item.get("content", ""))
-        st.divider() 
+        st.divider()

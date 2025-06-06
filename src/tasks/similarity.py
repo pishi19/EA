@@ -1,8 +1,10 @@
-import sqlite3
-import pandas as pd
-import numpy as np
 import os
+import sqlite3
+
+import numpy as np
+import pandas as pd
 from openai import OpenAI
+
 
 # --- Embedding Utility (could be shared) ---
 def get_embedding(text, model="text-embedding-ada-002"):
@@ -40,7 +42,7 @@ def find_similar_tasks(verb: str, threshold: float = 0.85, db_path="runtime/db/o
         return {"error": "The 'tasks' table does not exist. Please run the indexer first."}
     finally:
         conn.close()
-        
+
     if tasks_df.empty:
         return []
 
@@ -48,14 +50,14 @@ def find_similar_tasks(verb: str, threshold: float = 0.85, db_path="runtime/db/o
     for index, row in tasks_df.iterrows():
         # The vector dimension is 1536 for text-embedding-ada-002
         stored_vector = np.frombuffer(row['vector'], dtype=np.float32)
-        
+
         # Ensure vectors are of the same dimension before comparing
         if stored_vector.shape != input_vector.shape:
             print(f"Skipping task {row['uuid']} due to mismatched vector dimensions.")
             continue
 
         similarity = cosine_similarity(input_vector, stored_vector)
-        
+
         if similarity >= threshold:
             similar_tasks.append({
                 "task_uuid": row['uuid'],
@@ -66,4 +68,4 @@ def find_similar_tasks(verb: str, threshold: float = 0.85, db_path="runtime/db/o
             })
 
     # Sort by similarity score, descending
-    return sorted(similar_tasks, key=lambda x: x['similarity'], reverse=True) 
+    return sorted(similar_tasks, key=lambda x: x['similarity'], reverse=True)

@@ -6,11 +6,15 @@ Inserts the loop metadata into the SQLite loop memory DB.
 
 import sqlite3
 from datetime import date
-from src.path_config import LOOP_MEMORY_DB
+from pathlib import Path
 
+from src.system.path_config import LOOP_MEMORY_DB
+
+# Ensure the database directory exists
+db_path = Path(LOOP_MEMORY_DB)
 
 def insert_to_sqlite(loop_id, summary, metadata):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(LOOP_MEMORY_DB)
     cursor = conn.cursor()
 
     # Ensure the table exists
@@ -49,4 +53,4 @@ def insert_to_sqlite(loop_id, summary, metadata):
 
     conn.commit()
     conn.close()
-    print(f"✅ Inserted {loop_id} into SQLite at {DB_PATH}")
+    print(f"✅ Inserted {loop_id} into SQLite at {LOOP_MEMORY_DB}")

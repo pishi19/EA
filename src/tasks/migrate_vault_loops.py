@@ -1,12 +1,10 @@
 import argparse
 import datetime
-import frontmatter
-import os
-from pathlib import Path
-import shutil
 import subprocess
 import typing
-import yaml # For potentially loading a list of vault dirs if we make it configurable
+from pathlib import Path
+
+import frontmatter
 
 # --- Configuration ---
 # VAULT_ROOT_DIRS: These are the top-level directories to scan recursively.
@@ -71,10 +69,10 @@ def process_loop_file(file_path: Path, dry_run: bool = False) -> tuple[str, typi
     try:
         script_path_str = str(QDRANT_EMBEDDER_SCRIPT.resolve())
         new_file_path_str = str(target_file_path.resolve())
-        
+
         print(f"⏳ Calling embedder for: {new_file_path_str}")
         python_executable = "python" # Assumes python is in PATH and is the correct one
-        
+
         result = subprocess.run(
             [python_executable, script_path_str, new_file_path_str],
             capture_output=True, text=True, check=False, encoding='utf-8'
@@ -88,7 +86,7 @@ def process_loop_file(file_path: Path, dry_run: bool = False) -> tuple[str, typi
             print(f"   Stdout:\n{result.stdout.strip()}")
             print(f"   Stderr:\n{result.stderr.strip()}")
             return "migrated_embed_failed", str(target_file_path)
-            
+
     except FileNotFoundError:
         print(f"❌ Error: Embedder script at '{script_path_str}\' not found.")
         return "migrated_embed_script_not_found", str(target_file_path)
@@ -110,7 +108,7 @@ def main():
 
     if args.dry_run:
         print("DRY RUN MODE: No files will be written or embedded.\n")
-    
+
     all_potential_md_files = []
     for root_path_str in INITIAL_SCAN_ROOT_PATHS_STR:
         root_dir = Path(root_path_str)
@@ -119,7 +117,7 @@ def main():
             all_potential_md_files.extend(list(root_dir.rglob('*.md')))
         else:
             print(f"ℹ️ Configured scan directory not found, skipping: {root_dir}")
-            
+
     # Filter for actual files and remove duplicates if any scan paths overlapped
     source_md_files = sorted(list(set(p for p in all_potential_md_files if p.is_file())))
 
@@ -135,7 +133,7 @@ def main():
     error_files = []
     processed_in_dry_run = 0
     skipped_files = [] # Initialize skipped_files outside the dry_run conditional
-    
+
     # Ensure target directory exists for non-dry run
     if not args.dry_run:
         TARGET_LOOP_DIR.mkdir(parents=True, exist_ok=True)
@@ -143,7 +141,7 @@ def main():
     for md_file in source_md_files:
         print(f"---\nProcessing: {md_file}")
         status, new_path_str = process_loop_file(md_file, args.dry_run)
-        
+
         if args.dry_run:
             processed_in_dry_run +=1
             if status == "dry_run_migrated":
@@ -153,7 +151,7 @@ def main():
                     actual_migrated_in_dry_run += 1
                 else:
                     # It exists, so it would have been skipped
-                    skipped_count +=1 
+                    skipped_count +=1
             elif status.startswith("skipped"):
                  skipped_count +=1
             # No explicit error count for dry run, errors are printed directly
@@ -181,8 +179,8 @@ def main():
             print(f"\nEncountered errors with {len(error_files)} files (see logs above for details):")
             for f_info in error_files:
                 print(f"- {f_info}")
-            
+
     print("Migration process complete.")
 
 if __name__ == "__main__":
-    main() 
+    main()

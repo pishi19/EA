@@ -23,4 +23,4 @@ if failures:
     print(f"\n❌ {len(failures)} module(s) failed to import.")
     sys.exit(1)
 else:
-    print("\n✅ All UI modules imported successfully.") 
+    print("\n✅ All UI modules imported successfully.")

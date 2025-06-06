@@ -1,5 +1,7 @@
 from pathlib import Path
+
 import frontmatter
+
 
 def load_roadmap_items(roadmap_dir="Roadmap"):
     items = []
@@ -22,6 +24,6 @@ def load_roadmap_items(roadmap_dir="Roadmap"):
             items.append(item)
         except Exception as e:
             print(f"❌ Failed to load {file.name}: {e}")
-    
+
     print(f"✅ Loaded {len(items)} roadmap items from {roadmap_dir}")
-    return items 
+    return items

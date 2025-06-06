@@ -1,8 +1,8 @@
 import json
 import logging
 import sqlite3
-from pathlib import Path
 from urllib.parse import quote
+
 from src.path_config import MCP_MEMORY_DB
 
 logging.basicConfig(

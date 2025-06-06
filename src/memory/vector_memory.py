@@ -6,6 +6,7 @@ from pathlib import Path
 import faiss
 import numpy as np
 from openai import OpenAI
+
 from src.path_config import INDEX_PATH, META_PATH
 
 # === CONFIG ===

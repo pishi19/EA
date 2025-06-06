@@ -2,6 +2,7 @@ import sqlite3
 import sys
 from datetime import datetime
 from typing import Literal, NoReturn
+
 from src.path_config import DB_LOOP_FEEDBACK
 
 # Config

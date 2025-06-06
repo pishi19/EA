@@ -1,5 +1,5 @@
-from pathlib import Path
 import sys
+from pathlib import Path
 
 base = Path(__file__).resolve().parents[1]  # go up from scripts/ to project root
 
@@ -27,4 +27,4 @@ if missing:
         print(m)
     sys.exit(1)
 else:
-    print("\n✅ All essential Ora structure is present.") 
+    print("\n✅ All essential Ora structure is present.")

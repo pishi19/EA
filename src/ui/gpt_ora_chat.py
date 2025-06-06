@@ -1,6 +1,7 @@
 import os
+
 import openai
-from datetime import datetime
+
 
 def run_gpt_ora_chat(query: str, loop_summaries: list) -> str:
     api_key = os.environ.get('OPENAI_API_KEY')
@@ -52,4 +53,4 @@ def run_gpt_ora_chat_streaming(query: str, loop_summaries: list):
             if delta:
                 yield delta
     except Exception as e:
-        yield f"[GPT-4 ERROR: {e}]" 
+        yield f"[GPT-4 ERROR: {e}]"

@@ -1,8 +1,8 @@
 import json
 import sqlite3
 from datetime import datetime
-from pathlib import Path
-from src.path_config import MCP_MEMORY_JSON, MCP_MEMORY_DB
+
+from src.path_config import MCP_MEMORY_DB, MCP_MEMORY_JSON
 
 
 def load_json():

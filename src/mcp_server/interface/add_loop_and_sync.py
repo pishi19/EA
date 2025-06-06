@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from pathlib import Path
+
 from src.path_config import MCP_MEMORY_JSON
 
 logging.basicConfig(

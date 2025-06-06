@@ -1,6 +1,7 @@
-import streamlit as st
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import streamlit as st
 
 # Add project root for imports
 try:
@@ -11,7 +12,7 @@ except IndexError:
     sys.path.append(str(PROJECT_ROOT))
 
 from src.agent.commands.promote_loop import promote_loop_to_roadmap
-from src.data.ui_loaders import load_promotable_loops # Import from new location
+from src.data.ui_loaders import load_promotable_loops  # Import from new location
 
 st.set_page_config(page_title="Promote Loops", layout="wide")
 
@@ -48,4 +49,4 @@ def main():
         st.exception(e)
 
 if __name__ == "__main__":
-    main() 
+    main()

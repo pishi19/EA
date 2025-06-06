@@ -1,18 +1,21 @@
-import streamlit as st
 import sys
 from pathlib import Path
 from typing import Optional
+
+import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
-import os
 
 # Add project root to sys.path to resolve imports
 project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from src.semantic.memory_injection import get_top_k_loops_for_query, format_loops_for_prompt
 from src.semantic.loop_mutations import promote_loop_to_roadmap, tag_loop_feedback
+from src.semantic.memory_injection import (
+    format_loops_for_prompt,
+    get_top_k_loops_for_query,
+)
 
 load_dotenv()
 
@@ -61,11 +64,11 @@ def render_chat_view():
             try:
                 top_loops = get_top_k_loops_for_query(prompt, k=3)
                 memory_context = format_loops_for_prompt(top_loops) if top_loops else ""
-                
+
                 system_prompt = "You are Ora, a helpful AI assistant."
                 if memory_context.strip():
                     system_prompt += f"\n\n[Relevant Information Retrieved from Your Loops]\n{memory_context.strip()}"
-                
+
                 messages_for_api = [{"role": "system", "content": system_prompt}]
                 messages_for_api.extend(st.session_state.messages[-10:])
 
@@ -80,7 +83,7 @@ def render_chat_view():
             except Exception as e:
                 full_response = f"An error occurred: {e}"
                 st.error(full_response)
-            
+
             if full_response:
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
 

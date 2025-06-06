@@ -1,6 +1,8 @@
+import streamlit as st
+
 from src.system.data_loader import get_loop_summaries
 from src.system.gpt_ora_chat import run_gpt_ora_chat
-import streamlit as st
+
 
 def render_chat():
     st.title("🧠 Ora Chat")
@@ -23,4 +25,4 @@ def render_chat():
                 response = run_gpt_ora_chat(prompt, summaries)
                 st.success(response)
             except Exception as e:
-                st.error(f"Error generating GPT response: {e}") 
+                st.error(f"Error generating GPT response: {e}")

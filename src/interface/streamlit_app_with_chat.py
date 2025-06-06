@@ -1,5 +1,4 @@
 import streamlit as st
-
 from ui.panels import chat_panel, inbox_panel
 
 st.set_page_config(page_title="Ora Assistant", layout="wide")

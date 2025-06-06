@@ -5,12 +5,13 @@ from src.system.data_loader import (
     get_loop_summaries,
 )
 from src.system.path_config import (
-    LOOPS_DIR,
-    ROADMAP_DIR,
     INBOX_DIR,
-    REFLECTIONS_DIR,
     INSIGHTS_DIR,
+    LOOPS_DIR,
+    REFLECTIONS_DIR,
+    ROADMAP_DIR,
 )
+
 
 def print_section(name, count):
     print(f"[✔] {name}: {count} entries")
@@ -31,4 +32,4 @@ def main():
     print_section("Roadmap Items", len(get_all_roadmaps()))
 
 if __name__ == "__main__":
-    main() 
+    main()

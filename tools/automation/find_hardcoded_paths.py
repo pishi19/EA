@@ -1,9 +1,8 @@
 
-import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]  # assumes script is in tools/automation/
-TARGET = str("/Users/air/ea_assistant")
+TARGET = "/Users/air/ea_assistant"
 REPLACEMENT = "resolve(...)  # TODO: replace with path_config entry"
 
 extensions = [".py", ".sh", ".md"]

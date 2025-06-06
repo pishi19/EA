@@ -1,12 +1,11 @@
 import datetime
 import os
 
+from config import DAILY_NOTES_PATH, LOG_PATH, OPENAI_API_KEY
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from openai import OpenAI
-
-from config import DAILY_NOTES_PATH, LOG_PATH, OPENAI_API_KEY
 
 # Initialize OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)

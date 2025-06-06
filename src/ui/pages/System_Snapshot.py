@@ -1,7 +1,8 @@
-import streamlit as st
-import sqlite3
 import os
+import sqlite3
 from pathlib import Path
+
+import streamlit as st
 
 st.set_page_config(page_title="System Snapshot", layout="wide")
 st.title("📸 System Snapshot")
@@ -64,4 +65,4 @@ with col2:
         with st.expander("View Files"):
             st.code("\n".join(roadmap_files))
     else:
-        st.warning("Directory not found.") 
+        st.warning("Directory not found.")

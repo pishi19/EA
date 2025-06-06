@@ -1,8 +1,8 @@
-import os
-import frontmatter
 from datetime import datetime
-from src.system import path_config
 from pathlib import Path
+
+import frontmatter
+
 
 def parse_file(path: str) -> dict:
     try:
@@ -31,7 +31,6 @@ def parse_file(path: str) -> dict:
         return None
 
 def get_inbox_entries() -> list[dict]:
-    from src.system import path_config
     return _load_from_dir(path_config.INBOX_DIR)
 
 def _load_from_dir(directory: Path) -> list[dict]:
@@ -58,11 +57,9 @@ def _load_from_dir(directory: Path) -> list[dict]:
     return sorted(items, key=lambda x: x["created"], reverse=True)
 
 def get_all_loops() -> list[dict]:
-    from src.system import path_config
     return _load_from_dir(path_config.LOOPS_DIR)
 
 def get_all_roadmaps() -> list[dict]:
-    from src.system import path_config
     print("[DEBUG] Loaded roadmap item metadata:")
     for item in _load_from_dir(path_config.ROADMAP_DIR):
         print(item["metadata"])
@@ -82,6 +79,5 @@ def get_loop_summaries() -> list[dict]:
     ]
 
 def get_insights() -> list[dict]:
-    from src.system import path_config
     print(f"[DEBUG] Loading insights from: {path_config.INSIGHTS_DIR}")
-    return _load_from_dir(path_config.INSIGHTS_DIR) 
+    return _load_from_dir(path_config.INSIGHTS_DIR)

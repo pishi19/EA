@@ -6,7 +6,8 @@ import re
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from src.path_config import TOKEN_PATH, CREDENTIALS
+
+from src.path_config import CREDENTIALS, TOKEN_PATH
 
 # ========== CONFIG ==========
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]

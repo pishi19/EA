@@ -1,9 +1,11 @@
-import sqlite3
-import pandas as pd
-import uuid
-import numpy as np
 import os
+import sqlite3
+import uuid
+
+import numpy as np
+import pandas as pd
 from openai import OpenAI
+
 
 # --- Utility Functions ---
 def get_embedding(text, model="text-embedding-ada-002"):
@@ -28,11 +30,11 @@ def index_task_verbs(db_path="runtime/db/ora.db"):
     """Indexes task verbs from active loops into the 'tasks' table."""
     print("🚀 Starting task verb indexing...")
     conn = sqlite3.connect(db_path)
-    
+
     # Ensure the schema is up-to-date
-    with open("runtime/db/schema.sql", 'r') as f:
+    with open("runtime/db/schema.sql") as f:
         conn.executescript(f.read())
-        
+
     # Load active/pending loops
     try:
         loops_df = pd.read_sql(
@@ -43,23 +45,23 @@ def index_task_verbs(db_path="runtime/db/ora.db"):
         print("❌ `loop_metadata` table not found or query failed. Stopping.")
         conn.close()
         return
-        
+
     print(f"Found {len(loops_df)} active/pending loops to index.")
-    
+
     tasks_to_insert = []
     for index, row in loops_df.iterrows():
         verb = extract_verb_from_title(row['title'])
         if not verb:
             continue
-            
+
         vector = get_embedding(verb)
         if not vector:
             print(f"Skipping loop {row['uuid']} due to embedding failure.")
             continue
-            
+
         # Convert vector to bytes for BLOB storage
         vector_blob = np.array(vector).astype(np.float32).tobytes()
-        
+
         tasks_to_insert.append((
             str(uuid.uuid4()),
             row['workstream'],
@@ -78,11 +80,11 @@ def index_task_verbs(db_path="runtime/db/ora.db"):
         print(f"✅ Indexed {len(tasks_to_insert)} task verbs.")
     else:
         print("No new tasks to index.")
-        
+
     conn.close()
 
 if __name__ == "__main__":
     if not os.getenv("OPENAI_API_KEY"):
         print("🚨 OPENAI_API_KEY environment variable not set. Please set it to run the indexer.")
     else:
-        index_task_verbs() 
+        index_task_verbs()

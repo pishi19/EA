@@ -3,8 +3,10 @@ name = "ea_assistant"
 version = "0.1.0"
 description = "GPT-powered local assistant system"
 authors = [{ name = "Your Name", email = "your.email@example.com" }]
+requires-python = ">=3.9, <3.13"
 dependencies = [
-    "openai==1.3.7",
+    "openai==1.12.0",
+    "httpx==0.27.0",
     "pydantic==2.6.1",
     "qdrant-client==1.7.0",
     "sqlite-utils==3.35.2",
@@ -20,7 +22,6 @@ dependencies = [
     "ruamel.yaml==0.18.6",
     "loguru==0.7.2",
     "structlog==24.1.0",
-    "python-dotenv==1.0.1",
     "matplotlib==3.8.3",
     "pandas==2.2.1",
     "watchdog==3.0.0",
@@ -38,13 +39,6 @@ dev = [
     "pytest-mock==3.12.0",
     "pytest-asyncio==0.23.5",
 ]
-prod = [
-    "gunicorn==21.2.0",
-    "uvicorn==0.27.1",
-    "python-dotenv==1.0.1",
-    "psycopg2-binary==2.9.9",
-    "redis==5.0.1",
-]
 docs = [
     "mkdocs==1.5.3",
     "mkdocs-material==9.5.3",
@@ -54,10 +48,7 @@ docs = [
     "mkdocs-jupyter==0.24.1",
 ]
 ai = [
-    "openai==1.12.0",
-    "qdrant-client==1.7.0",
     "faiss-cpu==1.7.4",
-    "numpy==1.26.4",
     "torch==2.2.0",
     "transformers==4.37.2",
     "sentence-transformers==2.5.1",
@@ -70,14 +61,6 @@ test = [
     "pytest-xdist==3.5.0",
     "pytest-timeout==2.2.0",
     "pytest-env==1.1.3",
-]
-monitoring = [
-    "matplotlib==3.8.3",
-    "pandas==2.2.1",
-    "watchdog==3.0.0",
-    "psutil==5.9.8",
-    "loguru==0.7.2",
-    "structlog==24.1.0",
 ]
 
 [tool.black]
@@ -112,6 +95,7 @@ warn_unreachable = true
 testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "-v --cov=src"
+pythonpath = ["src"]
 
 [build-system]
 requires = ["setuptools>=42", "wheel"]

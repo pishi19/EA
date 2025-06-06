@@ -5,7 +5,8 @@ from datetime import datetime
 from pathlib import Path
 
 from openai import OpenAI
-from src.path_config import MCP_MEMORY_JSON, EXTRACT_LOG_PATH
+
+from src.path_config import EXTRACT_LOG_PATH, MCP_MEMORY_JSON
 
 # Configuration
 retros_dir = Path("/Users/air/AIR01/Retrospectives/")

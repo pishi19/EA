@@ -1,5 +1,5 @@
 import sqlite3
-import pandas as pd
+
 
 def summarize_stream(workstream_id: str, db_path="runtime/db/ora.db") -> dict:
     """
@@ -55,4 +55,4 @@ def summarize_stream(workstream_id: str, db_path="runtime/db/ora.db") -> dict:
             }
             for l in loops[:5]
         ]
-    } 
+    }

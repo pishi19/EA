@@ -1,10 +1,10 @@
 import os
-import openai # Keep this for OpenAI class
-from openai import OpenAI # Import the main OpenAI class
+from typing import Any, Dict, List  # Added for type hinting
+
 import qdrant_client
-from qdrant_client.http import models
 from dotenv import load_dotenv
-from typing import List, Dict, Any # Added for type hinting
+from openai import OpenAI  # Import the main OpenAI class
+from qdrant_client.http import models
 
 # Load environment variables from .env file
 load_dotenv()
@@ -120,13 +120,13 @@ if __name__ == "__main__":
             #         collection_name="workstream_items",
             #         points=[
             #             models.PointStruct(
-            #                 id=1, 
-            #                 vector=embed_text("Initial Ora project setup and planning"), 
+            #                 id=1,
+            #                 vector=embed_text("Initial Ora project setup and planning"),
             #                 payload={"project": "Ora Executive Assistant", "phase": "1.0"}
             #             ),
             #             models.PointStruct(
-            #                 id=2, 
-            #                 vector=embed_text("Data migration for CRM system"), 
+            #                 id=2,
+            #                 vector=embed_text("Data migration for CRM system"),
             #                 payload={"project": "CRM Update", "phase": "2.3"}
             #             ),
             #         ]\n        #     )
@@ -147,4 +147,4 @@ if __name__ == "__main__":
             test_text_no_match = "Looking for information about holiday schedules."
             print(f"\nFinding match for: '{test_text_no_match}'")
             match_no_match = find_nearest_project_match(test_text_no_match)
-            print(f"Result (expected low score or no match): {match_no_match}") 
+            print(f"Result (expected low score or no match): {match_no_match}")

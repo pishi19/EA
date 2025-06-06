@@ -3,8 +3,9 @@ Name: ea_assistant
 Version: 0.1.0
 Summary: GPT-powered local assistant system
 Author-email: Your Name <your.email@example.com>
-License-File: LICENSE
-Requires-Dist: openai==1.3.7
+Requires-Python: <3.13,>=3.9
+Requires-Dist: openai==1.12.0
+Requires-Dist: httpx==0.27.0
 Requires-Dist: pydantic==2.6.1
 Requires-Dist: qdrant-client==1.7.0
 Requires-Dist: sqlite-utils==3.35.2
@@ -20,7 +21,6 @@ Requires-Dist: numpy==1.26.4
 Requires-Dist: ruamel.yaml==0.18.6
 Requires-Dist: loguru==0.7.2
 Requires-Dist: structlog==24.1.0
-Requires-Dist: python-dotenv==1.0.1
 Requires-Dist: matplotlib==3.8.3
 Requires-Dist: pandas==2.2.1
 Requires-Dist: watchdog==3.0.0
@@ -34,12 +34,6 @@ Requires-Dist: pytest==8.0.1; extra == "dev"
 Requires-Dist: pytest-cov==4.1.0; extra == "dev"
 Requires-Dist: pytest-mock==3.12.0; extra == "dev"
 Requires-Dist: pytest-asyncio==0.23.5; extra == "dev"
-Provides-Extra: prod
-Requires-Dist: gunicorn==21.2.0; extra == "prod"
-Requires-Dist: uvicorn==0.27.1; extra == "prod"
-Requires-Dist: python-dotenv==1.0.1; extra == "prod"
-Requires-Dist: psycopg2-binary==2.9.9; extra == "prod"
-Requires-Dist: redis==5.0.1; extra == "prod"
 Provides-Extra: docs
 Requires-Dist: mkdocs==1.5.3; extra == "docs"
 Requires-Dist: mkdocs-material==9.5.3; extra == "docs"
@@ -48,10 +42,7 @@ Requires-Dist: mkdocstrings-python==1.7.1; extra == "docs"
 Requires-Dist: mkdocs-autorefs==1.0.1; extra == "docs"
 Requires-Dist: mkdocs-jupyter==0.24.1; extra == "docs"
 Provides-Extra: ai
-Requires-Dist: openai==1.12.0; extra == "ai"
-Requires-Dist: qdrant-client==1.7.0; extra == "ai"
 Requires-Dist: faiss-cpu==1.7.4; extra == "ai"
-Requires-Dist: numpy==1.26.4; extra == "ai"
 Requires-Dist: torch==2.2.0; extra == "ai"
 Requires-Dist: transformers==4.37.2; extra == "ai"
 Requires-Dist: sentence-transformers==2.5.1; extra == "ai"
@@ -63,11 +54,3 @@ Requires-Dist: pytest-asyncio==0.23.5; extra == "test"
 Requires-Dist: pytest-xdist==3.5.0; extra == "test"
 Requires-Dist: pytest-timeout==2.2.0; extra == "test"
 Requires-Dist: pytest-env==1.1.3; extra == "test"
-Provides-Extra: monitoring
-Requires-Dist: matplotlib==3.8.3; extra == "monitoring"
-Requires-Dist: pandas==2.2.1; extra == "monitoring"
-Requires-Dist: watchdog==3.0.0; extra == "monitoring"
-Requires-Dist: psutil==5.9.8; extra == "monitoring"
-Requires-Dist: loguru==0.7.2; extra == "monitoring"
-Requires-Dist: structlog==24.1.0; extra == "monitoring"
-Dynamic: license-file

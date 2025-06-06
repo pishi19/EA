@@ -1,4 +1,5 @@
 from typing import List
+
 from openai import OpenAI
 
 client = OpenAI()
@@ -25,4 +26,4 @@ def run_gpt_ora_chat(prompt: str, loop_summaries: List[dict]) -> str:
         temperature=0.3,
     )
 
-    return response.choices[0].message.content.strip() 
+    return response.choices[0].message.content.strip()

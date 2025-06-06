@@ -1,11 +1,14 @@
 import sqlite3
-from pathlib import Path
 from collections import defaultdict
-from typing import List, Dict, Any, Optional
+from pathlib import Path
+from typing import Any, Dict, List
+
+import yaml
+
 from src.system.trust import checkpoint
 
 # Assuming this file is in src/data/workstream_loader.py
-project_root = Path(__file__).resolve().parent.parent.parent 
+project_root = Path(__file__).resolve().parent.parent.parent
 PLAN_PATH = project_root / "workstream_plan.yaml"
 FEEDBACK_PATH = project_root / "src/data/feedback_scores.yaml"
 
@@ -40,7 +43,7 @@ def load_feedback() -> Dict[str, Dict[str, Any]]:
 
     try:
         loaded_data = yaml.safe_load(FEEDBACK_PATH.read_text(encoding="utf-8"))
-        
+
         if isinstance(loaded_data, dict):
             # Basic validation: ensure keys are strings (UUIDs) and values are dicts with 'score'
             valid_data = True
@@ -55,16 +58,16 @@ def load_feedback() -> Dict[str, Dict[str, Any]]:
             else:
                 print(f"(Loader) Warning: Some data in {FEEDBACK_PATH} is not in the expected format. No feedback will be merged.")
                 return {} # Return empty if structure is partially incorrect
-                
+
         elif loaded_data is None: # Handles empty file case
             print(f"(Loader) Feedback scores file {FEEDBACK_PATH} is empty. No feedback will be merged.")
             # feedback_by_uuid is already {}
         else: # Unexpected format (e.g., a list or other type)
             print(f"(Loader) Warning: Feedback data in {FEEDBACK_PATH} is not in the expected dictionary format (keyed by UUID). Expected dict, got {type(loaded_data)}. No feedback will be merged.")
             # feedback_by_uuid is already {}
-            
+
         return feedback_by_uuid
-        
+
     except yaml.YAMLError as e:
         print(f"(Loader) Error parsing YAML from feedback file {FEEDBACK_PATH}: {e}. No feedback will be merged.")
         return {}
@@ -126,7 +129,7 @@ def load_workstreams(db_path="runtime/db/ora.db"):
 
 if __name__ == '__main__':
     print("Testing src.data.workstream_loader module...")
-    
+
     # Create dummy workstream_plan.yaml for testing if it doesn't exist
     if not PLAN_PATH.exists():
         print(f"Creating dummy {PLAN_PATH} for testing loader.")
@@ -186,7 +189,7 @@ if __name__ == '__main__':
     else:
         print("\nMerging feedback scores into plan...")
         merged_plan = merge_plan_with_feedback(plan_items, feedback_data_uuid_keyed)
-        
+
         print("\nGenerating phase summary...")
         phase_summary = get_phase_summary(merged_plan)
 
@@ -206,12 +209,12 @@ if __name__ == '__main__':
                 effort_str = f"effort={effort}" if effort is not None else ""
                 priority = item.get('priority')
                 priority_str = f"priority={priority}" if priority is not None else ""
-                
+
                 details = f"({score_str}"
                 if effort_str: details += f", {effort_str}"
                 if priority_str: details += f", {priority_str}"
                 details += ")"
-                
+
                 print(f"  - [{status}] {title} {details}")
         print("\n--- End of Summary ---")
 
@@ -223,4 +226,4 @@ if __name__ == '__main__':
         #         yaml.safe_dump(merged_plan, f, sort_keys=False, indent=2)
         #     print(f"✅ Merged plan saved successfully.")
         # except Exception as e:
-        #     print(f"❌ Error saving merged plan: {e}") 
+        #     print(f"❌ Error saving merged plan: {e}")

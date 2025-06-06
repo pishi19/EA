@@ -1,6 +1,6 @@
 import os
-import subprocess
 import signal
+import subprocess
 from pathlib import Path
 
 # This script assumes it is run from the project root directory.
@@ -14,7 +14,7 @@ def launch_ora_interface():
         # Find PID using the port
         lsof_process = subprocess.run(["lsof", "-t", f"-i:{TARGET_PORT}"], capture_output=True, text=True, check=False)
         pid_to_kill = lsof_process.stdout.strip()
-        
+
         if pid_to_kill:
             print(f"Process found on port {TARGET_PORT} with PID(s): {pid_to_kill}. Attempting to kill...")
             # lsof might return multiple PIDs, one per line
@@ -27,7 +27,7 @@ def launch_ora_interface():
                         print(f"  Could not kill process {pid_str}: {e}")
         else:
             print(f"No process found running on port {TARGET_PORT}.")
-            
+
     except FileNotFoundError:
         print("Warning: 'lsof' command not found. Cannot check/kill process by port. Manual check might be needed.")
     except Exception as e:
@@ -70,7 +70,7 @@ def launch_ora_interface():
             # "--server.enableCORS", "false"
         ]
         print(f"Executing: {' '.join(command)}")
-        
+
         # Popen with start_new_session=True to detach.
         process = subprocess.Popen(command, start_new_session=True)
         print(f"✅ Streamlit app '{TARGET_STREAMLIT_APP.name}' launched with PID: {process.pid} on port {TARGET_PORT}.")
@@ -78,9 +78,9 @@ def launch_ora_interface():
         print(f"   Check http://localhost:{TARGET_PORT} or the appropriate network URL.")
 
     except FileNotFoundError:
-        print(f"Error: 'streamlit' command not found. Is Streamlit installed and in your PATH?")
+        print("Error: 'streamlit' command not found. Is Streamlit installed and in your PATH?")
     except Exception as e:
         print(f"❌ Error launching Streamlit app: {e}")
 
 if __name__ == "__main__":
-    launch_ora_interface() 
+    launch_ora_interface()

@@ -1,11 +1,12 @@
-from pathlib import Path
 import re
+from pathlib import Path
+
 import frontmatter
 
 roadmap_path = Path("src/Roadmap/R001.md")
 output_dir = roadmap_path.parent
 
-with open(roadmap_path, "r", encoding="utf-8") as f:
+with open(roadmap_path, encoding="utf-8") as f:
     raw = f.read()
 
 # Extract all YAML blocks between ---
@@ -28,4 +29,4 @@ for idx, block in enumerate(matches):
             frontmatter.dump(cleaned, f)
         print(f"✅ Created {filename}")
     except Exception as e:
-        print(f"❌ Failed to parse block #{idx+1}: {e}") 
+        print(f"❌ Failed to parse block #{idx+1}: {e}")

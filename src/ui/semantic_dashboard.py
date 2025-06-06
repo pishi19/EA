@@ -1,8 +1,8 @@
+import sqlite3
+from pathlib import Path
+
 import streamlit as st
 from qdrant_client import QdrantClient, models
-from pathlib import Path
-import sqlite3
-import frontmatter # For loading loop content if needed directly
 
 # --- Configuration ---
 QDRANT_HOST = "localhost"
@@ -83,7 +83,7 @@ def render_related_loops_view(client: QdrantClient):
                  else:
                     st.warning(f"Could not find vector for loop ID '{search_term}' in Qdrant.")
                     return
-            else: 
+            else:
                 st.info("Text query search is not yet fully implemented here. Please use a Loop ID.")
                 st.warning("For now, please use Loop ID for related search.")
                 return
@@ -152,7 +152,7 @@ def render_feedback_tag_clusters(client: QdrantClient):
                         )
                     ]
                 ),
-                limit=50, 
+                limit=50,
                 with_payload=True,
                 with_vectors=True
             )
@@ -170,17 +170,17 @@ def render_feedback_tag_clusters(client: QdrantClient):
 
                     st.markdown(f"--- \n**Seed Loop:** {title} (`{loop_id}`)")
                     st.markdown(f"**Feedback:** 👍 {feedback.get('useful',0)} | 👎 {feedback.get('false_positive',0)} | 💬 {feedback.get('mentions',0)}")
-                    
+
                     if seed_loop.vector:
                         neighbor_hits = client.search(
                             collection_name=QDRANT_COLLECTION,
                             query_vector=seed_loop.vector,
-                            limit=top_n_cluster + 1, 
+                            limit=top_n_cluster + 1,
                             with_payload=True
                         )
                         st.write(f"Semantic neighbors for '{title}':")
                         for neighbor in neighbor_hits:
-                            if neighbor.id == loop_id: 
+                            if neighbor.id == loop_id:
                                 continue
                             neighbor_payload = neighbor.payload if neighbor.payload else {}
                             neighbor_title = neighbor_payload.get("title", neighbor.id)
@@ -206,37 +206,37 @@ def render_loop_promotion_candidates(client: QdrantClient):
     # st.info("Feature under construction.")
     # st.write("This section will show loops with high #useful ratios and strong similarity to roadmap topics.")
     try:
-        all_loop_points, _ = client.scroll(collection_name=QDRANT_COLLECTION, limit=200, with_payload=True) 
-        
+        all_loop_points, _ = client.scroll(collection_name=QDRANT_COLLECTION, limit=200, with_payload=True)
+
         candidates = []
         for point in all_loop_points:
             loop_id = point.id
             payload = point.payload or {}
             feedback = get_loop_feedback_scores(loop_id)
-            
+
             useful_score = feedback.get('useful', 0)
             fp_score = feedback.get('false_positive', 0)
-            
-            if useful_score > 0 and useful_score >= (fp_score * 2): 
+
+            if useful_score > 0 and useful_score >= (fp_score * 2):
                 candidates.append({
                     "id": loop_id,
                     "title": payload.get("title", loop_id),
                     "path": payload.get("path", "N/A"),
                     "useful": useful_score,
                     "fp": fp_score,
-                    "score": useful_score - fp_score 
+                    "score": useful_score - fp_score
                 })
-        
+
         if candidates:
             sorted_candidates = sorted(candidates, key=lambda x: x["score"], reverse=True)
             st.write(f"Found {len(sorted_candidates)} potential candidates (based on useful > 2*FP ratio):")
-            for cand in sorted_candidates[:10]: 
+            for cand in sorted_candidates[:10]:
                  with st.expander(f"{cand['title']} (Score: {cand['score']}) - ID: {cand['id']}"):
                     st.markdown(f"**Path:** {cand['path']}")
                     st.markdown(f"**Feedback:** 👍 {cand['useful']} | 👎 {cand['fp']}")
         else:
             st.info("No strong promotion candidates found based on current simple criteria.")
-            
+
     except Exception as e:
         st.error(f"Error fetching promotion candidates: {e}")
 
@@ -245,16 +245,16 @@ def render_embedding_quality_check(client: QdrantClient):
     st.markdown("**Loops in Filesystem vs. Qdrant:**")
     md_files = list(LOOP_DIR_PATH.glob("*.md"))
     md_file_ids = {f.stem for f in md_files}
-    
+
     qdrant_ids = set()
     try:
         offset = None
         while True:
             points_batch, next_offset = client.scroll(
                 collection_name=QDRANT_COLLECTION,
-                limit=250, 
+                limit=250,
                 offset=offset,
-                with_payload=False, 
+                with_payload=False,
                 with_vectors=False
             )
             for point in points_batch:
@@ -262,11 +262,11 @@ def render_embedding_quality_check(client: QdrantClient):
             if not next_offset:
                 break
             offset = next_offset
-            
+
         missing_in_qdrant = md_file_ids - qdrant_ids
         if missing_in_qdrant:
             st.warning(f"{len(missing_in_qdrant)} loops found in `{LOOP_DIR_PATH}` but not in Qdrant:")
-            for loop_id in list(missing_in_qdrant)[:10]: 
+            for loop_id in list(missing_in_qdrant)[:10]:
                 st.write(f"- `{loop_id}.md`")
             if len(missing_in_qdrant) > 10:
                 st.write(f"...and {len(missing_in_qdrant) - 10} more.")
@@ -296,7 +296,7 @@ def render_embedding_quality_check(client: QdrantClient):
                 collection_name=QDRANT_COLLECTION,
                 limit=250,
                 offset=offset,
-                with_payload=True, 
+                with_payload=True,
                 with_vectors=False
             )
             for point in points_batch:
@@ -333,9 +333,9 @@ def render_semantic_dashboard():
         return
 
     tabs_titles = [
-        "Related Loops", 
-        "Tag Clusters", 
-        "Promotion Candidates", 
+        "Related Loops",
+        "Tag Clusters",
+        "Promotion Candidates",
         "Embedding Quality"
     ]
     tab1, tab2, tab3, tab4 = st.tabs(tabs_titles)
@@ -351,4 +351,4 @@ def render_semantic_dashboard():
 
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
-    render_semantic_dashboard() 
+    render_semantic_dashboard()

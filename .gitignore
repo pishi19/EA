@@ -1,17 +1,33 @@
-# macOS
-.DS_Store
-
 # Python
 *.pyc
 __pycache__/
+*.egg-info
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+.coverage
+
+# macOS
+.DS_Store
 
 # Editor/Tooling
 .cursor/
 .opencode/
+.vscode/
+Cursor/
 
 # Local DB and archives
+*.db
+*.sqlite3
 loop_memory.db
-*.zip 
+archive/
+*.zip
+*.log
+
+# Virtual environment
+.venv/
+
+# Build artifacts
+dist/
+build/
+streamlit_ui_report.txt
