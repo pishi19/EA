@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+import yaml
 import frontmatter
 import re
 import sqlite3
