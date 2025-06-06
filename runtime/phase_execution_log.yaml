@@ -22,4 +22,9 @@
   action: implement_summarize_stream_sql
   result: success
   timestamp: <AUTOFILL>
-  note: /summarize_stream returns structured summary using SQL metadata and assistant logic 
+  note: /summarize_stream returns structured summary using SQL metadata and assistant logic
+- phase: 7.1.5
+  action: build_feedback_volatility_surface
+  result: success
+  timestamp: <AUTOFILL>
+  note: Feedback scores and volatility metrics now visualized in UI and accessible to assistant via /summarize_volatility 
