@@ -4,4 +4,18 @@ CREATE TABLE IF NOT EXISTS workstreams (
   tags TEXT,
   goals TEXT,
   owners TEXT
+);
+
+CREATE TABLE IF NOT EXISTS loop_metadata (
+    uuid TEXT PRIMARY KEY,
+    title TEXT,
+    score REAL,
+    status TEXT,
+    workstream TEXT
+);
+
+CREATE TABLE IF NOT EXISTS loop_feedback (
+    uuid TEXT,
+    tag TEXT,
+    FOREIGN KEY (uuid) REFERENCES loop_metadata (uuid)
 ); 

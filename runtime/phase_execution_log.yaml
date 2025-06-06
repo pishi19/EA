@@ -17,4 +17,9 @@
   action: enable_gpt_sql_workstream_routing
   result: success
   timestamp: <AUTOFILL>
-  note: Assistant routing suggestions now source from SQL workstreams 
+  note: Assistant routing suggestions now source from SQL workstreams
+- phase: 7.1.4
+  action: implement_summarize_stream_sql
+  result: success
+  timestamp: <AUTOFILL>
+  note: /summarize_stream returns structured summary using SQL metadata and assistant logic 
