@@ -1,0 +1,1 @@
+{"version":1,"functions":{"/api/chat":{},"/api/complete-task":{},"/api/get-plan":{},"/api/loops":{},"/api/memory":{},"/api/phase-doc":{},"/api/plan-tasks":{},"/api/project-task-files":{},"/api/promote-plan-task":{},"/api/roadmap":{},"/api/promote-task":{},"/api/run-task":{},"/api/suggest-next-step":{},"/api/suggest-plan-task":{},"/api/system-view":{},"/api/tasks":{}}}

@@ -1,0 +1,463 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskExecutor Snapshot Tests matches snapshot after task completion 1`] = `
+<DocumentFragment>
+  <div
+    class="container mx-auto p-4"
+  >
+    <h1
+      class="text-2xl font-bold mb-4"
+    >
+      Contextual Task Executor
+    </h1>
+    <div
+      class="flex space-x-4 mb-6 p-4 border rounded-lg bg-slate-50"
+    >
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Filter by Workstream
+        </label>
+        <button
+          aria-autocomplete="none"
+          aria-controls="radix-:r1q:"
+          aria-expanded="false"
+          class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 w-[220px]"
+          data-state="closed"
+          dir="ltr"
+          role="combobox"
+          type="button"
+        >
+          <span
+            style="pointer-events: none;"
+          >
+            all
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </button>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Filter by Phase
+        </label>
+        <button
+          aria-autocomplete="none"
+          aria-controls="radix-:r1r:"
+          aria-expanded="false"
+          class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 w-[220px]"
+          data-state="closed"
+          dir="ltr"
+          role="combobox"
+          type="button"
+        >
+          <span
+            style="pointer-events: none;"
+          >
+            all
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="rounded-lg border text-card-foreground shadow-sm bg-gray-50"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Develop the initial UI structure.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              UI Development
+            </strong>
+             (Phase: 1, Workstream: Frontend)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-abc-123
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            disabled=""
+          >
+            Completed
+          </button>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Setup the backend API for tasks.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              API Implementation
+            </strong>
+             (Phase: 2, Workstream: Backend)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-def-456
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            Run
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+          >
+            Complete
+          </button>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border text-card-foreground shadow-sm bg-gray-50"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Write integration tests.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              Testing Phase
+            </strong>
+             (Phase: 3, Workstream: QA)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-ghi-789
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            disabled=""
+          >
+            Completed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`TaskExecutor Snapshot Tests matches snapshot before task completion 1`] = `
+<DocumentFragment>
+  <div
+    class="container mx-auto p-4"
+  >
+    <h1
+      class="text-2xl font-bold mb-4"
+    >
+      Contextual Task Executor
+    </h1>
+    <div
+      class="flex space-x-4 mb-6 p-4 border rounded-lg bg-slate-50"
+    >
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Filter by Workstream
+        </label>
+        <button
+          aria-autocomplete="none"
+          aria-controls="radix-:r1g:"
+          aria-expanded="false"
+          class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 w-[220px]"
+          data-state="closed"
+          dir="ltr"
+          role="combobox"
+          type="button"
+        >
+          <span
+            style="pointer-events: none;"
+          >
+            all
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </button>
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Filter by Phase
+        </label>
+        <button
+          aria-autocomplete="none"
+          aria-controls="radix-:r1h:"
+          aria-expanded="false"
+          class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 w-[220px]"
+          data-state="closed"
+          dir="ltr"
+          role="combobox"
+          type="button"
+        >
+          <span
+            style="pointer-events: none;"
+          >
+            all
+          </span>
+          <svg
+            aria-hidden="true"
+            class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Develop the initial UI structure.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              UI Development
+            </strong>
+             (Phase: 1, Workstream: Frontend)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-abc-123
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            Run
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+          >
+            Complete
+          </button>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Setup the backend API for tasks.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              API Implementation
+            </strong>
+             (Phase: 2, Workstream: Backend)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-def-456
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+          >
+            Run
+          </button>
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+          >
+            Complete
+          </button>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border text-card-foreground shadow-sm bg-gray-50"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Write integration tests.
+          </h3>
+          <p
+            class="text-sm text-muted-foreground"
+          >
+            From Loop: 
+            <strong>
+              Testing Phase
+            </strong>
+             (Phase: 3, Workstream: QA)
+            <br />
+            <span
+              class="text-xs text-gray-500"
+            >
+              UUID: loop-ghi-789
+            </span>
+          </p>
+        </div>
+        <div
+          class="p-6 pt-0"
+        />
+        <div
+          class="flex items-center p-6 pt-0 space-x-2"
+        >
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            disabled=""
+          >
+            Completed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,10 @@
+"use strict";(()=>{var e={};e.id=780,e.ids=[780],e.modules={399:e=>{e.exports=require("next/dist/compiled/next-server/app-page.runtime.prod.js")},517:e=>{e.exports=require("next/dist/compiled/next-server/app-route.runtime.prod.js")},629:e=>{e.exports=require("fs/promises")},5315:e=>{e.exports=require("path")},1514:(e,t,r)=>{r.r(t),r.d(t,{originalPathname:()=>v,patchFetch:()=>f,requestAsyncStorage:()=>x,routeModule:()=>m,serverHooks:()=>g,staticGenerationAsyncStorage:()=>k});var s={};r.r(s),r.d(s,{POST:()=>c});var a=r(9303),o=r(8716),n=r(3131),p=r(7070),i=r(629),u=r.n(i),l=r(5315),d=r.n(l);async function c(e){let{taskDescription:t,context:r}=await e.json();if(!t)return p.NextResponse.json({message:"Missing taskDescription"},{status:400});try{let e=d().resolve(process.cwd(),"..","..","..","runtime","Worksteams","roadmap","workstream_plan.md"),s=await u().readFile(e,"utf-8"),a="### Ora-Suggested Tasks",o=`
+- [ ] ${t}
+  \`added_by: ora\`
+  \`context: ${r||"No context provided."}\`
+`;return s.includes(a)?s=s.replace(a,`${a}
+${o}`):s+=`
+---
+
+${a}
+${o}`,await u().writeFile(e,s,"utf-8"),p.NextResponse.json({message:"Task promoted to plan successfully"})}catch(t){console.error("Failed to promote task to plan:",t);let e=t instanceof Error?t.message:"Internal Server Error";return p.NextResponse.json({message:"Failed to promote task to plan",error:e},{status:500})}}let m=new a.AppRouteRouteModule({definition:{kind:o.x.APP_ROUTE,page:"/api/promote-plan-task/route",pathname:"/api/promote-plan-task",filename:"route",bundlePath:"app/api/promote-plan-task/route"},resolvedPagePath:"/Users/air/Projects/ora-system/src/ui/react-app/app/api/promote-plan-task/route.ts",nextConfigOutput:"",userland:s}),{requestAsyncStorage:x,staticGenerationAsyncStorage:k,serverHooks:g}=m,v="/api/promote-plan-task/route";function f(){return(0,n.patchFetch)({serverHooks:g,staticGenerationAsyncStorage:k})}}};var t=require("../../../webpack-runtime.js");t.C(e);var r=e=>t(t.s=e),s=t.X(0,[276,972],()=>r(1514));module.exports=s})();
