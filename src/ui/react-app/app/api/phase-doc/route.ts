@@ -4,6 +4,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
 
+// Force dynamic behavior for this route since we use request.url
+export const dynamic = 'force-dynamic';
+
 // Helper function to parse frontmatter and content
 async function parseMarkdownFile(filePath: string) {
     const fileContent = await fs.readFile(filePath, 'utf-8');
