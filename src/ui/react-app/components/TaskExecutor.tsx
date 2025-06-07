@@ -9,7 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, AlertTriangle } from "lucide-react";
+import { PlusCircle, AlertTriangle, FileText, Cog, BookOpen } from "lucide-react";
+
+// Helper function to get type badge
+const getTypeBadge = (type: string | undefined) => {
+    switch (type) {
+        case 'planning':
+            return { icon: <FileText className="h-3 w-3" />, label: 'Planning', color: 'bg-blue-100 text-blue-800' };
+        case 'execution':
+            return { icon: <Cog className="h-3 w-3" />, label: 'Execution', color: 'bg-green-100 text-green-800' };
+        case 'retrospective':
+            return { icon: <BookOpen className="h-3 w-3" />, label: 'Retrospective', color: 'bg-amber-100 text-amber-800' };
+        default:
+            return { icon: <Cog className="h-3 w-3" />, label: 'Execution', color: 'bg-green-100 text-green-800' };
+    }
+};
 
 // --- Type Definitions ---
 interface ValidationStatus {
@@ -24,6 +38,7 @@ interface SourceLoop {
   phase: string | number;
   workstream: string;
   tags: string[];
+  type?: 'planning' | 'execution' | 'retrospective';
   validation?: ValidationStatus;
 }
 
@@ -57,20 +72,23 @@ export default function TaskExecutor() {
   const [workstreamFilter, setWorkstreamFilter] = useState<string>("all");
   const [phaseFilter, setPhaseFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<Record<string, string>>({});
   const [editingSuggestion, setEditingSuggestion] = useState<Record<string, string>>({});
 
   const fetchTasks = async () => {
     try {
       setIsLoading(true);
+      setError(null);
       const response = await fetch('/api/tasks');
       if (!response.ok) {
-        throw new Error('Failed to fetch tasks');
+        throw new Error(`Failed to fetch tasks: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
       setTasks(data);
     } catch (error) {
-      console.error(error);
+      console.error('TaskExecutor: Error fetching tasks:', error);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -300,18 +318,50 @@ export default function TaskExecutor() {
       {/* Task List */}
       {isLoading ? (
         <p className="text-center text-gray-500 py-8">Loading tasks...</p>
+      ) : error ? (
+        <div className="text-center py-8">
+          <p className="text-red-500 mb-4">Error loading tasks: {error}</p>
+          <Button onClick={fetchTasks}>Retry</Button>
+        </div>
       ) : (
         <div className="space-y-8">
             {Object.values(groupedTasks).map((group) => (
                 <div key={group.uuid}>
                     <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <h2 className="text-xl font-semibold">{group.title}</h2>
-                            {group.validation && !group.validation.isValid && (
-                                <Badge variant="destructive" className="flex items-center gap-1">
-                                    <AlertTriangle className="h-3 w-3" />
-                                    Incomplete Loop
-                                </Badge>
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <h2 className="text-xl font-semibold">{group.title}</h2>
+                                {(() => {
+                                    const typeBadge = getTypeBadge(group.type);
+                                    return (
+                                        <Badge 
+                                            variant="secondary" 
+                                            className={`flex items-center gap-1 ${typeBadge.color}`}
+                                        >
+                                            {typeBadge.icon}
+                                            {typeBadge.label}
+                                        </Badge>
+                                    );
+                                })()}
+                                {group.validation && !group.validation.isValid && (
+                                    <Badge variant="destructive" className="flex items-center gap-1">
+                                        <AlertTriangle className="h-3 w-3" />
+                                        Incomplete Loop
+                                    </Badge>
+                                )}
+                            </div>
+                            <div className="text-sm text-gray-600 mb-1">
+                                Phase: {group.phase} | Workstream: {group.workstream}
+                            </div>
+                            {/* Tags display */}
+                            {group.tags && group.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1">
+                                    {group.tags.map((tag, idx) => (
+                                        <Badge key={idx} variant="outline" className="text-xs">
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
                             )}
                         </div>
                         <div className="flex space-x-2">

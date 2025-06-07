@@ -12,6 +12,7 @@ export interface EnrichedLoop extends Loop {
     content: string; // HTML content
     created: string;
     workstream: string;
+    type?: 'planning' | 'execution' | 'retrospective';
 }
 
 export interface Phase {

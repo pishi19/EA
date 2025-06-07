@@ -6,13 +6,7 @@ import matter from 'gray-matter';
 import { marked } from 'marked';
 import { Phase, Loop, EnrichedPhase, EnrichedLoop } from '@/lib/types';
 import { matterOptions } from '@/lib/yaml-engine';
-
-// --- Path Constants ---
-const BASE_DIR = path.resolve(process.cwd(), '../../..');
-const RUNTIME_DIR = path.join(BASE_DIR, 'runtime');
-const ROADMAP_YAML_PATH = path.join(RUNTIME_DIR, 'system_roadmap.yaml');
-const PHASES_DIR = path.join(RUNTIME_DIR, 'phases');
-const LOOPS_DIR = path.join(RUNTIME_DIR, 'loops');
+import { PATHS } from '@/lib/path-utils';
 
 // --- Data Enrichment Functions ---
 
@@ -24,12 +18,12 @@ async function getEnrichedLoop(loopId: string, phase: number): Promise<EnrichedL
             return null;
         }
         
-        const filePath = path.join(LOOPS_DIR, loopId);
+        const filePath = path.join(PATHS.LOOPS_DIR, loopId);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         const { data, content } = matter(fileContent, matterOptions);
         return {
             id: data.id || loopId,
-            title: data.name || loopId.replace('.md', ''),
+            title: data.title || data.name || loopId.replace('.md', ''),
             phase: parseFloat(data.phase) || phase,
             status: data.status || 'unknown',
             workstream: data.workstream || 'unassigned',
@@ -38,6 +32,7 @@ async function getEnrichedLoop(loopId: string, phase: number): Promise<EnrichedL
             summary: data.summary || '',
             content: await marked(content),
             created: data.created || '',
+            type: data.type || 'execution', // Default to execution if not specified
         };
     } catch (error) {
         console.error(`Error processing loop ${loopId}:`, error);
@@ -57,7 +52,7 @@ async function getEnrichedPhase(phase: Phase): Promise<EnrichedPhase> {
 
     let phaseContent = '';
     try {
-        const phaseFilePath = path.join(PHASES_DIR, `phase-${phase.phase}.md`);
+        const phaseFilePath = path.join(PATHS.PHASES_DIR, `phase-${phase.phase}.md`);
         const fileContent = await fs.readFile(phaseFilePath, 'utf-8');
         const { content } = matter(fileContent, matterOptions);
         phaseContent = await marked(content);
@@ -77,14 +72,14 @@ async function getEnrichedPhase(phase: Phase): Promise<EnrichedPhase> {
 // --- Helper function to scan loop files for phase associations ---
 async function getLoopsForPhase(phaseNumber: number): Promise<string[]> {
     try {
-        const loopFiles = await fs.readdir(LOOPS_DIR);
+        const loopFiles = await fs.readdir(PATHS.LOOPS_DIR);
         const relevantLoops: string[] = [];
         
         for (const file of loopFiles) {
             if (!file.endsWith('.md')) continue;
             
             try {
-                const filePath = path.join(LOOPS_DIR, file);
+                const filePath = path.join(PATHS.LOOPS_DIR, file);
                 const fileContent = await fs.readFile(filePath, 'utf-8');
                 const { data } = matter(fileContent, matterOptions);
                 
@@ -109,7 +104,7 @@ async function getLoopsForPhase(phaseNumber: number): Promise<string[]> {
 // --- API Handler ---
 export async function GET() {
     try {
-        const yamlContent = await fs.readFile(ROADMAP_YAML_PATH, 'utf-8');
+        const yamlContent = await fs.readFile(PATHS.ROADMAP_YAML_PATH, 'utf-8');
         const roadmapData = yaml.load(yamlContent) as { phases: Phase[] };
         
         // Process phases with improved loop handling

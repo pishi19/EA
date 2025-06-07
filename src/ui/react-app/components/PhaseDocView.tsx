@@ -11,7 +11,21 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { EnrichedPhase, EnrichedLoop } from '@/lib/types';
 import { MultiSelect } from '@/components/ui/multi-select'; // Assuming this component exists
 import { validateLoopSchema, formatValidationError } from '@/lib/schema-validation';
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, FileText, Cog, BookOpen } from "lucide-react";
+
+// Helper function to get type badge
+const getTypeBadge = (type: string | undefined) => {
+    switch (type) {
+        case 'planning':
+            return { icon: <FileText className="h-3 w-3" />, label: 'Planning', color: 'bg-blue-100 text-blue-800' };
+        case 'execution':
+            return { icon: <Cog className="h-3 w-3" />, label: 'Execution', color: 'bg-green-100 text-green-800' };
+        case 'retrospective':
+            return { icon: <BookOpen className="h-3 w-3" />, label: 'Retrospective', color: 'bg-amber-100 text-amber-800' };
+        default:
+            return { icon: <Cog className="h-3 w-3" />, label: 'Execution', color: 'bg-green-100 text-green-800' };
+    }
+};
 
 // --- Component ---
 export default function PhaseDocView() {
@@ -24,6 +38,7 @@ export default function PhaseDocView() {
     const [loopValidations, setLoopValidations] = useState<Record<string, any>>({});
 
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [typeFilter, setTypeFilter] = useState<string>('all');
     const [tagFilter, setTagFilter] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<string>('created_desc');
 
@@ -41,23 +56,32 @@ export default function PhaseDocView() {
         return Array.from(tags);
     }, [activePhase]);
 
-    const filteredAndSortedLoops = useMemo(() => {
-        if (!activePhase) return [];
+    const groupedLoops = useMemo(() => {
+        if (!activePhase) return { planning: [], execution: [], retrospective: [] };
         let loops = activePhase.loops;
 
         if (statusFilter !== 'all') {
             loops = loops.filter(loop => loop.status === statusFilter);
         }
+        if (typeFilter !== 'all') {
+            loops = loops.filter(loop => (loop.type || 'execution') === typeFilter);
+        }
         if (tagFilter.length > 0) {
             loops = loops.filter(loop => tagFilter.every(tag => loop.tags.includes(tag)));
         }
+        
         loops.sort((a, b) => {
             if (sortBy === 'score_desc') return b.score - a.score;
             if (sortBy === 'score_asc') return a.score - b.score;
             return new Date(b.created).getTime() - new Date(a.created).getTime();
         });
-        return loops;
-    }, [activePhase, statusFilter, tagFilter, sortBy]);
+
+        return {
+            planning: loops.filter(loop => loop.type === 'planning'),
+            execution: loops.filter(loop => (loop.type || 'execution') === 'execution'),
+            retrospective: loops.filter(loop => loop.type === 'retrospective')
+        };
+    }, [activePhase, statusFilter, typeFilter, tagFilter, sortBy]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -115,7 +139,7 @@ export default function PhaseDocView() {
             </header>
 
             {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 border rounded-lg bg-slate-50">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 p-4 border rounded-lg bg-slate-50">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Phase</label>
                     <Select value={String(activePhase.phase)} onValueChange={handlePhaseChange}>
@@ -133,6 +157,18 @@ export default function PhaseDocView() {
                             <SelectItem value="all">All Statuses</SelectItem>
                             <SelectItem value="in_progress">In Progress</SelectItem>
                             <SelectItem value="complete">Complete</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <Select value={typeFilter} onValueChange={setTypeFilter}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Types</SelectItem>
+                            <SelectItem value="planning">📘 Planning</SelectItem>
+                            <SelectItem value="execution">⚙️ Execution</SelectItem>
+                            <SelectItem value="retrospective">📓 Retrospective</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -165,56 +201,221 @@ export default function PhaseDocView() {
                 </section>
                 <section>
                     <h2 className="text-3xl font-bold mb-6 border-b pb-2">Loops in this Phase</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                        {filteredAndSortedLoops.map(loop => {
-                            const validation = loopValidations[loop.id];
-                            const isValid = validation ? validation.isValid : true;
-                            
-                            return (
-                                <AccordionItem key={loop.id} value={loop.id}>
-                                    <AccordionTrigger>
-                                        <div className="flex flex-col text-left">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-semibold text-lg">{loop.title}</span>
-                                                {!isValid && (
-                                                    <Badge variant="destructive" className="flex items-center gap-1">
-                                                        <AlertTriangle className="h-3 w-3" />
-                                                        Incomplete
-                                                    </Badge>
+                    
+                    {/* Planning Loops */}
+                    {groupedLoops.planning.length > 0 && (
+                        <div className="mb-8">
+                            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                📘 Strategic Documents
+                            </h3>
+                            <Accordion type="single" collapsible className="w-full">
+                                {groupedLoops.planning.map(loop => {
+                                    const validation = loopValidations[loop.id];
+                                    const isValid = validation ? validation.isValid : true;
+                                    const typeBadge = getTypeBadge(loop.type);
+                                    
+                                    return (
+                                        <AccordionItem key={loop.id} value={loop.id}>
+                                            <AccordionTrigger>
+                                                <div className="flex flex-col text-left">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-semibold text-lg">{loop.title}</span>
+                                                        <Badge 
+                                                            variant="secondary" 
+                                                            className={`flex items-center gap-1 ${typeBadge.color}`}
+                                                        >
+                                                            {typeBadge.icon}
+                                                            {typeBadge.label}
+                                                        </Badge>
+                                                        {!isValid && (
+                                                            <Badge variant="destructive" className="flex items-center gap-1">
+                                                                <AlertTriangle className="h-3 w-3" />
+                                                                Incomplete
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                                        <span>ID: {loop.id}</span>
+                                                        <Badge variant={loop.status === 'complete' ? 'default' : 'secondary'}>{loop.status}</Badge>
+                                                        <span>Score: {loop.score}</span>
+                                                    </div>
+                                                    {/* Tags */}
+                                                    {loop.tags && loop.tags.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {loop.tags.map((tag, idx) => (
+                                                                <Badge key={idx} variant="outline" className="text-xs">
+                                                                    {tag}
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent>
+                                                {!isValid && validation && (
+                                                    <Alert variant="destructive" className="mb-4">
+                                                        <AlertTriangle className="h-4 w-4" />
+                                                        <AlertTitle>Structurally Invalid Loop File</AlertTitle>
+                                                        <AlertDescription>
+                                                            {formatValidationError(validation, 'Loop file')}
+                                                        </AlertDescription>
+                                                    </Alert>
                                                 )}
-                                            </div>
-                                            <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                                <span>ID: {loop.id}</span>
-                                                <Badge variant={loop.status === 'complete' ? 'default' : 'secondary'}>{loop.status}</Badge>
-                                                <span>Score: {loop.score}</span>
-                                            </div>
-                                        </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent>
-                                        {!isValid && validation && (
-                                            <Alert variant="destructive" className="mb-4">
-                                                <AlertTriangle className="h-4 w-4" />
-                                                <AlertTitle>Structurally Invalid Loop File</AlertTitle>
-                                                <AlertDescription>
-                                                    {formatValidationError(validation, 'Loop file')}
-                                                </AlertDescription>
-                                            </Alert>
-                                        )}
-                                        <div className="prose max-w-none p-4" dangerouslySetInnerHTML={{ __html: loop.content }} />
-                                    </AccordionContent>
-                                </AccordionItem>
-                            );
-                        })}
-                        {filteredAndSortedLoops.length === 0 && (
-                            <div className="p-4">
-                                {activePhase?.loops.length === 0 ? (
-                                    <p className="text-muted-foreground">No loops found for this phase.</p>
-                                ) : (
-                                    <p className="text-muted-foreground">No valid loops found matching the current filters.</p>
-                                )}
-                            </div>
-                        )}
-                    </Accordion>
+                                                <div className="prose max-w-none p-4" dangerouslySetInnerHTML={{ __html: loop.content }} />
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    );
+                                })}
+                            </Accordion>
+                        </div>
+                    )}
+
+                    {/* Execution Loops */}
+                    {groupedLoops.execution.length > 0 && (
+                        <div className="mb-8">
+                            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                ⚙️ Active Loops
+                            </h3>
+                            <Accordion type="single" collapsible className="w-full">
+                                {groupedLoops.execution.map(loop => {
+                                    const validation = loopValidations[loop.id];
+                                    const isValid = validation ? validation.isValid : true;
+                                    const typeBadge = getTypeBadge(loop.type);
+                                    
+                                    return (
+                                        <AccordionItem key={loop.id} value={loop.id}>
+                                            <AccordionTrigger>
+                                                <div className="flex flex-col text-left">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-semibold text-lg">{loop.title}</span>
+                                                        <Badge 
+                                                            variant="secondary" 
+                                                            className={`flex items-center gap-1 ${typeBadge.color}`}
+                                                        >
+                                                            {typeBadge.icon}
+                                                            {typeBadge.label}
+                                                        </Badge>
+                                                        {!isValid && (
+                                                            <Badge variant="destructive" className="flex items-center gap-1">
+                                                                <AlertTriangle className="h-3 w-3" />
+                                                                Incomplete
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                                        <span>ID: {loop.id}</span>
+                                                        <Badge variant={loop.status === 'complete' ? 'default' : 'secondary'}>{loop.status}</Badge>
+                                                        <span>Score: {loop.score}</span>
+                                                    </div>
+                                                    {/* Tags */}
+                                                    {loop.tags && loop.tags.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {loop.tags.map((tag, idx) => (
+                                                                <Badge key={idx} variant="outline" className="text-xs">
+                                                                    {tag}
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent>
+                                                {!isValid && validation && (
+                                                    <Alert variant="destructive" className="mb-4">
+                                                        <AlertTriangle className="h-4 w-4" />
+                                                        <AlertTitle>Structurally Invalid Loop File</AlertTitle>
+                                                        <AlertDescription>
+                                                            {formatValidationError(validation, 'Loop file')}
+                                                        </AlertDescription>
+                                                    </Alert>
+                                                )}
+                                                <div className="prose max-w-none p-4" dangerouslySetInnerHTML={{ __html: loop.content }} />
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    );
+                                })}
+                            </Accordion>
+                        </div>
+                    )}
+
+                    {/* Retrospective Loops */}
+                    {groupedLoops.retrospective.length > 0 && (
+                        <div className="mb-8">
+                            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                📓 Retrospectives
+                            </h3>
+                            <Accordion type="single" collapsible className="w-full">
+                                {groupedLoops.retrospective.map(loop => {
+                                    const validation = loopValidations[loop.id];
+                                    const isValid = validation ? validation.isValid : true;
+                                    const typeBadge = getTypeBadge(loop.type);
+                                    
+                                    return (
+                                        <AccordionItem key={loop.id} value={loop.id}>
+                                            <AccordionTrigger>
+                                                <div className="flex flex-col text-left">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-semibold text-lg">{loop.title}</span>
+                                                        <Badge 
+                                                            variant="secondary" 
+                                                            className={`flex items-center gap-1 ${typeBadge.color}`}
+                                                        >
+                                                            {typeBadge.icon}
+                                                            {typeBadge.label}
+                                                        </Badge>
+                                                        {!isValid && (
+                                                            <Badge variant="destructive" className="flex items-center gap-1">
+                                                                <AlertTriangle className="h-3 w-3" />
+                                                                Incomplete
+                                                            </Badge>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                                        <span>ID: {loop.id}</span>
+                                                        <Badge variant={loop.status === 'complete' ? 'default' : 'secondary'}>{loop.status}</Badge>
+                                                        <span>Score: {loop.score}</span>
+                                                    </div>
+                                                    {/* Tags */}
+                                                    {loop.tags && loop.tags.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {loop.tags.map((tag, idx) => (
+                                                                <Badge key={idx} variant="outline" className="text-xs">
+                                                                    {tag}
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent>
+                                                {!isValid && validation && (
+                                                    <Alert variant="destructive" className="mb-4">
+                                                        <AlertTriangle className="h-4 w-4" />
+                                                        <AlertTitle>Structurally Invalid Loop File</AlertTitle>
+                                                        <AlertDescription>
+                                                            {formatValidationError(validation, 'Loop file')}
+                                                        </AlertDescription>
+                                                    </Alert>
+                                                )}
+                                                <div className="prose max-w-none p-4" dangerouslySetInnerHTML={{ __html: loop.content }} />
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    );
+                                })}
+                            </Accordion>
+                        </div>
+                    )}
+
+                    {/* No loops message */}
+                    {groupedLoops.planning.length === 0 && groupedLoops.execution.length === 0 && groupedLoops.retrospective.length === 0 && (
+                        <div className="p-4">
+                            {activePhase?.loops.length === 0 ? (
+                                <p className="text-muted-foreground">No loops found for this phase.</p>
+                            ) : (
+                                <p className="text-muted-foreground">No valid loops found matching the current filters.</p>
+                            )}
+                        </div>
+                    )}
                 </section>
             </main>
         </div>
