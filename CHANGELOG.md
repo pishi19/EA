@@ -1,5 +1,7 @@
 # 🧾 CHANGELOG
 
+- 2025-06-07: Validator script initiated to ensure sync between checklist and real system state
+
 ## [v0.1.0] – Stable EA Signal & Triage System (2025-05-31)
 
 ### Highlights
@@ -24,3 +26,8 @@
 - Fully deployed on Droplet with `systemctl enable ora`
 - All UI modules verified live on production server
 - GPT chat functional with API key loaded via launch script
+
+- 2025-06-05: Added initial `promote_loop_to_roadmap` command
+- 2025-06-04: Began work on new UI for loop promotion
+- 2025-06-03: Refactored database schema for loop metadata
+- 2025-06-02: Initial project setup

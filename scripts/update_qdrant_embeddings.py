@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import uuid
 
 import yaml
 
@@ -136,6 +137,11 @@ def main():
             logger.warning(f"No 'uuid' found in frontmatter for {md_file_path}. Skipping.")
             continue
 
+        # Generate a deterministic UUID for the Qdrant point ID from the loop's string UUID.
+        # This ensures the ID is always a valid UUID format for Qdrant.
+        # The original string uuid from the file is preserved in the payload.
+        qdrant_point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, str(loop_uuid)))
+
         loop_title = metadata.get('title', 'Untitled Loop')
         loop_tags = metadata.get('tags', [])
         loop_summary = metadata.get('summary', '')
@@ -173,11 +179,11 @@ def main():
         }
 
         points_to_upsert.append(models.PointStruct(
-            id=str(loop_uuid), # Qdrant point ID must be string, int or UUID
+            id=qdrant_point_id, # Qdrant point ID must be a valid UUID
             vector=embedding_vector,
             payload=payload
         ))
-        logger.info(f"Prepared point for {loop_uuid} from {md_file_path}.")
+        logger.info(f"Prepared point for {loop_uuid} (Qdrant ID: {qdrant_point_id}) from {md_file_path}.")
 
     if points_to_upsert:
         logger.info(f"Upserting {len(points_to_upsert)} points to Qdrant collection '{QDRANT_COLLECTION_NAME}'...")

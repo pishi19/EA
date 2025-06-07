@@ -31,3 +31,5 @@ archive/
 dist/
 build/
 streamlit_ui_report.txt
+node_modules
+node_modules
