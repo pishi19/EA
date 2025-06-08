@@ -1,0 +1,39 @@
+phases:
+  - phase: 8.0
+    id: "phase-8.0-refinement"
+    title: "Phase 8.0 - Refinement & Stability"
+    status: "complete"
+    score: 100
+  - phase: 8.1
+    id: "phase-8.1-green-slice"
+    title: "Phase 8.1 – Green Slice: Task Execution UI"
+    status: "complete"
+    score: 100
+  - phase: 8.2
+    id: "phase-8.2-yellow-slice"
+    title: "Phase 8.2 – Yellow Slice: Contextual Execution"
+    status: "in_progress"
+    score: 75
+  - phase: 8.3
+    id: "phase-8.3-orange-slice"
+    title: "Phase 8.3 - Orange Slice: Task Promotion"
+    status: "complete"
+    score: 100
+  - phase: 8.4
+    id: "phase-8.4-ui-execution"
+    title: "Phase 8.4 – UI Execution Integration"
+    status: "in_progress"
+    score: 50
+  - phase: 9.0
+    id: "phase-9.0-resilience"
+    title: "Phase 9.0 - Resilience and Regression"
+    status: "complete"
+    score: 100
+  - phase: 10.0
+    id: "phase-10.0-scoped-chat"
+    title: "Phase 10.0 - Scoped Chat Architecture"
+    status: "in_progress"
+    score: 25
+    loops:
+      - "loop-2025-08-20-phase-10-initiation.md"
+      - "loop-2025-09-06-phase-10-wrapup.md" 

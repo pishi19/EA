@@ -1,0 +1,15 @@
+mecca_event_nights:
+  title: Mecca In-Store Event Program
+  tags: [mecca, event, consultant]
+  goals:
+    - convert consultants to promoters
+    - deepen retail partner trust
+  owners: [ash, consultant_ops]
+
+ora_self_execution:
+  title: Ora Self-Execution
+  tags: [ora, roadmap, system]
+  goals:
+    - execute semantic roadmap loop-by-loop
+    - validate prompt engineering and assistant logic
+  owners: [ash] 

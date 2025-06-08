@@ -3,6 +3,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
 
+// Force dynamic rendering since we use request.url for search params
+export const dynamic = 'force-dynamic';
+
 // --- Path Resolution ---
 const BASE_DIR = path.resolve(process.cwd(), '../../..');
 const LOOPS_DIR = path.join(BASE_DIR, 'runtime/loops');

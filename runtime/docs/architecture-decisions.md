@@ -7,6 +7,17 @@ tags: [system, architecture, decisions, documentation]
 
 # Architecture Decisions Log
 
+## [2025-12-13] Roadmap-Referenced Artefact Alignment & Live Directory Enforcement
+
+- **Decision:** Archive all remaining loop artefacts from root directory that are not explicitly referenced in `/runtime/docs/roadmap.md` as required for current live execution; enforce Ora Alignment Protocol requirement for roadmap-driven artefact management
+- **Rationale:** Maintain clean separation between live and archived content; ensure only currently needed artefacts remain in live directories; complete the canonical schema foundation established in previous archival phases; eliminate confusion about active vs. historical artefacts
+- **Trigger:** Discovery of 6 loop files in root directory during UI data source audit; enforcement of Ora Alignment Protocol requirement that only roadmap-referenced artefacts should remain in live directories
+- **Action:** 
+  - Archived: 6 loop files from root directory to `/runtime/loops/archive/` (loop-2025-08-17-memory-driven-reasoning.md, loop-2025-08-15-memory-trace-initiation.md, loop-2025-08-13-ui-integration.md, loop-2025-08-12-task-ui-behavior-test.md, loop-2025-08-10-task-mutation-from-ui.md, loop-2025-08-08-test-infrastructure-diagnosis.md)
+  - Updated: Archive README.md with new archival rationale and file inventory
+  - Logged: Action in all required protocol documents (feedback-journal.md, architecture-decisions.md, system-update-protocol-checklist.md, .cursor/prompts/manifest.yaml)
+- **UI Integration:** All archived files remain accessible through system documentation interface; live directories now contain only roadmap-sequenced artefacts; complete compliance with canonical artefact management requirements
+
 ## [2025-06-08] Storage Evolution: Markdown vs Database
 
 - **Decision:** Continue using markdown for artefacts until real mutation or source-integration issues arise; migrate only artefact types that prove unsound in markdown.
@@ -69,6 +80,33 @@ tags: [system, architecture, decisions, documentation]
   - Integrated: Clear filter reset functionality and comprehensive no-results handling
   - Ensured: Dynamic count displays showing total artefacts, filtered results, available workstreams, and programs
 - **UI Integration:** Sophisticated filtering interface with responsive grid layout; independent filter operation with "All" defaults; real-time artefact count updates and filter state management; comprehensive sort options with immediate visual feedback; enhanced artefact cards with type badges (Planning, Execution, Retrospective) and structured metadata display; filter reset functionality for easy navigation; establishes robust filtering architecture pattern for future semantic UI enhancements and artefact management systems
+
+## [2025-12-13] Semantic Chat Classic Restoration & Embedded Chat Architecture
+
+- **Decision:** Restore previously lost "Semantic Chat Classic" page with embedded, expandable context-aware chat for each artefact; implement dual semantic chat interface pattern with current filtering demo and restored embedded chat architecture
+- **Rationale:** Preserve both interface paradigms - current filtering-focused demo and restored embedded chat functionality; embedded chat provides direct context-specific interaction with each artefact; expandable/collapsible design scales efficiently with large artefact collections; maintains semantic anchoring of chat to specific loop context and file structure; supports persistent chat history in loop files through ## 💬 Chat sections
+- **Trigger:** User requirement to restore lost embedded chat functionality without replacing current implementation; need for context-aware chat interface where conversations are scoped to individual artefacts; requirement for persistent chat history integration with loop file structure and Memory Trace/Execution Log functionality
+- **Action:**
+  - Created: `semantic-chat-classic/page.tsx` with embedded ChatPane components for each filtered artefact
+  - Implemented: Individual expand/collapse controls per artefact with bulk expand/collapse functionality
+  - Created: `components/ui/collapsible.tsx` to support expandable chat interface
+  - Enhanced: Navigation to include "Semantic Chat Classic" alongside existing "Semantic Chat"
+  - Integrated: Full filtering capabilities with embedded chat state preservation across filter operations
+  - Ensured: Contextual chat scoped to loop UUID and file path with persistent history in ## 💬 Chat sections
+- **UI Integration:** Semantic Chat Classic page provides artefact list/card view with embedded ChatPane components; individual chat expand/collapse controls maintain clean interface scaling; bulk controls enable efficient navigation through large collections; filtering preservation maintains context across artefact discovery and chat interaction; persistent chat history anchored to loop files enables continuity and Memory Trace integration; dual semantic chat pattern supports both discovery-focused (current demo) and interaction-focused (classic) workflows
+
+## [2025-12-13] Workstream Filter Demo Implementation
+
+- **Decision:** Create new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema and roadmap structure
+- **Rationale:** Establish dedicated demonstration of hierarchical filtering capability without mutating existing Contextual Chat Architecture Demo; implement canonical schema structure (workstream, program/phase, project/tags, task/artefact) as specified in Ora Alignment Protocol; provide comprehensive artefact filtering using live data from roadmap-referenced artefacts only
+- **Trigger:** User requirement to create new page implementing explicit hierarchy: "Workstream → Program → Project → Task (Artefact)" using canonical YAML schema; requirement to preserve existing Contextual Chat Architecture Demo page; need for standalone filtering demonstration following Ora Alignment Protocol
+- **Action:**
+  - Created: `app/workstream-filter-demo/page.tsx` implementing hierarchical cascade filtering with workstream (frontmatter), program (phase-based), project (tag-based), and status filtering
+  - Added: Navigation link in `layout.tsx` as "Workstream Filter Demo" alongside existing pages
+  - Implemented: Real-time filter computation with comprehensive metadata display including UUID, origin, scores, creation dates, and full tag visualization
+  - Integrated: Summary statistics showing total artefacts, filtered results, available workstreams, and programs with dynamic counts
+  - Ensured: Component uses existing API routes (/api/roadmap) and follows established UI patterns with shadcn/ui components
+- **UI Integration:** New page accessible via primary navigation; hierarchical filtering demonstrates canonical schema structure with live roadmap data; comprehensive artefact cards show all metadata dimensions; filter controls use established UI patterns; responsive design maintains quality across filter combinations; real-time updates with clear visual feedback and filter reset functionality; no mutations to existing pages or artefacts
 
 ## [YYYY-MM-DD] Decision/Change Title
 

@@ -1,25 +1,6 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/validate-schema/route": "app/api/validate-schema/route.js",
-  "/phase-doc/page": "app/phase-doc/page.js",
-  "/system-view/page": "app/system-view/page.js",
-  "/page": "app/page.js",
-  "/planning/page": "app/planning/page.js",
-  "/task-executor/page": "app/task-executor/page.js",
-  "/api/complete-task/route": "app/api/complete-task/route.js",
-  "/api/chat/route": "app/api/chat/route.js",
-  "/api/memory/route": "app/api/memory/route.js",
-  "/api/project-task-files/route": "app/api/project-task-files/route.js",
-  "/api/loops/route": "app/api/loops/route.js",
-  "/api/promote-plan-task/route": "app/api/promote-plan-task/route.js",
-  "/api/promote-task/route": "app/api/promote-task/route.js",
-  "/api/suggest-next-step/route": "app/api/suggest-next-step/route.js",
-  "/api/run-task/route": "app/api/run-task/route.js",
-  "/api/phase-doc/route": "app/api/phase-doc/route.js",
-  "/api/get-plan/route": "app/api/get-plan/route.js",
-  "/api/suggest-plan-task/route": "app/api/suggest-plan-task/route.js",
-  "/api/system-view/route": "app/api/system-view/route.js",
-  "/api/roadmap/route": "app/api/roadmap/route.js",
-  "/api/plan-tasks/route": "app/api/plan-tasks/route.js",
-  "/api/tasks/route": "app/api/tasks/route.js"
+  "/semantic-chat-classic/page": "app/semantic-chat-classic/page.js",
+  "/contextual-chat-demo/page": "app/contextual-chat-demo/page.js",
+  "/page": "app/page.js"
 }

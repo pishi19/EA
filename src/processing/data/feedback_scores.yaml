@@ -1,0 +1,6 @@
+- uuid: phase-7.0-gmail-loop-creation
+  score: 0.8
+  tags: [useful]
+- uuid: phase-7.1-workstream-ui
+  score: -1.0
+  tags: [false_positive, not_useful] 

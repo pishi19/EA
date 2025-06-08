@@ -27,6 +27,10 @@ export default function RootLayout({
             <Link href="/" className="font-bold">Ora System</Link>
             <Link href="/task-executor" className="text-sm text-muted-foreground hover:text-primary">Task Executor</Link>
             <Link href="/system-view" className="text-sm text-muted-foreground hover:text-primary">System View</Link>
+            <Link href="/contextual-chat-demo" className="text-sm text-muted-foreground hover:text-primary">Semantic Chat</Link>
+            <Link href="/semantic-chat-classic" className="text-sm text-muted-foreground hover:text-primary">Contextual Chat Architecture</Link>
+            <Link href="/workstream-filter-demo" className="text-sm text-muted-foreground hover:text-primary">Workstream Filter Demo</Link>
+            <Link href="/system-docs" className="text-sm text-muted-foreground hover:text-primary">System Docs</Link>
             <Link href="/phase-doc" className="text-sm text-muted-foreground hover:text-primary">Phase Document</Link>
             <Link href="/planning" className="text-sm text-muted-foreground hover:text-primary">Task Board</Link>
           </nav>
@@ -41,8 +45,8 @@ export default function RootLayout({
           <DrawerContent className="h-[80vh] flex flex-col">
             <div className="flex-1 p-4">
               <ChatPane 
-                scope="workstream" 
-                params={{ name: 'roadmap' }} 
+                contextType="phase" 
+                contextId="roadmap" 
                 title="Workstream: Roadmap" 
               />
             </div>

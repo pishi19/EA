@@ -7,6 +7,12 @@ tags: [feedback, journal, retrospective, documentation]
 
 # Ora Feedback Journal
 
+## [2025-12-13] Roadmap-Referenced Artefact Alignment and Live Directory Cleanup
+
+- **Feedback:** Successfully archived 6 remaining loop artefacts from root directory that were not explicitly referenced in `/runtime/docs/roadmap.md` as required for live execution. Following Ora Alignment Protocol requirement that only roadmap-referenced artefacts should remain in live directories. All archived files represent completed historical work that has been integrated into current system architecture. Updated archive documentation and maintained complete historical integrity. System now fully compliant with roadmap-driven artefact management requirements.
+- **Actor:** AI Assistant (via Cursor)
+- **Context:** Ora Alignment Protocol enforcement and live directory cleanup
+
 ## [2025-06-08] System Bootstrapping
 
 - **Feedback:** Initial seed documents in place, ready for live UI surfacing.
@@ -36,6 +42,18 @@ tags: [feedback, journal, retrospective, documentation]
 - **Feedback:** Successfully implemented full artefact filtering controls in Semantic Chat Demo with workstream, program (phase), and project (tags) filtering capabilities. All filtering works independently and in combination with "All" defaults. Real-time filtering of 53+ artefacts with dynamic counts and comprehensive sorting options (newest first, score-based, alphabetical). UI follows SystemView/PhaseDocView patterns with consistent shadcn/ui components. No regressions in existing functionality. Clear filter reset functionality and responsive grid layout enhance UX significantly. Component properly parses loop metadata for workstreams (system-integrity, workstream-ui, reasoning, memory, etc.), phases (8.1, 8.2, 9, 10, etc.), and project tags.
 - **Actor:** AI Assistant (via Cursor)
 - **Context:** Comprehensive filtering implementation following established UI patterns and Ora Alignment Protocol requirements
+
+## [2025-12-13] Semantic Chat Classic Restoration
+
+- **Feedback:** Successfully restored the previously lost "Semantic Chat Classic" page as a new separate UI component with embedded, expandable context-aware chat for each artefact. The restored page combines the filtering capabilities of the current Semantic Chat Demo with embedded ChatPane components anchored to each loop's schema and hierarchy. Features include individual expand/collapse chat controls, bulk expand/collapse functionality, contextual chat scoped to loop UUID and file path with persistent history in ## 💬 Chat sections, filtering preservation across chat states, and Memory Trace/Execution Log integration. Added to navigation as "Semantic Chat Classic" alongside existing "Semantic Chat" without replacement. Created missing Collapsible UI component and installed required dependencies. Full compliance with Ora Alignment Protocol including documentation updates.
+- **Actor:** AI Assistant (via Cursor)
+- **Context:** Page restoration following git history analysis and architectural reconstruction to provide context-aware chat interface with artefact-scoped conversations
+
+## [2025-12-13] Workstream Filter Demo Implementation
+
+- **Feedback:** Successfully created new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema. New "Workstream Filter Demo" page added to navigation without replacing existing Contextual Chat Architecture Demo page. Implements hierarchical cascade filtering with workstream (from frontmatter), program (phase-based), project (tag-based), and status filtering. Real-time filter computation with comprehensive metadata display including UUID, origin, scores, creation dates, and full tag visualization. Component properly integrates with existing API routes (/api/roadmap) and follows established UI patterns. Summary statistics show total artefacts, filtered results, workstreams, and programs. Build successful with no TypeScript errors or regressions to existing functionality.
+- **Actor:** AI Assistant (via Cursor)
+- **Context:** New hierarchical filtering component implementation following Ora Alignment Protocol requirements
 
 ## [YYYY-MM-DD] Feedback Entry
 

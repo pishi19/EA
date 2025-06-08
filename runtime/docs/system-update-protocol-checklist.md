@@ -56,6 +56,27 @@ To ensure all architecture decisions, migrations, feedback, and major actions ar
 
 ## Recent Implementations
 
+### [2025-12-13] Roadmap-Referenced Artefact Alignment & Live Directory Enforcement
+
+**Change:** Archived 6 remaining loop artefacts from root directory not explicitly referenced in roadmap.md; enforced Ora Alignment Protocol requirement for roadmap-driven live artefact management
+
+**Files Modified:**
+- Moved: 6 loop files from root directory to `/runtime/loops/archive/` (loop-2025-08-17-memory-driven-reasoning.md, loop-2025-08-15-memory-trace-initiation.md, loop-2025-08-13-ui-integration.md, loop-2025-08-12-task-ui-behavior-test.md, loop-2025-08-10-task-mutation-from-ui.md, loop-2025-08-08-test-infrastructure-diagnosis.md)
+- Modified: `runtime/loops/archive/README.md` (updated archive documentation and file inventory)
+
+**Checklist Status:**
+- [x] Is this action/decision part of a loop, phase, or execution context?
+    - [x] Part of Ora Alignment Protocol enforcement following UI data source audit
+- [x] Will this change impact system design, architecture, artefact structure, feedback, or migration?
+    - [x] Updated `feedback-journal.md` with archival action and rationale
+    - [x] Updated `architecture-decisions.md` with live directory enforcement decision
+    - [x] Updated `system-update-protocol-checklist.md` (this file)
+    - [x] Will update `.cursor/prompts/manifest.yaml` with prompt logging
+- [x] Use ChatGPT to generate the new section or entry (AI-assisted archival)
+- [x] Loop/Doc Cross-Reference: Connected to roadmap-driven artefact management requirements
+- [x] UI Surfacing: Archived files remain accessible through system documentation interface; live directories now contain only roadmap-sequenced content
+- [x] Review & Confirm: Complete historical preservation maintained; clean separation between live and archived content achieved; full Ora Alignment Protocol compliance
+
 ### [2025-12-13] System Docs UI Implementation & React Migration
 
 **Change:** Migrated "System Docs" feature to canonical React UI, removed Streamlit implementation
@@ -140,6 +161,30 @@ To ensure all architecture decisions, migrations, feedback, and major actions ar
 - [x] Loop/Doc Cross-Reference: Connected to artefact filtering and semantic UI enhancement requirements
 - [x] UI Surfacing: Comprehensive filtering with workstream (system-integrity, workstream-ui, reasoning, memory), program (phases 8.1, 8.2, 9, 10), project (tag-based) filters plus sorting and reset functionality
 - [x] Review & Confirm: All filters working independently and in combination, real-time updates with 53+ artefacts, no functionality regressions
+
+### [2025-12-13] Semantic Chat Classic Restoration
+
+**Change:** Restored previously lost "Semantic Chat Classic" page with embedded, expandable context-aware chat for each artefact
+
+**Files Modified:**
+- Created: `src/ui/react-app/app/semantic-chat-classic/page.tsx` (restored page with embedded chat functionality)
+- Created: `src/ui/react-app/components/ui/collapsible.tsx` (required UI component)
+- Modified: `src/ui/react-app/app/layout.tsx` (added "Semantic Chat Classic" to navigation)
+- Installed: `@radix-ui/react-collapsible` (required dependency)
+
+**Checklist Status:**
+- [x] Is this action/decision part of a loop, phase, or execution context?
+    - [x] Part of page restoration following Ora Alignment Protocol requirements for lost functionality recovery
+- [x] Will this change impact system design, architecture, artefact structure, feedback, or migration?
+    - [x] Updated `feedback-journal.md` with restoration results and architectural details
+    - [x] Updated `architecture-decisions.md` with embedded chat architecture decision
+    - [x] Updated `system-update-protocol-checklist.md` (this file)
+    - [x] Updated `roadmap.md` noting restoration completion
+    - [x] Updated `.cursor/prompts/manifest.yaml` with prompt logging per protocol
+- [x] Use ChatGPT to generate the new section or entry (AI-assisted restoration)
+- [x] Loop/Doc Cross-Reference: Connected to contextual chat architecture and semantic UI requirements
+- [x] UI Surfacing: Semantic Chat Classic page surfaces artefacts with embedded ChatPane components, filtering preservation, and bulk expand/collapse controls
+- [x] Review & Confirm: Collapsible component created, dependencies installed, navigation updated, full embedded chat functionality restored
 
 ### 2025-06-08: Loop Metadata Audit Script Implementation
 
@@ -324,6 +369,27 @@ To ensure all architecture decisions, migrations, feedback, and major actions ar
 - System update protocol checklist completed
 - Changes will be surfaced in UI through archive access
 - Prompt logging pending in manifest
+
+### [2025-12-13] Workstream Filter Demo Implementation
+
+**Change:** Created new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema and roadmap structure
+
+**Files Modified:**
+- Created: `src/ui/react-app/app/workstream-filter-demo/page.tsx` (new hierarchical filtering page)
+- Modified: `src/ui/react-app/app/layout.tsx` (added navigation link)
+
+**Checklist Status:**
+- [x] Is this action/decision part of a loop, phase, or execution context?
+    - [x] Part of Ora Alignment Protocol implementation following user requirement for hierarchical filtering demonstration
+- [x] Will this change impact system design, architecture, artefact structure, feedback, or migration?
+    - [x] Updated `feedback-journal.md` with implementation results and filtering capabilities
+    - [x] Updated `architecture-decisions.md` with hierarchical filtering decision and rationale
+    - [x] Updated `system-update-protocol-checklist.md` (this file)
+    - [x] Will update `.cursor/prompts/manifest.yaml` with prompt logging per protocol
+- [x] Use ChatGPT to generate the new section or entry (AI-assisted implementation)
+- [x] Loop/Doc Cross-Reference: Connected to canonical YAML schema requirements and hierarchical filtering demonstration
+- [x] UI Surfacing: New page accessible via primary navigation; hierarchical filtering demonstrates canonical schema structure with live roadmap data; comprehensive artefact metadata display with filtering controls
+- [x] Review & Confirm: Component uses existing API routes, follows established UI patterns, implements real-time hierarchical filtering with workstream/program/project/task structure, preserves existing functionality without mutations
 
 ---
 

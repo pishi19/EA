@@ -1,0 +1,77 @@
+import fileinput
+import pathlib
+
+# Paths are relative to the project root where this script will be run from.
+project_root = pathlib.Path(".") # Current directory, assuming script is run from project root
+utils_path = project_root / "src" / "utils"
+old_name = "email.py"
+new_name = "email_signals.py"
+
+old_path = utils_path / old_name
+new_path = utils_path / new_name
+
+def refactor_email_module_name():
+    print(f"Attempting to rename {old_path} to {new_path}")
+    if old_path.exists():
+        try:
+            old_path.rename(new_path)
+            print(f"✅ Renamed: {old_path} → {new_path}")
+        except OSError as e:
+            print(f"❌ Error renaming file {old_path} to {new_path}: {e}")
+            return # Stop if rename fails
+    else:
+        print(f"ℹ️ Source file {old_path} not found. Skipping rename.")
+
+    print(f"\nUpdating import statements across project (*.py files in {project_root}):")
+    files_checked = 0
+    files_modified = 0
+
+    # Define old and new module import strings
+    old_import_1 = f"from utils import {old_name[:-3]}" # from utils import email_signals
+    new_import_1 = f"from utils import {new_name[:-3]}" # from utils import email_signals_signals
+
+    old_import_2 = f"import utils.{old_name[:-3]}"    # import utils.email_signals
+    new_import_2 = f"import utils.{new_name[:-3]}"    # import utils.email_signals_signals
+
+    try:
+        for py_file in project_root.rglob("*.py"):
+            # Skip the script itself and backup files
+            if py_file.name == __file__ or str(py_file).endswith(".bak") or "site-packages" in str(py_file) or ".venv" in str(py_file):
+                continue
+
+            files_checked += 1
+            modified_in_file = False
+            try:
+                # Read content first to see if modification is needed
+                content = py_file.read_text(encoding='utf-8')
+                if old_import_1 in content or old_import_2 in content:
+                    # Use fileinput only if changes are likely
+                    print(f"  Checking: {py_file}")
+                    with fileinput.FileInput(str(py_file), inplace=True, backup='.bak') as file:
+                        for line in file:
+                            original_line = line
+                            line = line.replace(old_import_1, new_import_1)
+                            line = line.replace(old_import_2, new_import_2)
+                            if original_line != line:
+                                modified_in_file = True
+                            print(line, end='')
+                    if modified_in_file:
+                        print(f"    🔄 Modified: {py_file}")
+                        files_modified += 1
+            except FileNotFoundError:
+                print(f"    ⚠️ File not found during rglob scan (should not happen): {py_file}")
+            except UnicodeDecodeError as ude:
+                print(f"    ⚠️ UnicodeDecodeError reading {py_file}: {ude}. Skipping this file for replacements.")
+            except Exception as e:
+                print(f"    ❌ Error processing file {py_file} for import replacement: {e}")
+
+    except Exception as e:
+        print(f"❌ An error occurred during project file scan: {e}")
+
+    print("\nImport update process complete.")
+    print(f"Files checked: {files_checked}")
+    print(f"Files modified (imports updated): {files_modified}")
+    print("Backup files (if any) were created with a '.bak' extension.")
+
+if __name__ == "__main__":
+    refactor_email_module_name()

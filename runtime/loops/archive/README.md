@@ -2,10 +2,10 @@
 
 ## Archive Summary
 
-**Archive Date**: 2025-06-08  
-**Archive Time**: 16:30:00 UTC  
-**Archive Reason**: Legacy Data Cleanup (Phase 11.3 - Project 11.3.2)  
-**Total Files Archived**: 52 loop markdown files  
+**Archive Date**: 2025-06-08 (Initial), 2025-12-13 (Roadmap Cleanup)  
+**Archive Time**: 16:30:00 UTC (Initial), Current (Roadmap Cleanup)  
+**Archive Reason**: Legacy Data Cleanup (Phase 11.3 - Project 11.3.2) + Roadmap-Referenced Artefact Alignment  
+**Total Files Archived**: 58 loop markdown files (52 initial + 6 roadmap cleanup)  
 
 ## Purpose and Rationale
 
@@ -100,6 +100,19 @@ Going forward, all new artefacts must conform to the **Canonical Artefact Schema
 | mecca-staging-deploy.md | N/A | N/A | N/A | N/A |
 | test-loop.md | N/A | N/A | N/A | N/A |
 
+### Additional Files Archived (2025-12-13): Roadmap-Referenced Artefact Alignment
+
+| Filename | UUID | Workstream | Status | Created |
+|----------|------|------------|--------|---------|
+| loop-2025-08-17-memory-driven-reasoning.md | loop-2025-08-17-memory-driven-reasoning | reasoning | complete | 2025-08-17 |
+| loop-2025-08-15-memory-trace-initiation.md | loop-2025-08-15-memory-trace-initiation | memory | complete | 2025-08-15 |
+| loop-2025-08-13-ui-integration.md | loop-2025-08-13-ui-integration | workstream-ui | complete | 2025-08-13 |
+| loop-2025-08-12-task-ui-behavior-test.md | loop-2025-08-12-task-ui-behavior-test | system-integrity | complete | 2025-08-12 |
+| loop-2025-08-10-task-mutation-from-ui.md | loop-2025-08-10-task-mutation-from-ui | workstream-ui | complete | 2025-08-10 |
+| loop-2025-08-08-test-infrastructure-diagnosis.md | loop-2025-08-08-test-infrastructure-diagnosis | system-integrity | complete | 2025-08-08 |
+
+**Archival Rationale (2025-12-13)**: These files were archived as part of enforcing the Ora Alignment Protocol requirement that only artefacts explicitly referenced in `/runtime/docs/roadmap.md` should remain in live directories. Upon audit, no specific loop files were found to be explicitly referenced as needed for current live execution in the roadmap documentation.
+
 ## Future Artefact Creation Requirements
 
 1. **Sequencing**: All new artefacts must be sequenced from `/runtime/docs/roadmap.md` using the hierarchical Program/Project/Task structure
@@ -119,5 +132,5 @@ Going forward, all new artefacts must conform to the **Canonical Artefact Schema
 ---
 
 **Archive maintained under Ora Alignment Protocol**  
-**Last Updated**: 2025-06-08  
+**Last Updated**: 2025-12-13  
 **Archive Status**: PRESERVED (No modifications to archived content) 

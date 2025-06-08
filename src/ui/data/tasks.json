@@ -1,0 +1,97 @@
+[
+  {
+    "id": "loop-2025-08-02-phase-8-standards-Integrate methodical",
+    "description": "Integrate methodical checklist into all loop templates",
+    "is_complete": false,
+    "source_loop": {
+      "uuid": "loop-2025-08-02-phase-8-standards",
+      "title": "Phase 8 Execution Standards & Verification Framework",
+      "phase": 8.1,
+      "workstream": "system-integrity",
+      "tags": [
+        "execution-model",
+        "testing",
+        "git",
+        "loop-discipline",
+        "verification",
+        "standards"
+      ]
+    }
+  },
+  {
+    "id": "loop-2025-08-02-phase-8-standards-Create a validator s",
+    "description": "Create a validator script to compare loop file tasks with real code state",
+    "is_complete": true,
+    "source_loop": {
+      "uuid": "loop-2025-08-02-phase-8-standards",
+      "title": "Phase 8 Execution Standards & Verification Framework",
+      "phase": 8.1,
+      "workstream": "system-integrity",
+      "tags": [
+        "execution-model",
+        "testing",
+        "git",
+        "loop-discipline",
+        "verification",
+        "standards"
+      ]
+    }
+  },
+  {
+    "id": "loop-2025-08-02-phase-8-standards-Write Git sync scrip",
+    "description": "Write Git sync script that checks commits against loop UUIDs",
+    "is_complete": true,
+    "source_loop": {
+      "uuid": "loop-2025-08-02-phase-8-standards",
+      "title": "Phase 8 Execution Standards & Verification Framework",
+      "phase": 8.1,
+      "workstream": "system-integrity",
+      "tags": [
+        "execution-model",
+        "testing",
+        "git",
+        "loop-discipline",
+        "verification",
+        "standards"
+      ]
+    }
+  },
+  {
+    "id": "loop-2025-08-02-phase-8-standards-Retrofit existing lo",
+    "description": "Retrofit existing loop `loop-2025-08-01-verification-integrity.md` with standards",
+    "is_complete": false,
+    "source_loop": {
+      "uuid": "loop-2025-08-02-phase-8-standards",
+      "title": "Phase 8 Execution Standards & Verification Framework",
+      "phase": 8.1,
+      "workstream": "system-integrity",
+      "tags": [
+        "execution-model",
+        "testing",
+        "git",
+        "loop-discipline",
+        "verification",
+        "standards"
+      ]
+    }
+  },
+  {
+    "id": "loop-2025-08-02-phase-8-standards-Enforce this model i",
+    "description": "Enforce this model in Phase 8.2+",
+    "is_complete": false,
+    "source_loop": {
+      "uuid": "loop-2025-08-02-phase-8-standards",
+      "title": "Phase 8 Execution Standards & Verification Framework",
+      "phase": 8.1,
+      "workstream": "system-integrity",
+      "tags": [
+        "execution-model",
+        "testing",
+        "git",
+        "loop-discipline",
+        "verification",
+        "standards"
+      ]
+    }
+  }
+]

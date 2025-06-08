@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { EnrichedPhase, EnrichedLoop } from '@/lib/types';
-import { MultiSelect } from '@/components/ui/multi-select'; // Assuming this component exists
+// MultiSelect component removed due to dependency issues
 import { validateLoopSchema, formatValidationError } from '@/lib/schema-validation';
 import { AlertTriangle, FileText, Cog, BookOpen } from "lucide-react";
 
@@ -41,6 +41,7 @@ export default function PhaseDocView() {
     const [typeFilter, setTypeFilter] = useState<string>('all');
     const [tagFilter, setTagFilter] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState<string>('created_desc');
+    const [workstreamFilter, setWorkstreamFilter] = useState<string>('all');
 
     const activePhase = useMemo(() => {
         const phaseParam = searchParams.get('phase');
@@ -56,6 +57,16 @@ export default function PhaseDocView() {
         return Array.from(tags);
     }, [activePhase]);
 
+    const allWorkstreams = useMemo(() => {
+        const workstreams = new Set<string>();
+        activePhase?.loops.forEach(loop => {
+            if (loop.workstream) {
+                workstreams.add(loop.workstream);
+            }
+        });
+        return ['all', ...Array.from(workstreams)];
+    }, [activePhase]);
+
     const groupedLoops = useMemo(() => {
         if (!activePhase) return { planning: [], execution: [], retrospective: [] };
         let loops = activePhase.loops;
@@ -65,6 +76,9 @@ export default function PhaseDocView() {
         }
         if (typeFilter !== 'all') {
             loops = loops.filter(loop => (loop.type || 'execution') === typeFilter);
+        }
+        if (workstreamFilter !== 'all') {
+            loops = loops.filter(loop => loop.workstream === workstreamFilter);
         }
         if (tagFilter.length > 0) {
             loops = loops.filter(loop => tagFilter.every(tag => loop.tags.includes(tag)));
@@ -81,7 +95,7 @@ export default function PhaseDocView() {
             execution: loops.filter(loop => (loop.type || 'execution') === 'execution'),
             retrospective: loops.filter(loop => loop.type === 'retrospective')
         };
-    }, [activePhase, statusFilter, typeFilter, tagFilter, sortBy]);
+    }, [activePhase, statusFilter, typeFilter, workstreamFilter, tagFilter, sortBy]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -139,7 +153,7 @@ export default function PhaseDocView() {
             </header>
 
             {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 p-4 border rounded-lg bg-slate-50">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6 p-4 border rounded-lg bg-slate-50">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Phase</label>
                     <Select value={String(activePhase.phase)} onValueChange={handlePhaseChange}>
@@ -173,13 +187,25 @@ export default function PhaseDocView() {
                     </Select>
                 </div>
                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Workstream</label>
+                    <Select value={workstreamFilter} onValueChange={setWorkstreamFilter}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            {allWorkstreams.map(ws => <SelectItem key={ws} value={ws}>{ws === 'all' ? 'All Workstreams' : ws}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
-                    <MultiSelect
-                        options={allTags.map(tag => ({ value: tag, label: tag }))}
-                        selected={tagFilter}
-                        onChange={setTagFilter}
-                        placeholder="Filter by tags..."
-                    />
+                    <Select value={tagFilter[0] || 'all'} onValueChange={(value) => setTagFilter(value === 'all' ? [] : [value])}>
+                        <SelectTrigger><SelectValue placeholder="Filter by tag..." /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Tags</SelectItem>
+                            {allTags.map(tag => (
+                                <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
