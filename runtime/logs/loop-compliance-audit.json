@@ -1,0 +1,1364 @@
+{
+  "timestamp": "2025-06-07T09:51:48.617Z",
+  "totalFiles": 50,
+  "compliantFiles": 50,
+  "nonCompliantFiles": 0,
+  "results": [
+    {
+      "filename": "loop-2025-06-02-test-loop-content.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-06-05-mecca-rsvp-client1.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-06-06-mecca-rsvp-client1.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-07-02-data-migration.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-07-03-enablement-sessions.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-07-05-integration-testing.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-00-task-executor-ui.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-01-verification-integrity.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-02-phase-8-standards.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-03-validator-registration.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-04-validator-findings.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-05-validator-retrospective.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-06-yellow-slice-initiation.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-07-testing-framework-recovery.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-08-test-infrastructure-diagnosis.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-09-radix-testing-compat.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-10-task-mutation-from-ui.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-12-task-ui-behavior-test.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-13-ui-integration.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-14-ui-test-completion.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-15-memory-trace-initiation.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-16-jest-esm-alias-resolution.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-17-memory-driven-reasoning.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-18-reasoning-test-coverage.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-19-task-generation-from-gpt.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-20-phase-10-initiation.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-21-system-view-ui.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-22-phase-document-view.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-26-gpt-suggestions-integrate-plan.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-27-task-ui-mutation.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-29-hierarchical-execution-structure.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-30-md-to-db-evolution.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-08-31-phase-doc-view-enhancement.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-01-task-promotion-path.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-02-ui-resilience-and-regression-tests.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-03-runtime-path-audit.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-04-task-board-ui-parse-debug.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-05-scoped-chat-architecture.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-06-phase-10-wrapup.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-07-phase-index-fix.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-08-data-logic-boundary.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-09-mutation-surface-hardening.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-10-project-refactor-audit.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-12-loop-compliance-audit.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-2025-09-13-database-transition-scope.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-phase-7.0-gmail-loop-creation.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-phase-7.1-workstream-ui.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "loop-with-summary.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "mecca-staging-deploy.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    },
+    {
+      "filename": "test-loop.md",
+      "frontmatterStatus": {
+        "valid": true,
+        "missingFields": [],
+        "presentFields": [
+          "uuid",
+          "title",
+          "phase",
+          "workstream",
+          "score",
+          "status"
+        ]
+      },
+      "structuralSections": {
+        "present": [
+          "Objectives",
+          "Tasks",
+          "Execution Log",
+          "Memory Trace"
+        ],
+        "missing": []
+      },
+      "dryRunPreviews": [],
+      "recommendedAction": "skip",
+      "errors": []
+    }
+  ],
+  "summary": {
+    "mostCommonMissingSections": {},
+    "mostCommonMissingFrontmatter": {},
+    "patchableFiles": 0,
+    "manualReviewRequired": 0
+  }
+}
