@@ -142,3 +142,74 @@ The loop collection had grown to 55+ files with inconsistent metadata quality, m
 5. **Historical Tracking**: Trend analysis of data quality over time
 
 This decision establishes a foundation for maintaining high-quality metadata across the entire loop collection, supporting better discoverability and system integrity.
+
+## ADR-009: Roadmap Hierarchical Structure (2025-06-08)
+
+**Status**: ✅ IMPLEMENTED  
+**Context**: Need for systematic organization of roadmap phases with explicit program/project/task hierarchy  
+**Impact**: Planning Structure & Project Management  
+
+### Problem Statement
+The existing roadmap structure lacked hierarchical organization, making it difficult to:
+- Track progress at different levels of granularity
+- Understand relationships between related work items
+- Provide clear status visibility for programs, projects, and tasks
+- Establish consistent patterns for future phase planning
+
+### Decision: Hierarchical Program/Project/Task Structure
+
+**Architecture**: Three-level hierarchy with explicit numbering scheme  
+**Pattern**: Phase X → Project X.Y → Task X.Y.Z  
+**Implementation**: Enhanced roadmap.md with structured breakdown  
+
+### Technical Design
+1. **Program Level**: Major phase initiatives (e.g., Phase 11 – Artefact Hierarchy and Filtering)
+2. **Project Level**: Logical groupings of related tasks (e.g., Project 11.1: Artefact Schema and Canonicalization)
+3. **Task Level**: Specific deliverables with clear outcomes (e.g., Task 11.1.1: Design canonical artefact schema)
+
+### Phase 11 Implementation Structure
+- **Program**: Phase 11 – Artefact Hierarchy and Filtering
+  - **Project 11.1**: Artefact Schema and Canonicalization (COMPLETE)
+    - Task 11.1.1: Design canonical artefact schema (COMPLETE)
+    - Task 11.1.2: Document schema in system docs (COMPLETE)
+  - **Project 11.2**: Semantic Chat Demo Filtering (COMPLETE)
+    - Task 11.2.1: Implement filtering logic (COMPLETE)
+    - Task 11.2.2: Integrate UI filter components (COMPLETE)
+    - Task 11.2.3: Test filtering across artefact types (COMPLETE)
+  - **Project 11.3**: Legacy Data Cleanup (IN PROGRESS)
+    - Task 11.3.1: Audit legacy loop files (COMPLETE)
+    - Task 11.3.2: Migrate compliant artefacts (IN PROGRESS)
+    - Task 11.3.3: Archive non-compliant artefacts (PLANNED)
+
+### Status Tracking Framework
+- **✅ COMPLETE**: Work finished with deliverables validated
+- **🔄 IN PROGRESS**: Active development with defined scope
+- **⏳ PLANNED**: Future work with dependencies identified
+- **❌ BLOCKED**: Work stopped pending resolution
+
+### Benefits
+1. **Granular Tracking**: Progress visibility at program, project, and task levels
+2. **Dependency Management**: Clear relationships between work items
+3. **Resource Planning**: Better allocation through structured breakdown
+4. **Pattern Consistency**: Reusable template for future phases
+5. **Status Clarity**: Unified tracking across all levels of work
+
+### Implementation Considerations
+- **Numbering Scheme**: Consistent X.Y.Z pattern for easy reference
+- **Status Preservation**: Existing completion states maintained during migration
+- **Deliverable Tracking**: Each task linked to specific outputs and artifacts
+- **Cross-Reference**: Integration with existing loop and documentation systems
+
+### Integration Points
+- **Documentation**: Links to specific deliverables in `/runtime/logs/` and `/runtime/docs/`
+- **UI Access**: Roadmap structure accessible through system documentation interface
+- **Audit Trail**: Change log entries tracking hierarchical structure implementation
+- **Future Phases**: Template established for consistent organization
+
+### Maintenance Protocol
+1. **Regular Updates**: Status changes tracked at appropriate granularity level
+2. **Completion Criteria**: Clear definition of done for each level
+3. **Documentation**: All changes logged in system update protocol checklist
+4. **Review Cycles**: Periodic assessment of structure effectiveness
+
+This decision establishes a foundation for systematic project management within the Ora system, enabling better planning, tracking, and execution of complex multi-phase initiatives.

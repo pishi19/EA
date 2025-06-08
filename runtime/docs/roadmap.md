@@ -17,7 +17,69 @@ tags: [roadmap, phases, planning, documentation]
 ## Status
 
 - Phase 10.2: Complete
-- Phase 11: In Planning
+- Phase 11: In Progress
+
+## Phase 11 – Artefact Hierarchy and Filtering
+
+**Program**: Phase 11 – Artefact Hierarchy and Filtering  
+**Status**: In Progress  
+**Start Date**: 2025-06-08  
+**Owner**: System Architecture Team  
+
+### Project 11.1: Artefact Schema and Canonicalization
+**Status**: ✅ COMPLETE  
+**Completion Date**: 2025-06-08  
+
+#### Task 11.1.1: Design canonical artefact schema
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Comprehensive schema patterns analysis
+- **Output**: `runtime/logs/loop_schema_patterns.md`
+- **Notes**: Analyzed 55 loop files, identified 27 unique frontmatter fields and 78 section headings
+
+#### Task 11.1.2: Document schema in system docs
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Schema documentation and integration recommendations
+- **Output**: Integration patterns for Gmail, Slack, and planning tools
+- **Notes**: High-value fields identified: title, uuid, created, source, workstream, status, tags
+
+### Project 11.2: Semantic Chat Demo Filtering
+**Status**: ✅ COMPLETE  
+**Completion Date**: 2025-06-08  
+
+#### Task 11.2.1: Implement filtering logic
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Multi-dimensional filtering engine
+- **Notes**: Workstream, program (phase-based), project (tag-based), status filtering with real-time updates
+
+#### Task 11.2.2: Integrate UI filter components
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Comprehensive filter interface
+- **Notes**: 6-column responsive grid with shadcn/ui Select components, dynamic count displays
+
+#### Task 11.2.3: Test filtering across artefact types
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Validated filtering across 53+ artefacts
+- **Notes**: Independent and combination filtering working, no regressions detected
+
+### Project 11.3: Legacy Data Cleanup
+**Status**: In Progress  
+**Estimated Completion**: 2025-06-15  
+
+#### Task 11.3.1: Audit legacy loop files
+- **Status**: ✅ COMPLETE
+- **Deliverable**: Comprehensive metadata audit report
+- **Output**: `runtime/logs/loop_metadata_audit.md`
+- **Notes**: 44 files (80%) identified with metadata issues requiring attention
+
+#### Task 11.3.2: Migrate compliant artefacts
+- **Status**: 🔄 IN PROGRESS
+- **Priority**: High
+- **Notes**: Focus on 17 files missing required sections, 8 orphaned artefacts
+
+#### Task 11.3.3: Archive non-compliant artefacts
+- **Status**: ⏳ PLANNED
+- **Priority**: Medium
+- **Dependencies**: Task 11.3.2 completion
 
 ## Change Log
 
@@ -25,9 +87,43 @@ tags: [roadmap, phases, planning, documentation]
 - [2025-12-13] Semantic Chat Demo Elevation & Enhanced Filtering completed - Elevated Contextual Chat Demo to primary navigation as "Semantic Chat" with comprehensive artefact filtering (workstream, phase/program, tag/project, status) and real-time filter effects, establishing semantic chat as core architectural feature (linked to Phase 11 UI enhancements)
 - [2025-12-13] Workstream Filtering UI Enhancement completed - Added workstream filtering dropdown to PhaseDocView component, achieving consistent workstream-based filtering across all loop views (SystemView and PhaseDocView) with proper API integration and responsive design (linked to Phase 11 UI enhancements)
 - [2025-12-13] System Docs UI Integration completed - Added dedicated "System Docs" tab to Contextual Chat Demo UI, surfacing all `/runtime/docs/` files with read-only markdown rendering (linked to Phase 11 UI enhancements)
+- [2025-06-08] Phase 11 hierarchical structure implemented - Established program/project/task hierarchy with explicit tracking and status management
 - [2025-06-08] Roadmap doc seeded for canonical reference.
 
 # Project Roadmap
+
+## 2025-06-08: Loop Schema Patterns Analysis System
+
+**Capability**: Comprehensive Schema Analysis & Integration Planning  
+**Status**: ✅ COMPLETE  
+**Impact**: High - Foundation for artefact standardization and source integration  
+
+### Implementation Summary
+Delivered comprehensive schema patterns analysis system that analyzes all loop files for YAML frontmatter and markdown section patterns, providing integration recommendations for external sources.
+
+### Key Achievements
+- **Complete Schema Analysis**: Analyzed 55 loop files identifying 27 unique frontmatter fields and 78 section headings
+- **Integration Recommendations**: Specific mapping guidance for Gmail, Slack, and planning tool integration
+- **Data Quality Insights**: Field completeness analysis and standardization opportunities
+- **Future Architecture**: Technical implementation notes for schema validation and templates
+
+### Technical Deliverables
+1. **Analysis Script**: `scripts/analyze-loop-schema-patterns.ts` with comprehensive pattern detection
+2. **Schema Report**: `runtime/logs/loop_schema_patterns.md` with detailed analysis and recommendations
+3. **Integration Mappings**: Source-specific mapping recommendations for external systems
+4. **Evolution Roadmap**: Schema standardization and emerging pattern identification
+
+### Business Value
+- **Integration Readiness**: Clear roadmap for external source integration (Gmail, Slack, planning tools)
+- **Data Standardization**: Identification of high-value fields for prioritized integration
+- **Quality Framework**: Schema validation foundation for future artefact creation
+- **Semantic Enhancement**: Support for AI-powered analysis and reasoning capabilities
+
+### Critical Insights
+- **Top Fields**: origin (96%), title (93%), tags (91%), uuid (91%), created (85%)
+- **Core Sections**: Execution Log (82%), Purpose (78%), Objectives (76%), Memory Trace (75%), Tasks (71%)
+- **Integration Value**: 7 high-value fields identified for external source mapping
+- **Evolution Patterns**: 17 fields need standardization, 5 core sections well-established
 
 ## 2025-06-08: Loop Metadata Audit System
 
