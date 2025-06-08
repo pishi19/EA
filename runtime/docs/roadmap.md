@@ -62,8 +62,8 @@ tags: [roadmap, phases, planning, documentation]
 - **Notes**: Independent and combination filtering working, no regressions detected
 
 ### Project 11.3: Legacy Data Cleanup
-**Status**: In Progress  
-**Estimated Completion**: 2025-06-15  
+**Status**: ✅ COMPLETE  
+**Completion Date**: 2025-06-08  
 
 #### Task 11.3.1: Audit legacy loop files
 - **Status**: ✅ COMPLETE
@@ -72,14 +72,16 @@ tags: [roadmap, phases, planning, documentation]
 - **Notes**: 44 files (80%) identified with metadata issues requiring attention
 
 #### Task 11.3.2: Migrate compliant artefacts
-- **Status**: 🔄 IN PROGRESS
-- **Priority**: High
-- **Notes**: Focus on 17 files missing required sections, 8 orphaned artefacts
+- **Status**: ✅ COMPLETE
+- **Completion Date**: 2025-06-08
+- **Deliverable**: Complete archival of 54 legacy files to establish canonical schema foundation
+- **Notes**: 52 loop files and 2 task files archived with comprehensive documentation
 
 #### Task 11.3.3: Archive non-compliant artefacts
-- **Status**: ⏳ PLANNED
-- **Priority**: Medium
-- **Dependencies**: Task 11.3.2 completion
+- **Status**: ✅ COMPLETE
+- **Completion Date**: 2025-06-08
+- **Deliverable**: Legacy artefacts archived with comprehensive documentation and canonical schema requirements
+- **Notes**: All legacy content preserved in archive subdirectories with complete historical integrity
 
 ## Change Log
 

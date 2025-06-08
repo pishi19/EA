@@ -213,3 +213,79 @@ The existing roadmap structure lacked hierarchical organization, making it diffi
 4. **Review Cycles**: Periodic assessment of structure effectiveness
 
 This decision establishes a foundation for systematic project management within the Ora system, enabling better planning, tracking, and execution of complex multi-phase initiatives.
+
+## ADR-010: Legacy Artefact Archival Strategy (2025-06-08)
+
+**Status**: ✅ IMPLEMENTED  
+**Context**: Need for systematic cleanup of legacy loop and task files to establish canonical artefact schema foundation  
+**Impact**: Data Architecture & Quality Management  
+
+### Problem Statement
+The system contained 54 legacy artefact files (52 loops, 2 tasks) with inconsistent metadata structures that created issues with:
+- Filtering and discovery in the UI systems
+- Compliance with established canonical schema requirements
+- Data integrity and systematic organization
+- Integration with hierarchical roadmap structure
+
+### Decision: Archive-First Legacy Data Cleanup
+
+**Strategy**: Preserve all legacy content through archival while establishing clean foundation  
+**Implementation**: Create `/archive/` subdirectories within existing structure  
+**Preservation**: Maintain complete historical record without content modification  
+
+### Technical Design
+1. **Archive Structure**: Create `/runtime/loops/archive/` and `/runtime/tasks/archive/` directories
+2. **Content Preservation**: Move all files without modification to maintain historical integrity
+3. **Documentation**: Comprehensive README.md files documenting archive rationale and future requirements
+4. **Schema Reference**: Clear links to canonical schema documentation and requirements
+
+### Legacy Files Archived
+
+#### Loops Archive (52 files):
+- **System Integrity**: 16 files related to testing, validation, and system hardening
+- **Workstream UI**: 18 files covering UI development, testing, and integration
+- **Reasoning**: 9 files focused on memory, reasoning, and task generation
+- **Memory**: 2 files addressing memory trace and reasoning systems
+- **Orphaned**: 7 files with missing or non-canonical workstream assignments
+
+#### Tasks Archive (2 files):
+- **task-loop-card-component.md**: LoopCard component with embedded chat functionality
+- **task-chat-pane-update.md**: Chat pane contextual functionality updates
+
+### Archive Documentation Standards
+Each archive directory includes comprehensive README.md with:
+- **Archive Summary**: Date, time, reason, and file count
+- **Rationale**: Detailed explanation of issues and cleanup necessity  
+- **Canonical Schema**: Complete specification for future artefact creation
+- **File Inventory**: Table with filename, UUID, workstream, status, and creation date
+- **Requirements**: Clear guidelines for future artefact creation and validation
+
+### Benefits
+1. **Clean Foundation**: Establishes clear baseline for canonical schema implementation
+2. **Historical Preservation**: Maintains complete system evolution record
+3. **Quality Improvement**: Enables consistent metadata and structure going forward
+4. **Integration Support**: Facilitates proper roadmap hierarchy implementation
+5. **Audit Compliance**: Provides clear trail of cleanup decisions and rationale
+
+### Future Architecture Implications
+- **No Standalone Tasks**: All task work integrated into roadmap hierarchy
+- **Schema Validation**: Mandatory compliance checking before artefact creation
+- **Workstream Assignment**: Required canonical workstream categorization
+- **Hierarchical Structure**: Program/Project/Task organization from roadmap
+- **Documentation Standards**: Complete required sections with meaningful content
+
+### Implementation Considerations
+- **Content Immutability**: Archived files preserved exactly as created
+- **Cross-Reference Integrity**: Archive documentation includes full inventory
+- **Schema Evolution**: Clear path from legacy to canonical structure
+- **UI Integration**: Archive accessible through system documentation interface
+- **Audit Trail**: Complete logging in all required protocol documents
+
+### Maintenance Protocol
+1. **Archive Immutability**: No modifications to archived content
+2. **Documentation Updates**: README.md files updated as schema evolves
+3. **Reference Links**: Maintain accurate links to canonical documentation
+4. **Access Control**: Archive content read-only for historical reference
+5. **Migration Tracking**: Clear documentation of evolved functionality integration
+
+This decision establishes a foundation for systematic artefact management while preserving the complete historical evolution of the Ora system for future reference and analysis.
