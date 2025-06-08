@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { parsePlan, stringifyPlan, Task } from '@/lib/plan-parser';
 import { mutationEngine } from '@/system/mutation-engine';
+import { logTaskInteraction } from '@/lib/interaction-logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,6 +67,19 @@ export async function POST(request: Request) {
         
         await mutationEngine.appendToSection(PLAN_PATH, sectionHeader, taskString);
         
+        // Log the interaction
+        try {
+            await logTaskInteraction(
+                'create',
+                newTask.description,
+                newTask.added_by,
+                `Task successfully created and added to ${sectionHeader}.`,
+                context
+            );
+        } catch (logError) {
+            console.error('Failed to log task creation interaction:', logError);
+        }
+        
         return NextResponse.json(newTask, { status: 201 });
         
     } catch (error) {
@@ -94,6 +108,19 @@ export async function PUT(request: Request) {
 
         await mutationEngine.replaceInSection(PLAN_PATH, sectionHeader, originalTaskString, updatedTaskString, taskToUpdate.id);
 
+        // Log the interaction
+        try {
+            await logTaskInteraction(
+                'update',
+                taskToUpdate.description,
+                'user', // Assume user updates tasks through UI
+                `Task successfully updated in ${sectionHeader}.`,
+                taskToUpdate.id
+            );
+        } catch (logError) {
+            console.error('Failed to log task update interaction:', logError);
+        }
+
         return NextResponse.json(taskToUpdate);
 
     } catch (error) {
@@ -120,6 +147,19 @@ export async function DELETE(request: Request) {
         const sectionHeader = taskToDelete.section === 'User-Defined Tasks' ? '### User-Defined Tasks' : '### Ora-Suggested Tasks';
 
         await mutationEngine.replaceInSection(PLAN_PATH, sectionHeader, taskString, '', id);
+
+        // Log the interaction
+        try {
+            await logTaskInteraction(
+                'delete',
+                taskToDelete.description,
+                'user', // Assume user deletes tasks through UI
+                `Task successfully deleted from ${sectionHeader}.`,
+                id
+            );
+        } catch (logError) {
+            console.error('Failed to log task deletion interaction:', logError);
+        }
 
         return NextResponse.json({ message: 'Task deleted successfully' });
         

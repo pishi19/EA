@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     try {
         // 1. Read the workstream plan
-        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'Worksteams', 'roadmap', 'workstream_plan.md');
+        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'workstreams', 'roadmap', 'workstream_plan.md');
         const planContent = await fs.readFile(planPath, 'utf-8');
         const openTasks = parseWorkstreamPlan(planContent);
 

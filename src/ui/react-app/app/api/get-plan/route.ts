@@ -5,7 +5,7 @@ import { marked } from 'marked';
 
 export async function GET() {
     try {
-        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'Worksteams', 'roadmap', 'workstream_plan.md');
+        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'workstreams', 'roadmap', 'workstream_plan.md');
         const planContent = await fs.readFile(planPath, 'utf-8');
         const htmlContent = await marked(planContent);
         return NextResponse.json({ content: htmlContent });

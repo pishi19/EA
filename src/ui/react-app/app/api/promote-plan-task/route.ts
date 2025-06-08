@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     try {
-        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'Worksteams', 'roadmap', 'workstream_plan.md');
+        const planPath = path.resolve(process.cwd(), '..', '..', '..', 'runtime', 'workstreams', 'roadmap', 'workstream_plan.md');
         let planContent = await fs.readFile(planPath, 'utf-8');
         
         const oraTasksHeader = '### Ora-Suggested Tasks';

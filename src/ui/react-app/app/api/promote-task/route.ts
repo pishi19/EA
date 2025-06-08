@@ -4,6 +4,7 @@ import path from 'path';
 import { mutationEngine } from '@/system/mutation-engine';
 import { Task } from '@/lib/types';
 import { parsePlan, stringifyPlan } from '@/lib/plan-parser';
+import { logTaskInteraction } from '@/lib/interaction-logger';
 
 // --- Constants ---
 const WORKSTREAM_PLAN_PATH = path.resolve(process.cwd(), '../../../runtime/workstreams/roadmap/workstream_plan.md');
@@ -87,6 +88,19 @@ status: active
 
         } else {
              return NextResponse.json({ message: 'Task not found in workstream plan' }, { status: 404 });
+        }
+        
+        // Log the interaction
+        try {
+            await logTaskInteraction(
+                'promote',
+                task.description,
+                'user', // Assume user promotes tasks through UI
+                `Task successfully promoted to ${destinationType}: ${destinationIdentifier}`,
+                task.id
+            );
+        } catch (logError) {
+            console.error('Failed to log task promotion interaction:', logError);
         }
         
         return NextResponse.json({ message: 'Task promoted successfully', promoted_to: destinationIdentifier });
