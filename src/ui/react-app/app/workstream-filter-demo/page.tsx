@@ -6,10 +6,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, Map, Plus } from "lucide-react";
+import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, Map, Plus, Sidebar } from "lucide-react";
 import { InlineTaskEditor } from '@/components/inline-task-editor';
 import { TaskMutationControls, TaskCard } from '@/components/task-mutation-controls';
 import { BatchTaskControls, SelectableTaskCard } from '@/components/batch-task-controls';
+
+// Import tree navigation components
+import TreeNavigation from './TreeNavigation';
+import ContextPane from './ContextPane';
+import useTreeState from './useTreeState';
+import useRoadmapHierarchy from './useRoadmapHierarchy';
 
 // --- Types ---
 interface Artefact {
@@ -40,7 +46,13 @@ const CANONICAL_WORKSTREAMS = [
 ];
 
 const CANONICAL_PROGRAMS = {
-    'Ora': ['Phase 11', 'Phase 10', 'Phase 9', 'Phase 8', 'Phase 7'],
+    'Ora': [
+        'Phase 11 – Artefact Hierarchy and Filtering',
+        'Phase 10 – API Integration and Backend', 
+        'Phase 9 – Strategic Planning and Analysis',
+        'Phase 8 – Data Quality Framework',
+        'Phase 7 – Memory System'
+    ],
     'workstream-ui': ['Phase 11.1', 'Phase 11.2', 'Phase 10.1'],
     'system-integrity': ['Phase 10.2', 'Phase 10.3', 'Phase 9.1'],
     'reasoning': ['Phase 9.1', 'Phase 8.1', 'Phase 8.2'],
@@ -103,6 +115,12 @@ export default function WorkstreamFilterDemo() {
     const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
     const [batchMode, setBatchMode] = useState<boolean>(false);
 
+    // Tree navigation state
+    const treeState = useTreeState();
+
+    // Roadmap hierarchy state - source of truth for programs and projects
+    const roadmapHierarchy = useRoadmapHierarchy();
+
     // Load roadmap content from API
     const loadRoadmap = async () => {
         try {
@@ -157,90 +175,56 @@ export default function WorkstreamFilterDemo() {
     useEffect(() => {
         if (artefacts.length > 0) {
             setOptimisticArtefacts(artefacts);
-        }
+            }
     }, [artefacts]);
 
-    // Computed hierarchical filter options based on canonical taxonomy (using optimistic state)
+    // Sync tree navigation with filter selections
+    useEffect(() => {
+        treeState.syncWithFilters(selectedWorkstream, selectedProgram, selectedProject);
+    }, [selectedWorkstream, selectedProgram, selectedProject]);
+
+    // Computed hierarchical filter options based on roadmap.md (source of truth)
     const availableWorkstreams = useMemo(() => {
-        const workstreams = new Set<string>();
-        optimisticArtefacts.forEach(artefact => {
-            // Default all artefacts to 'Ora' workstream if not set or non-canonical
-            const workstream = artefact.workstream && CANONICAL_WORKSTREAMS.includes(artefact.workstream) 
-                ? artefact.workstream 
-                : 'Ora';
-            workstreams.add(workstream);
-        });
-        return ['all', ...Array.from(workstreams).sort()];
-    }, [optimisticArtefacts]);
+        if (roadmapHierarchy.loading || !roadmapHierarchy.hierarchy) {
+            return ['all', 'Ora']; // Default fallback
+        }
+        return roadmapHierarchy.getAvailableWorkstreams();
+    }, [roadmapHierarchy.hierarchy, roadmapHierarchy.loading]);
 
     const availablePrograms = useMemo(() => {
-        const programs = new Set<string>();
-        
-        optimisticArtefacts.forEach(artefact => {
-            // Use program field if available, otherwise construct from phase
-            let programName = '';
-            if (artefact.program) {
-                programName = artefact.program;
-            } else if (artefact.phase && typeof artefact.phase === 'string' && artefact.phase.trim()) {
-                // Smart phase-to-program mapping
-                const phaseNum = artefact.phase.split('.')[0];
-                switch (phaseNum) {
-                    case '11':
-                        programName = 'Phase 11 – Artefact Hierarchy and Filtering';
-                        break;
-                    case '10':
-                        programName = 'Phase 10 – API Integration and Backend';
-                        break;
-                    case '9':
-                        programName = 'Phase 9 – Strategic Planning and Analysis';
-                        break;
-                    case '8':
-                        programName = 'Phase 8 – Data Quality Framework';
-                        break;
-                    case '7':
-                        programName = 'Phase 7 – Memory System';
-                        break;
-                    default:
-                        programName = `Phase ${phaseNum}`;
-                }
-            }
-            
-            if (programName) {
-                programs.add(programName);
-            }
-        });
-
-        if (selectedWorkstream !== 'all') {
-            // Filter programs based on selected workstream using canonical mapping
-            const canonicalPrograms = CANONICAL_PROGRAMS[selectedWorkstream as keyof typeof CANONICAL_PROGRAMS] || [];
-            const filteredPrograms = Array.from(programs).filter(program => 
-                canonicalPrograms.includes(program)
-            );
-            return ['all', ...filteredPrograms.sort()];
+        if (roadmapHierarchy.loading || !roadmapHierarchy.hierarchy) {
+            return []; // No programs until roadmap loads
         }
         
-        return ['all', ...Array.from(programs).sort()];
-    }, [optimisticArtefacts, selectedWorkstream]);
+        const roadmapPrograms = roadmapHierarchy.getAvailablePrograms(selectedWorkstream);
+        return [
+            { id: 'all', name: 'All Programs', fullName: 'All Programs', status: 'all' },
+            ...roadmapPrograms
+        ];
+    }, [roadmapHierarchy.hierarchy, roadmapHierarchy.loading, selectedWorkstream]);
 
     const availableProjects = useMemo(() => {
-        if (selectedProgram === 'all') {
-            const projects = new Set<string>();
-            optimisticArtefacts.forEach(artefact => {
-                if (artefact.tags && artefact.tags.length > 0) {
-                    artefact.tags.forEach(tag => {
-                        if (tag && !tag.startsWith('#')) {
-                            projects.add(tag);
-                        }
-                    });
-                }
-            });
-            return ['all', ...Array.from(projects).sort()];
-        } else {
-            // Filter projects based on selected program using canonical mapping
-            const canonicalProjects = CANONICAL_PROJECTS[selectedProgram as keyof typeof CANONICAL_PROJECTS] || [];
-            return ['all', ...canonicalProjects];
+        if (roadmapHierarchy.loading || !roadmapHierarchy.hierarchy) {
+            return []; // No projects until roadmap loads
         }
-    }, [optimisticArtefacts, selectedProgram]);
+        
+        // Find selected program by matching fullName or id
+        let selectedProgramId = selectedProgram;
+        if (selectedProgram !== 'all') {
+            const program = roadmapHierarchy.hierarchy.programs.find(p => 
+                p.fullName === selectedProgram || 
+                p.id === selectedProgram ||
+                p.name === selectedProgram
+            );
+            selectedProgramId = program ? program.id : selectedProgram;
+        }
+        
+        const roadmapProjects = roadmapHierarchy.getAvailableProjects(selectedProgramId);
+        return [
+            { id: 'all', name: 'All Projects', fullName: 'All Projects', status: 'all' },
+            ...roadmapProjects
+        ];
+    }, [roadmapHierarchy.hierarchy, roadmapHierarchy.loading, selectedProgram]);
 
     const availableArtefactTypes = useMemo(() => {
         const types = new Set<string>();
@@ -264,15 +248,13 @@ export default function WorkstreamFilterDemo() {
         return ['all', ...Array.from(statuses).sort()];
     }, [optimisticArtefacts]);
 
-    // Filtered artefacts based on hierarchical taxonomy selection (using optimistic state)
+    // Filtered artefacts based on roadmap-driven hierarchy validation
     const filteredArtefacts = useMemo(() => {
         let filtered = optimisticArtefacts;
 
-        // Apply taxonomy compliance: normalize workstream to 'Ora' if not canonical
+        // Apply basic normalization
         filtered = filtered.map(artefact => {
-            const normalizedWorkstream = artefact.workstream && CANONICAL_WORKSTREAMS.includes(artefact.workstream) 
-                ? artefact.workstream 
-                : 'Ora';
+            const normalizedWorkstream = artefact.workstream || 'Ora';
             const artefactType = artefact.type || 'task';
             const normalizedType = CANONICAL_ARTEFACT_TYPES.includes(artefactType) 
                 ? artefactType 
@@ -290,20 +272,37 @@ export default function WorkstreamFilterDemo() {
             filtered = filtered.filter(artefact => artefact.workstream === selectedWorkstream);
         }
 
-        // Program (Phase) filtering  
-        if (selectedProgram !== 'all') {
-            const phaseNum = selectedProgram.replace('Phase ', '');
-            filtered = filtered.filter(artefact => artefact.phase === phaseNum);
+        // Roadmap-driven program filtering
+        if (selectedProgram !== 'all' && roadmapHierarchy.hierarchy) {
+            const selectedProgramData = roadmapHierarchy.hierarchy.programs.find(p => 
+                p.id === selectedProgram || 
+                p.fullName === selectedProgram ||
+                p.name === selectedProgram
+            );
+            
+            if (selectedProgramData) {
+                filtered = filtered.filter(artefact => {
+                    const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                    return alignment.validProgram?.id === selectedProgramData.id ||
+                           alignment.validProgram?.phase === selectedProgramData.phase;
+                });
+        }
         }
 
-        // Project filtering (based on tags and canonical project mapping)
-        if (selectedProject !== 'all') {
-            filtered = filtered.filter(artefact => 
-                artefact.tags && artefact.tags.some(tag => 
-                    tag.toLowerCase().includes(selectedProject.toLowerCase()) ||
-                    selectedProject.toLowerCase().includes(tag.toLowerCase())
-                )
+        // Roadmap-driven project filtering
+        if (selectedProject !== 'all' && roadmapHierarchy.hierarchy) {
+            const selectedProjectData = roadmapHierarchy.hierarchy.projects.find(p => 
+                p.id === selectedProject || 
+                p.fullName === selectedProject ||
+                p.name === selectedProject
             );
+            
+            if (selectedProjectData) {
+                filtered = filtered.filter(artefact => {
+                    const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                    return alignment.validProjects.some(proj => proj.id === selectedProjectData.id);
+                });
+            }
         }
 
         // Artefact type filtering
@@ -316,23 +315,16 @@ export default function WorkstreamFilterDemo() {
             filtered = filtered.filter(artefact => artefact.status === selectedStatus);
         }
 
-        // Only show artefacts that are taxonomy-compliant and roadmap-aligned
-        filtered = filtered.filter(artefact => {
-            // Must have valid workstream
-            const hasValidWorkstream = CANONICAL_WORKSTREAMS.includes(artefact.workstream);
-            
-            // Must have valid phase if program is selected
-            const hasValidPhase = !selectedProgram || selectedProgram === 'all' || 
-                artefact.phase && artefact.phase.trim() !== '';
-
-            // Must have valid type
-            const hasValidType = CANONICAL_ARTEFACT_TYPES.includes(artefact.type);
-
-            return hasValidWorkstream && hasValidPhase && hasValidType;
-        });
+        // Roadmap alignment validation - only show artefacts that align with roadmap
+        if (roadmapHierarchy.hierarchy) {
+            filtered = filtered.filter(artefact => {
+                const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                return alignment.isValid; // Only show artefacts with valid roadmap alignment
+            });
+        }
 
         return filtered.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
-    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedArtefactType, selectedStatus]);
+    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedArtefactType, selectedStatus, roadmapHierarchy.hierarchy]);
 
     // Reset cascade when parent selection changes
     const handleWorkstreamChange = (value: string) => {
@@ -673,16 +665,27 @@ export default function WorkstreamFilterDemo() {
         <div className="container mx-auto p-6 space-y-6">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold">Canonical Taxonomy Filter Demo</h1>
+                <h1 className="text-3xl font-bold">Roadmap-Driven Tree Navigation</h1>
                 <p className="text-lg text-muted-foreground">
-                    Hierarchical Taxonomy Filtering: Workstream → Program → Project → Artefact Type → Status
+                    Hierarchical Tree Navigation + Roadmap-Driven Filtering: Workstream → Program → Project → Artefact Type → Status
                 </p>
                 <div className="flex justify-center space-x-6 text-sm">
                     <span>Total: <strong>{optimisticArtefacts.length}</strong> artefacts</span>
                     <span>Filtered: <strong>{filteredArtefacts.length}</strong> shown</span>
                     <span>Workstreams: <strong>{availableWorkstreams.length - 1}</strong></span>
-                    <span>Programs: <strong>{availablePrograms.length - 1}</strong></span>
+                    <span>Programs: <strong>{availablePrograms.length - 1}</strong> (roadmap)</span>
+                    <span>Projects: <strong>{availableProjects.length - 1}</strong> (roadmap)</span>
                     <span>Types: <strong>{availableArtefactTypes.length - 1}</strong></span>
+                    {roadmapHierarchy.loading && (
+                        <span className="text-orange-600">
+                            <strong>Loading roadmap...</strong>
+                        </span>
+                    )}
+                    {roadmapHierarchy.error && (
+                        <span className="text-red-600">
+                            <strong>Roadmap error</strong>
+                        </span>
+                    )}
                     {selectedTasks.size > 0 && (
                         <span className="text-blue-600">
                             <strong>{selectedTasks.size}</strong> selected
@@ -693,6 +696,22 @@ export default function WorkstreamFilterDemo() {
                             <strong>{pendingMutations.size}</strong> pending
                         </span>
                     )}
+                    {treeState.selectedArtefact && (
+                        <span className="text-purple-600">
+                            <strong>"{treeState.selectedArtefact.title}"</strong> selected
+                        </span>
+                    )}
+                </div>
+                <div className="flex justify-center">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={treeState.toggleTreeVisibility}
+                        className="flex items-center gap-2"
+                    >
+                        <Sidebar className="h-4 w-4" />
+                        {treeState.treeVisible ? 'Hide Tree' : 'Show Tree'}
+                    </Button>
                 </div>
             </div>
 
@@ -750,9 +769,9 @@ export default function WorkstreamFilterDemo() {
             {/* Hierarchical Filter Controls */}
             <Card>
                 <CardHeader>
-                    <CardTitle>🏗️ Canonical Taxonomy Hierarchical Filters</CardTitle>
+                    <CardTitle>🏗️ Roadmap-Driven Hierarchical Filters</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                        Hierarchical filtering: Workstream → Program → Project → Artefact Type (with status)
+                        Hierarchical filtering based on roadmap.md structure: Workstream → Program → Project → Artefact Type (with status)
                     </p>
                 </CardHeader>
                 <CardContent>
@@ -786,14 +805,14 @@ export default function WorkstreamFilterDemo() {
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     {availablePrograms.map(program => (
-                                        <SelectItem key={program} value={program}>
-                                            {program === 'all' ? 'All Programs' : program}
+                                        <SelectItem key={program.id} value={program.id}>
+                                            {(program as any).displayLabel || program.fullName || program.name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                             <p className="text-xs text-gray-500 mt-1">
-                                {availablePrograms.length - 1} programs available
+                                {availablePrograms.length - 1} programs from roadmap.md
                             </p>
                         </div>
 
@@ -806,14 +825,14 @@ export default function WorkstreamFilterDemo() {
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     {availableProjects.map(project => (
-                                        <SelectItem key={project} value={project}>
-                                            {project === 'all' ? 'All Projects' : project}
+                                        <SelectItem key={project.id} value={project.id}>
+                                            {(project as any).displayLabel || project.fullName || project.name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                             <p className="text-xs text-gray-500 mt-1">
-                                {availableProjects.length - 1} projects available
+                                {availableProjects.length - 1} projects from roadmap.md
                             </p>
                         </div>
 
@@ -857,7 +876,10 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div className="flex items-end">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Actions
+                            </label>
                             <Button 
                                 variant="outline" 
                                 onClick={clearAllFilters}
@@ -865,9 +887,15 @@ export default function WorkstreamFilterDemo() {
                             >
                                 Clear All Filters
                             </Button>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Reset to defaults
+                            </p>
                         </div>
 
-                        <div className="flex items-end">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Data
+                            </label>
                             <Button 
                                 variant="outline" 
                                 onClick={loadArtefacts}
@@ -875,19 +903,128 @@ export default function WorkstreamFilterDemo() {
                             >
                                 Refresh Data
                             </Button>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Reload from API
+                            </p>
                         </div>
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Tree Navigation + Context Pane Layout */}
+            {treeState.treeVisible && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Tree Navigation */}
+                    <div className="lg:col-span-1">
+                        <TreeNavigation
+                            artefacts={filteredArtefacts}
+                            roadmapHierarchy={roadmapHierarchy.hierarchy}
+                            onNodeSelect={treeState.selectNode}
+                            selectedNodeId={treeState.selectedNode?.id}
+                            validateArtefactAlignment={roadmapHierarchy.validateArtefactAlignment}
+                            className="sticky top-6"
+                        />
+                    </div>
+
+                    {/* Context Pane */}
+                    <div className="lg:col-span-2">
+                        <ContextPane
+                            selectedNode={treeState.selectedNode || undefined}
+                            selectedArtefact={treeState.selectedArtefact || undefined}
+                            className="sticky top-6"
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* Orphan Artefacts Detection */}
+            {roadmapHierarchy.hierarchy && (
+                <Card className="border-l-4 border-l-orange-500">
+                    <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                            <span>🔍 Roadmap Alignment Status</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {(() => {
+                            const orphanArtefacts = optimisticArtefacts.filter(artefact => {
+                                const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                                return !alignment.isValid;
+                            });
+
+                            const alignedArtefacts = optimisticArtefacts.filter(artefact => {
+                                const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                                return alignment.isValid;
+                            });
+
+                            return (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <h4 className="font-medium text-green-700">✅ Roadmap-Aligned Artefacts</h4>
+                                        <p className="text-sm text-muted-foreground">
+                                            <strong>{alignedArtefacts.length}</strong> artefacts properly linked to roadmap programs/projects
+                                        </p>
+                                        {alignedArtefacts.length > 0 && (
+                                            <div className="text-xs space-y-1">
+                                                {alignedArtefacts.slice(0, 3).map(artefact => {
+                                                    const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                                                    return (
+                                                        <div key={artefact.id} className="bg-green-50 p-2 rounded">
+                                                            <strong>{artefact.title}</strong> → {alignment.validProgram?.name}
+                                                            {alignment.validProjects.length > 0 && (
+                                                                <span> / {alignment.validProjects[0].name}</span>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                                {alignedArtefacts.length > 3 && (
+                                                    <p className="text-xs text-gray-500">...and {alignedArtefacts.length - 3} more</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                        <h4 className="font-medium text-orange-700">⚠️ Orphan Artefacts</h4>
+                                        <p className="text-sm text-muted-foreground">
+                                            <strong>{orphanArtefacts.length}</strong> artefacts not aligned with roadmap structure
+                                        </p>
+                                        {orphanArtefacts.length > 0 && (
+                                            <div className="text-xs space-y-1">
+                                                {orphanArtefacts.slice(0, 3).map(artefact => {
+                                                    const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
+                                                    return (
+                                                        <div key={artefact.id} className="bg-orange-50 p-2 rounded">
+                                                            <strong>{artefact.title}</strong>
+                                                            <br />
+                                                            <span className="text-orange-600">
+                                                                Phase: {artefact.phase || 'none'}, 
+                                                                Orphan tags: {alignment.orphanTags.join(', ') || 'none'}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })}
+                                                {orphanArtefacts.length > 3 && (
+                                                    <p className="text-xs text-gray-500">...and {orphanArtefacts.length - 3} more orphans</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Filtered Artefacts Display */}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
                         <div>
-                            <CardTitle>📋 Filtered Task Artefacts ({filteredArtefacts.length})</CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                                Showing artefacts matching current hierarchical filter selection
+                    <CardTitle>📋 Filtered Task Artefacts ({filteredArtefacts.length})</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                        Showing artefacts matching current hierarchical filter selection
                                 {batchMode && ' - Batch mode enabled'}
                             </p>
                         </div>
@@ -1025,17 +1162,17 @@ export default function WorkstreamFilterDemo() {
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                                                 Saving...
-                                            </div>
-                                        )}
-                                        
+                                                    </div>
+                                                )}
+                                                
                                         {/* Failed indicator */}
                                         {isFailed && (
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                                                 Failed - Rolled Back
-                                            </div>
+                                                </div>
                                         )}
-                                    </div>
+                                            </div>
                                 );
                             })}
                         </div>
@@ -1043,37 +1180,42 @@ export default function WorkstreamFilterDemo() {
                 </CardContent>
             </Card>
 
-            {/* Taxonomy Information */}
+            {/* Roadmap-Driven Architecture Information */}
             <Card>
                 <CardHeader>
-                    <CardTitle>📊 Canonical Taxonomy Hierarchy</CardTitle>
+                    <CardTitle>📊 Roadmap-Driven Hierarchy</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div className="space-y-2">
-                            <h4 className="font-medium text-green-700">✅ Taxonomy Structure</h4>
+                            <h4 className="font-medium text-green-700">✅ Roadmap Structure</h4>
                             <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                <li>• <strong>Workstream</strong>: Default "Ora" (all artefacts belong to Ora workstream)</li>
-                                <li>• <strong>Program</strong>: Phase-based organization (Phase 11, 10, 9, etc.)</li>
-                                <li>• <strong>Project</strong>: Project groupings within programs</li>
-                                <li>• <strong>Artefact Type</strong>: task, note, thought, execution, loop</li>
-                                <li>• <strong>Status</strong>: planning, in_progress, complete, blocked</li>
+                                <li>• <strong>Source of Truth</strong>: Programs and projects defined in roadmap.md</li>
+                                <li>• <strong>Workstream</strong>: "Ora" canonical workstream contains all programs</li>
+                                <li>• <strong>Programs</strong>: Phase-based organization directly from roadmap</li>
+                                <li>• <strong>Projects</strong>: Project definitions within each program</li>
+                                <li>• <strong>Artefacts</strong>: Must align with roadmap programs/projects to be visible</li>
+                                <li>• <strong>Validation</strong>: Real-time alignment checking against roadmap structure</li>
                             </ul>
                         </div>
                         <div className="space-y-2">
-                            <h4 className="font-medium text-blue-700">🔧 Taxonomy Features</h4>
+                            <h4 className="font-medium text-blue-700">🔧 Architecture Features</h4>
                             <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                <li>• Hierarchical filters with dependency cascading</li>
-                                <li>• Taxonomy compliance enforcement (orphaned items hidden)</li>
-                                <li>• Real-time filtering with canonical validation</li>
-                                <li>• Roadmap structure alignment and integration</li>
-                                <li>• Default workstream "Ora" for all artefacts</li>
+                                <li>• Roadmap.md parsing and hierarchy extraction</li>
+                                <li>• Real-time orphan artefact detection and flagging</li>
+                                <li>• Program/project status tracking from roadmap</li>
+                                <li>• Empty branch display (programs/projects without artefacts)</li>
+                                <li>• Instant UI reflection of roadmap.md changes</li>
+                                <li>• Artefact creation restricted to valid roadmap entries</li>
                             </ul>
                         </div>
                     </div>
-                    <div className="mt-6 text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
-                        <p className="text-purple-800 font-medium">
-                            🎯 Taxonomy-compliant filtering: {filteredArtefacts.length} of {artefacts.length} artefacts shown
+                    <div className="mt-6 text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <p className="text-blue-800 font-medium">
+                            🎯 Roadmap-aligned filtering: {filteredArtefacts.length} valid artefacts shown from {optimisticArtefacts.length} total
+                            {roadmapHierarchy.hierarchy && (
+                                <span> | {roadmapHierarchy.hierarchy.programs.length} programs, {roadmapHierarchy.hierarchy.projects.length} projects</span>
+                            )}
                         </p>
                     </div>
                 </CardContent>
