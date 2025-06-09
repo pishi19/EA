@@ -9,6 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, Map, Plus } from "lucide-react";
 import { InlineTaskEditor } from '@/components/inline-task-editor';
 import { TaskMutationControls, TaskCard } from '@/components/task-mutation-controls';
+import { BatchTaskControls, SelectableTaskCard } from '@/components/batch-task-controls';
 
 // --- Types ---
 interface Artefact {
@@ -17,6 +18,7 @@ interface Artefact {
     title: string;
     phase: string;
     workstream: string;
+    program?: string; // canonical program name
     status: string;
     score: number;
     tags: string[];
@@ -25,10 +27,12 @@ interface Artefact {
     summary: string;
     filePath: string;
     origin: string;
+    type?: string; // artefact type: task, note, thought
 }
 
-// --- Canonical Schema Mapping ---
+// --- Canonical Taxonomy Schema ---
 const CANONICAL_WORKSTREAMS = [
+    'Ora', // Default workstream - all artefacts must belong to Ora
     'workstream-ui',
     'system-integrity', 
     'reasoning',
@@ -36,6 +40,7 @@ const CANONICAL_WORKSTREAMS = [
 ];
 
 const CANONICAL_PROGRAMS = {
+    'Ora': ['Phase 11', 'Phase 10', 'Phase 9', 'Phase 8', 'Phase 7'],
     'workstream-ui': ['Phase 11.1', 'Phase 11.2', 'Phase 10.1'],
     'system-integrity': ['Phase 10.2', 'Phase 10.3', 'Phase 9.1'],
     'reasoning': ['Phase 9.1', 'Phase 8.1', 'Phase 8.2'],
@@ -43,14 +48,27 @@ const CANONICAL_PROGRAMS = {
 };
 
 const CANONICAL_PROJECTS = {
+    'Phase 11': ['Artefact Hierarchy and Filtering', 'Inline Task Mutation', 'Taxonomy Enforcement'],
     'Phase 11.1': ['Artefact Schema and Canonicalization', 'UI Component Architecture'],
-    'Phase 11.2': ['Semantic Chat Demo Filtering', 'Enhanced Filter Implementation'],
+    'Phase 11.2': ['Semantic Chat Demo Filtering', 'Enhanced Filter Implementation', 'Inline Task Mutation in Filtered View', 'Taxonomy-Driven Filtering Enforcement'],
+    'Phase 10': ['API Integration', 'System Enhancement', 'Backend Optimization'],
     'Phase 10.2': ['API Integration Work', 'Backend Optimization'],
     'Phase 10.3': ['System Integration & Enhancement'],
+    'Phase 9': ['Strategic Planning', 'Performance Analysis', 'Architecture Analysis'],
     'Phase 9.1': ['Strategic Planning & Architecture Analysis', 'Performance Analysis'],
+    'Phase 8': ['Data Quality', 'Reasoning System Enhancement'],
     'Phase 8.1': ['Data Quality Framework'],
-    'Phase 8.2': ['Reasoning System Enhancement']
+    'Phase 8.2': ['Reasoning System Enhancement'],
+    'Phase 7': ['Memory System', 'Core Architecture']
 };
+
+const CANONICAL_ARTEFACT_TYPES = [
+    'task',
+    'note', 
+    'thought',
+    'execution',
+    'loop'
+];
 
 // --- Component ---
 export default function WorkstreamFilterDemo() {
@@ -64,9 +82,10 @@ export default function WorkstreamFilterDemo() {
     const [roadmapOpen, setRoadmapOpen] = useState(false);
 
     // Filter states - hierarchical cascade
-    const [selectedWorkstream, setSelectedWorkstream] = useState<string>('all');
+    const [selectedWorkstream, setSelectedWorkstream] = useState<string>('Ora'); // Default to Ora workstream
     const [selectedProgram, setSelectedProgram] = useState<string>('all');
     const [selectedProject, setSelectedProject] = useState<string>('all');
+    const [selectedArtefactType, setSelectedArtefactType] = useState<string>('all');
     const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
     // Task mutation states
@@ -79,6 +98,10 @@ export default function WorkstreamFilterDemo() {
     const [optimisticArtefacts, setOptimisticArtefacts] = useState<Artefact[]>([]);
     const [pendingMutations, setPendingMutations] = useState<Set<string>>(new Set());
     const [failedMutations, setFailedMutations] = useState<Set<string>>(new Set());
+
+    // Batch operation states
+    const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
+    const [batchMode, setBatchMode] = useState<boolean>(false);
 
     // Load roadmap content from API
     const loadRoadmap = async () => {
@@ -137,36 +160,66 @@ export default function WorkstreamFilterDemo() {
         }
     }, [artefacts]);
 
-    // Computed hierarchical filter options based on canonical schema (using optimistic state)
+    // Computed hierarchical filter options based on canonical taxonomy (using optimistic state)
     const availableWorkstreams = useMemo(() => {
         const workstreams = new Set<string>();
         optimisticArtefacts.forEach(artefact => {
-            if (artefact.workstream && CANONICAL_WORKSTREAMS.includes(artefact.workstream)) {
-                workstreams.add(artefact.workstream);
-            }
+            // Default all artefacts to 'Ora' workstream if not set or non-canonical
+            const workstream = artefact.workstream && CANONICAL_WORKSTREAMS.includes(artefact.workstream) 
+                ? artefact.workstream 
+                : 'Ora';
+            workstreams.add(workstream);
         });
         return ['all', ...Array.from(workstreams).sort()];
     }, [optimisticArtefacts]);
 
     const availablePrograms = useMemo(() => {
-        if (selectedWorkstream === 'all') {
-            const programs = new Set<string>();
-            optimisticArtefacts.forEach(artefact => {
-                if (artefact.phase) {
-                    programs.add(`Phase ${artefact.phase}`);
+        const programs = new Set<string>();
+        
+        optimisticArtefacts.forEach(artefact => {
+            // Use program field if available, otherwise construct from phase
+            let programName = '';
+            if (artefact.program) {
+                programName = artefact.program;
+            } else if (artefact.phase && typeof artefact.phase === 'string' && artefact.phase.trim()) {
+                // Smart phase-to-program mapping
+                const phaseNum = artefact.phase.split('.')[0];
+                switch (phaseNum) {
+                    case '11':
+                        programName = 'Phase 11 – Artefact Hierarchy and Filtering';
+                        break;
+                    case '10':
+                        programName = 'Phase 10 – API Integration and Backend';
+                        break;
+                    case '9':
+                        programName = 'Phase 9 – Strategic Planning and Analysis';
+                        break;
+                    case '8':
+                        programName = 'Phase 8 – Data Quality Framework';
+                        break;
+                    case '7':
+                        programName = 'Phase 7 – Memory System';
+                        break;
+                    default:
+                        programName = `Phase ${phaseNum}`;
                 }
-            });
-            return ['all', ...Array.from(programs).sort()];
-        } else {
+            }
+            
+            if (programName) {
+                programs.add(programName);
+            }
+        });
+
+        if (selectedWorkstream !== 'all') {
             // Filter programs based on selected workstream using canonical mapping
             const canonicalPrograms = CANONICAL_PROGRAMS[selectedWorkstream as keyof typeof CANONICAL_PROGRAMS] || [];
-            const actualPrograms = optimisticArtefacts
-                .filter(artefact => artefact.workstream === selectedWorkstream)
-                .map(artefact => `Phase ${artefact.phase}`)
-                .filter(program => canonicalPrograms.includes(program));
-            
-            return ['all', ...Array.from(new Set(actualPrograms)).sort()];
+            const filteredPrograms = Array.from(programs).filter(program => 
+                canonicalPrograms.includes(program)
+            );
+            return ['all', ...filteredPrograms.sort()];
         }
+        
+        return ['all', ...Array.from(programs).sort()];
     }, [optimisticArtefacts, selectedWorkstream]);
 
     const availableProjects = useMemo(() => {
@@ -189,6 +242,18 @@ export default function WorkstreamFilterDemo() {
         }
     }, [optimisticArtefacts, selectedProgram]);
 
+    const availableArtefactTypes = useMemo(() => {
+        const types = new Set<string>();
+        optimisticArtefacts.forEach(artefact => {
+            // Default to 'task' if type not set or not canonical
+            const type = artefact.type && CANONICAL_ARTEFACT_TYPES.includes(artefact.type) 
+                ? artefact.type 
+                : 'task';
+            types.add(type);
+        });
+        return ['all', ...Array.from(types).sort()];
+    }, [optimisticArtefacts]);
+
     const availableStatuses = useMemo(() => {
         const statuses = new Set<string>();
         optimisticArtefacts.forEach(artefact => {
@@ -199,19 +264,39 @@ export default function WorkstreamFilterDemo() {
         return ['all', ...Array.from(statuses).sort()];
     }, [optimisticArtefacts]);
 
-    // Filtered artefacts based on hierarchical selection (using optimistic state)
+    // Filtered artefacts based on hierarchical taxonomy selection (using optimistic state)
     const filteredArtefacts = useMemo(() => {
         let filtered = optimisticArtefacts;
 
+        // Apply taxonomy compliance: normalize workstream to 'Ora' if not canonical
+        filtered = filtered.map(artefact => {
+            const normalizedWorkstream = artefact.workstream && CANONICAL_WORKSTREAMS.includes(artefact.workstream) 
+                ? artefact.workstream 
+                : 'Ora';
+            const artefactType = artefact.type || 'task';
+            const normalizedType = CANONICAL_ARTEFACT_TYPES.includes(artefactType) 
+                ? artefactType 
+                : 'task';
+            
+            return {
+                ...artefact,
+                workstream: normalizedWorkstream,
+                type: normalizedType
+            };
+        });
+
+        // Workstream filtering
         if (selectedWorkstream !== 'all') {
             filtered = filtered.filter(artefact => artefact.workstream === selectedWorkstream);
         }
 
+        // Program (Phase) filtering  
         if (selectedProgram !== 'all') {
             const phaseNum = selectedProgram.replace('Phase ', '');
             filtered = filtered.filter(artefact => artefact.phase === phaseNum);
         }
 
+        // Project filtering (based on tags and canonical project mapping)
         if (selectedProject !== 'all') {
             filtered = filtered.filter(artefact => 
                 artefact.tags && artefact.tags.some(tag => 
@@ -221,12 +306,33 @@ export default function WorkstreamFilterDemo() {
             );
         }
 
+        // Artefact type filtering
+        if (selectedArtefactType !== 'all') {
+            filtered = filtered.filter(artefact => artefact.type === selectedArtefactType);
+        }
+
+        // Status filtering
         if (selectedStatus !== 'all') {
             filtered = filtered.filter(artefact => artefact.status === selectedStatus);
         }
 
+        // Only show artefacts that are taxonomy-compliant and roadmap-aligned
+        filtered = filtered.filter(artefact => {
+            // Must have valid workstream
+            const hasValidWorkstream = CANONICAL_WORKSTREAMS.includes(artefact.workstream);
+            
+            // Must have valid phase if program is selected
+            const hasValidPhase = !selectedProgram || selectedProgram === 'all' || 
+                artefact.phase && artefact.phase.trim() !== '';
+
+            // Must have valid type
+            const hasValidType = CANONICAL_ARTEFACT_TYPES.includes(artefact.type);
+
+            return hasValidWorkstream && hasValidPhase && hasValidType;
+        });
+
         return filtered.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
-    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedStatus]);
+    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedArtefactType, selectedStatus]);
 
     // Reset cascade when parent selection changes
     const handleWorkstreamChange = (value: string) => {
@@ -241,9 +347,10 @@ export default function WorkstreamFilterDemo() {
     };
 
     const clearAllFilters = () => {
-        setSelectedWorkstream('all');
+        setSelectedWorkstream('Ora'); // Reset to default Ora workstream
         setSelectedProgram('all');
         setSelectedProject('all');
+        setSelectedArtefactType('all');
         setSelectedStatus('all');
     };
 
@@ -464,6 +571,81 @@ export default function WorkstreamFilterDemo() {
         setMutationError(null);
     };
 
+    // Batch operation handlers
+    const handleTaskSelectionChange = (taskId: string, selected: boolean) => {
+        setSelectedTasks(prev => {
+            const newSet = new Set(prev);
+            if (selected) {
+                newSet.add(taskId);
+            } else {
+                newSet.delete(taskId);
+            }
+            return newSet;
+        });
+    };
+
+    const handleSelectAll = () => {
+        setSelectedTasks(new Set(filteredArtefacts.map(a => a.id)));
+    };
+
+    const handleSelectNone = () => {
+        setSelectedTasks(new Set());
+    };
+
+    const handleBatchDelete = async (tasks: any[]) => {
+        const operations = tasks.map((task, index) => ({
+            action: 'delete' as const,
+            taskId: task.uuid,
+            operationId: `batch-delete-${index}-${Date.now()}`
+        }));
+
+        try {
+            const response = await fetch('/api/task-mutations/batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ operations })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Batch delete failed');
+            }
+
+            const result = await response.json();
+            
+            // Handle partial failures
+            if (!result.success && result.results) {
+                const failedIds = result.results
+                    .filter((r: any) => !r.success)
+                    .map((r: any) => r.operationId);
+                
+                if (failedIds.length > 0) {
+                    setMutationError(`Some deletions failed: ${failedIds.length} errors`);
+                }
+            }
+
+            // Refresh artefacts
+            await loadArtefacts();
+            
+        } catch (error) {
+            console.error('Batch delete error:', error);
+            setMutationError(error instanceof Error ? error.message : 'Batch delete failed');
+        }
+    };
+
+    const handleBatchEdit = async (tasks: any[]) => {
+        // For now, just log - would need a batch edit form
+        console.log('Batch edit requested for tasks:', tasks);
+        setMutationError('Batch edit not yet implemented - coming soon!');
+    };
+
+    const toggleBatchMode = () => {
+        setBatchMode(!batchMode);
+        if (batchMode) {
+            setSelectedTasks(new Set());
+        }
+    };
+
     if (loading) {
         return (
             <div className="container mx-auto p-6">
@@ -491,15 +673,21 @@ export default function WorkstreamFilterDemo() {
         <div className="container mx-auto p-6 space-y-6">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold">Workstream Filter Demo</h1>
+                <h1 className="text-3xl font-bold">Canonical Taxonomy Filter Demo</h1>
                 <p className="text-lg text-muted-foreground">
-                    Canonical Schema Hierarchical Filtering: Workstream → Program → Project → Task (Artefact)
+                    Hierarchical Taxonomy Filtering: Workstream → Program → Project → Artefact Type → Status
                 </p>
                 <div className="flex justify-center space-x-6 text-sm">
                     <span>Total: <strong>{optimisticArtefacts.length}</strong> artefacts</span>
                     <span>Filtered: <strong>{filteredArtefacts.length}</strong> shown</span>
                     <span>Workstreams: <strong>{availableWorkstreams.length - 1}</strong></span>
                     <span>Programs: <strong>{availablePrograms.length - 1}</strong></span>
+                    <span>Types: <strong>{availableArtefactTypes.length - 1}</strong></span>
+                    {selectedTasks.size > 0 && (
+                        <span className="text-blue-600">
+                            <strong>{selectedTasks.size}</strong> selected
+                        </span>
+                    )}
                     {pendingMutations.size > 0 && (
                         <span className="text-yellow-600">
                             <strong>{pendingMutations.size}</strong> pending
@@ -562,13 +750,13 @@ export default function WorkstreamFilterDemo() {
             {/* Hierarchical Filter Controls */}
             <Card>
                 <CardHeader>
-                    <CardTitle>🏗️ Canonical Schema Hierarchical Filters</CardTitle>
+                    <CardTitle>🏗️ Canonical Taxonomy Hierarchical Filters</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                        Cascading filters based on canonical YAML schema and roadmap structure
+                        Hierarchical filtering: Workstream → Program → Project → Artefact Type (with status)
                     </p>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 <Users className="inline h-4 w-4 mr-1" />
@@ -630,7 +818,30 @@ export default function WorkstreamFilterDemo() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <FileText className="inline h-4 w-4 mr-1" />
+                                Artefact Type
+                            </label>
+                            <Select value={selectedArtefactType} onValueChange={setSelectedArtefactType}>
+                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectContent>
+                                    {availableArtefactTypes.map(type => (
+                                        <SelectItem key={type} value={type}>
+                                            {type === 'all' ? 'All Types' : type}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {availableArtefactTypes.length - 1} types available
+                            </p>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <Calendar className="inline h-4 w-4 mr-1" />
+                                Status
+                            </label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -641,6 +852,9 @@ export default function WorkstreamFilterDemo() {
                                     ))}
                                 </SelectContent>
                             </Select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {availableStatuses.length - 1} statuses available
+                            </p>
                         </div>
 
                         <div className="flex items-end">
@@ -674,19 +888,58 @@ export default function WorkstreamFilterDemo() {
                             <CardTitle>📋 Filtered Task Artefacts ({filteredArtefacts.length})</CardTitle>
                             <p className="text-sm text-muted-foreground">
                                 Showing artefacts matching current hierarchical filter selection
+                                {batchMode && ' - Batch mode enabled'}
                             </p>
                         </div>
-                        <TaskMutationControls
-                            showAddButton={true}
-                            onAdd={handleAddTask}
-                            disabled={mutationLoading}
-                            size="lg"
-                        />
+                        <div className="flex items-center gap-2">
+                            <Button
+                                onClick={toggleBatchMode}
+                                variant={batchMode ? "default" : "outline"}
+                                size="sm"
+                                className="flex items-center gap-1"
+                            >
+                                {batchMode ? '🔄 Exit Batch' : '⚡ Batch Mode'}
+                            </Button>
+                            {!batchMode && (
+                                <TaskMutationControls
+                                    showAddButton={true}
+                                    onAdd={handleAddTask}
+                                    disabled={mutationLoading}
+                                    size="lg"
+                                />
+                            )}
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
+                    {/* Batch Controls */}
+                    {batchMode && (
+                        <div className="mb-6">
+                            <BatchTaskControls
+                                tasks={filteredArtefacts.map(a => ({
+                                    id: a.id,
+                                    title: a.title,
+                                    description: a.summary,
+                                    status: a.status as any,
+                                    phase: a.phase,
+                                    workstream: a.workstream,
+                                    tags: a.tags,
+                                    uuid: a.uuid
+                                }))}
+                                selectedTasks={selectedTasks}
+                                onTaskSelectionChange={handleTaskSelectionChange}
+                                onSelectAll={handleSelectAll}
+                                onSelectNone={handleSelectNone}
+                                onBatchEdit={handleBatchEdit}
+                                onBatchDelete={handleBatchDelete}
+                                onBatchAdd={handleAddTask}
+                                disabled={mutationLoading}
+                            />
+                        </div>
+                    )}
+
                     {/* Inline Task Editor */}
-                    {(addingTask || editingTask) && (
+                    {(addingTask || editingTask) && !batchMode && (
                         <div className="mb-6">
                             <InlineTaskEditor
                                 task={editingTask ? {
@@ -721,35 +974,55 @@ export default function WorkstreamFilterDemo() {
                             {filteredArtefacts.map((artefact) => {
                                 const isPending = pendingMutations.has(artefact.id);
                                 const isFailed = failedMutations.has(artefact.id);
+                                const task = {
+                                    id: artefact.id,
+                                    title: artefact.title,
+                                    description: artefact.summary,
+                                    status: artefact.status as any,
+                                    phase: artefact.phase,
+                                    workstream: artefact.workstream,
+                                    tags: artefact.tags,
+                                    uuid: artefact.uuid
+                                };
                                 
                                 return (
                                     <div key={artefact.id} className="relative">
-                                        <TaskCard
-                                            task={{
-                                                id: artefact.id,
-                                                title: artefact.title,
-                                                description: artefact.summary,
-                                                status: artefact.status as any,
-                                                phase: artefact.phase,
-                                                workstream: artefact.workstream,
-                                                tags: artefact.tags,
-                                                uuid: artefact.uuid
-                                            }}
-                                            onEdit={() => handleEditTask(artefact)}
-                                            onDelete={() => handleDeleteTask(artefact)}
-                                            className={`border-l-4 transition-all duration-200 ${
-                                                isPending 
-                                                    ? 'border-l-yellow-500 bg-yellow-50 opacity-75' 
-                                                    : isFailed 
-                                                        ? 'border-l-red-500 bg-red-50' 
-                                                        : 'border-l-purple-500'
-                                            }`}
-                                            showControls={!addingTask && !editingTask && !isPending}
-                                        />
+                                        {batchMode ? (
+                                            <SelectableTaskCard
+                                                task={task}
+                                                selected={selectedTasks.has(artefact.id)}
+                                                onSelectionChange={handleTaskSelectionChange}
+                                                onEdit={() => handleEditTask(artefact)}
+                                                onDelete={() => handleDeleteTask(artefact)}
+                                                isPending={isPending}
+                                                isFailed={isFailed}
+                                                className={`border-l-4 transition-all duration-200 ${
+                                                    isPending 
+                                                        ? 'border-l-yellow-500 bg-yellow-50 opacity-75' 
+                                                        : isFailed 
+                                                            ? 'border-l-red-500 bg-red-50' 
+                                                            : 'border-l-purple-500'
+                                                }`}
+                                            />
+                                        ) : (
+                                            <TaskCard
+                                                task={task}
+                                                onEdit={() => handleEditTask(artefact)}
+                                                onDelete={() => handleDeleteTask(artefact)}
+                                                className={`border-l-4 transition-all duration-200 ${
+                                                    isPending 
+                                                        ? 'border-l-yellow-500 bg-yellow-50 opacity-75' 
+                                                        : isFailed 
+                                                            ? 'border-l-red-500 bg-red-50' 
+                                                            : 'border-l-purple-500'
+                                                }`}
+                                                showControls={!addingTask && !editingTask && !isPending}
+                                            />
+                                        )}
                                         
                                         {/* Pending indicator */}
                                         {isPending && (
-                                            <div className="absolute top-2 left-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            <div className="absolute top-2 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                                                 Saving...
                                             </div>
@@ -757,7 +1030,7 @@ export default function WorkstreamFilterDemo() {
                                         
                                         {/* Failed indicator */}
                                         {isFailed && (
-                                            <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                                                 Failed - Rolled Back
                                             </div>
@@ -770,35 +1043,37 @@ export default function WorkstreamFilterDemo() {
                 </CardContent>
             </Card>
 
-            {/* Schema Information */}
+            {/* Taxonomy Information */}
             <Card>
                 <CardHeader>
-                    <CardTitle>📊 Canonical Schema Hierarchy</CardTitle>
+                    <CardTitle>📊 Canonical Taxonomy Hierarchy</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div className="space-y-2">
-                            <h4 className="font-medium text-green-700">✅ Hierarchical Structure</h4>
+                            <h4 className="font-medium text-green-700">✅ Taxonomy Structure</h4>
                             <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                <li>• <strong>Workstream</strong>: Canonical workstream categories (workstream-ui, system-integrity, reasoning, memory)</li>
-                                <li>• <strong>Program</strong>: Phase-based program organization (Phase 11.1, 10.2, etc.)</li>
-                                <li>• <strong>Project</strong>: Project-level groupings from roadmap structure</li>
-                                <li>• <strong>Task/Artefact</strong>: Individual loop files with canonical YAML schema</li>
+                                <li>• <strong>Workstream</strong>: Default "Ora" (all artefacts belong to Ora workstream)</li>
+                                <li>• <strong>Program</strong>: Phase-based organization (Phase 11, 10, 9, etc.)</li>
+                                <li>• <strong>Project</strong>: Project groupings within programs</li>
+                                <li>• <strong>Artefact Type</strong>: task, note, thought, execution, loop</li>
+                                <li>• <strong>Status</strong>: planning, in_progress, complete, blocked</li>
                             </ul>
                         </div>
                         <div className="space-y-2">
-                            <h4 className="font-medium text-blue-700">🔧 Filter Features</h4>
+                            <h4 className="font-medium text-blue-700">🔧 Taxonomy Features</h4>
                             <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                <li>• Cascading dropdown filters maintain hierarchy relationships</li>
-                                <li>• Real-time filtering with dynamic option computation</li>
-                                <li>• Canonical schema validation ensures data quality</li>
-                                <li>• Roadmap structure integration for accurate project mapping</li>
+                                <li>• Hierarchical filters with dependency cascading</li>
+                                <li>• Taxonomy compliance enforcement (orphaned items hidden)</li>
+                                <li>• Real-time filtering with canonical validation</li>
+                                <li>• Roadmap structure alignment and integration</li>
+                                <li>• Default workstream "Ora" for all artefacts</li>
                             </ul>
                         </div>
                     </div>
                     <div className="mt-6 text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
                         <p className="text-purple-800 font-medium">
-                            🎯 Hierarchical filtering with {filteredArtefacts.length} of {artefacts.length} artefacts using canonical schema!
+                            🎯 Taxonomy-compliant filtering: {filteredArtefacts.length} of {artefacts.length} artefacts shown
                         </p>
                     </div>
                 </CardContent>

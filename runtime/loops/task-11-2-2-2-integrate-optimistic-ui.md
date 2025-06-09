@@ -2,7 +2,8 @@
 uuid: 92BA08DF-4191-457D-996C-91F48C45867D
 title: Task 11.2.2.2 – Integrate Optimistic UI for Inline Task Mutations
 phase: 11.2.2.2
-workstream: roadmap-vertical-slice
+workstream: Ora
+program: Phase 11 – Artefact Hierarchy and Filtering
 status: complete
 type: execution
 tags: [ui, optimistic, mutation, feedback]

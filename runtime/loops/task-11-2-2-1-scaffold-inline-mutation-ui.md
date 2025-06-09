@@ -2,7 +2,8 @@
 uuid: 3BF22FB9-F235-461D-BEE4-F06728D05483
 title: Task 11.2.2.1 – Scaffold Inline Mutation UI Controls
 phase: 11.2.2.1
-workstream: roadmap-vertical-slice
+workstream: Ora
+program: Phase 11 – Artefact Hierarchy and Filtering
 status: complete
 type: execution
 tags: [ui, components, mutation, inline-editing, tasks]

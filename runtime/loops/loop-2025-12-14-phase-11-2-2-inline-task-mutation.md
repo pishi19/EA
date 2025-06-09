@@ -2,7 +2,8 @@
 uuid: 44DAF6DD-253D-4AA0-A9C8-B76BAA58F9CD
 title: Phase 11.2.2 – Implement Inline Task Mutation in Filtered View
 phase: 11.2.2
-workstream: roadmap-vertical-slice
+workstream: Ora
+program: Phase 11 – Artefact Hierarchy and Filtering
 status: in_progress
 type: execution
 tags: [ui, mutation, filter, tasks]
