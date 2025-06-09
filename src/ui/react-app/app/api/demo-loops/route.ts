@@ -16,6 +16,7 @@ interface LoopMetadata {
   title: string;
   phase: string;
   workstream: string;
+  program?: string;
   status: string;
   score: number;
   tags: string[];
@@ -23,6 +24,8 @@ interface LoopMetadata {
   uuid: string;
   summary: string;
   filePath: string;
+  type?: string;
+  origin?: string;
 }
 
 // --- Helper Functions ---
@@ -47,7 +50,8 @@ async function loadLoopMetadata(fileName: string): Promise<LoopMetadata | null> 
       name: loopId,
       title: frontmatter.title || loopId,
       phase: frontmatter.phase || '0.0',
-      workstream: frontmatter.workstream || 'unknown',
+      workstream: frontmatter.workstream || 'Ora',
+      program: frontmatter.program,
       status: frontmatter.status || 'unknown',
       score: frontmatter.score || 0.0,
       tags: frontmatter.tags || [],
@@ -55,6 +59,8 @@ async function loadLoopMetadata(fileName: string): Promise<LoopMetadata | null> 
       uuid: frontmatter.uuid || loopId,
       summary: frontmatter.summary || summary,
       filePath: `runtime/loops/${fileName}`,
+      type: frontmatter.type || 'task',
+      origin: frontmatter.origin || 'file',
     };
   } catch (error) {
     console.error(`Failed to load loop metadata for ${fileName}:`, error);
