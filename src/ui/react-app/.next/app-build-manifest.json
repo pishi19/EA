@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/page": [
+    "/workstream-filter-demo/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/workstream-filter-demo/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -11,45 +11,20 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/semantic-chat-classic/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/semantic-chat-classic/page.js"
-    ],
-    "/task-executor/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/task-executor/page.js"
-    ],
-    "/system-view/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/system-view/page.js"
+      "static/chunks/app/page.js"
     ],
     "/contextual-chat-demo/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/contextual-chat-demo/page.js"
     ],
-    "/system-docs/page": [
+    "/system-view/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/system-docs/page.js"
-    ],
-    "/phase-doc/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/phase-doc/page.js"
-    ],
-    "/planning/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/planning/page.js"
-    ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/system-view/page.js"
     ]
   }
 }

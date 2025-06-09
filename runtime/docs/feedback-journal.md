@@ -51,9 +51,21 @@ tags: [feedback, journal, retrospective, documentation]
 
 ## [2025-12-13] Workstream Filter Demo Implementation
 
-- **Feedback:** Successfully created new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema. New "Workstream Filter Demo" page added to navigation without replacing existing Contextual Chat Architecture Demo page. Implements hierarchical cascade filtering with workstream (from frontmatter), program (phase-based), project (tag-based), and status filtering. Real-time filter computation with comprehensive metadata display including UUID, origin, scores, creation dates, and full tag visualization. Component properly integrates with existing API routes (/api/roadmap) and follows established UI patterns. Summary statistics show total artefacts, filtered results, workstreams, and programs. Build successful with no TypeScript errors or regressions to existing functionality.
+- **Feedback:** Successfully created new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema. New "Workstream Filter Demo" page added to navigation without replacing existing Contextual Chat Architecture Demo page. Implements hierarchical cascade filtering with workstream (from frontmatter), program (phase-based), project (tag-based), and status filtering. Real-time filter computation with comprehensive metadata display including UUID, origin, scores, creation dates, and full tag visualization. Component properly integrates with existing API routes (/api/demo-loops) and follows established UI patterns. Summary statistics show total artefacts, filtered results, workstreams, and programs. Build successful with no TypeScript errors or regressions to existing functionality.
 - **Actor:** AI Assistant (via Cursor)
 - **Context:** New hierarchical filtering component implementation following Ora Alignment Protocol requirements
+
+## [2025-12-13] Canonical Schema Hierarchical Filtering Implementation
+
+- **Feedback:** Successfully implemented new standalone "Workstream Filter Demo" page that demonstrates explicit hierarchical filtering using canonical YAML schema structure: Workstream → Program (Phase) → Project → Task (Artefact). Features include cascading dropdown filters that maintain hierarchy relationships, real-time filtering with dynamic option computation, canonical schema validation for data quality, and roadmap structure integration for accurate project mapping. Component uses /api/demo-loops endpoint and displays comprehensive artefact metadata with UUID, workstream, phase, score, creation date, tags, and summary information. Hierarchical structure enforces canonical workstream categories (workstream-ui, system-integrity, reasoning, memory) and phase-based program organization. Clear visual hierarchy with proper status color coding and responsive design. Implementation follows Ora Alignment Protocol with complete documentation updates across all required files.
+- **Actor:** AI Assistant (via Cursor)  
+- **Context:** Canonical schema hierarchical filtering demonstration page creation following explicit UI architecture requirements
+
+## [2025-12-13] Workstream Filter Demo Roadmap Integration
+
+- **Feedback:** Successfully enhanced Workstream Filter Demo page with integrated roadmap display at the top. Added collapsible roadmap section that renders `/runtime/docs/roadmap.md` as formatted markdown content using existing system-docs API infrastructure. The roadmap appears as a reference anchor above the filtering controls, providing context for the hierarchical structure being demonstrated. Features include collapsible/expandable roadmap panel with visual indicators, loading states, error handling, and styled prose rendering. Implementation preserves all existing filtering functionality while adding roadmap visibility. Uses consistent UI patterns with indigo border accent and proper markdown styling via prose classes. No changes made to artefact loading, filtering, or chat logic as specified.
+- **Actor:** AI Assistant (via Cursor)
+- **Context:** UI enhancement to provide roadmap context for hierarchical filtering demonstration without modifying core functionality
 
 ## [YYYY-MM-DD] Feedback Entry
 

@@ -66,7 +66,7 @@ async function loadAllLoops(): Promise<LoopMetadata[]> {
   try {
     const files = await fs.readdir(LOOPS_DIR);
     const loopFiles = files.filter(file => 
-      file.startsWith('loop-') && file.endsWith('.md')
+      (file.startsWith('loop-') || file.startsWith('task-')) && file.endsWith('.md')
     );
 
     const loops = await Promise.all(

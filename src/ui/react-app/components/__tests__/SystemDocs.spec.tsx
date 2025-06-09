@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import SystemDocs from '../SystemDocs';
 
 // Mock data
@@ -73,6 +73,11 @@ describe('SystemDocs Component', () => {
         });
     });
 
+    afterEach(() => {
+        cleanup();
+        jest.restoreAllMocks();
+    });
+
     test('renders loading state initially', () => {
         render(<SystemDocs />);
         expect(screen.getByText('Loading system documentation...')).toBeInTheDocument();
@@ -109,8 +114,8 @@ describe('SystemDocs Component', () => {
             expect(screen.getByText('System Design Document')).toBeInTheDocument();
         });
 
-        // Should display the markdown content
-        expect(screen.getByText('System Design')).toBeInTheDocument();
+        // Should display the markdown content in the main content area
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('System Design');
     });
 
     test('file selection from dropdown works', async () => {
@@ -126,7 +131,8 @@ describe('SystemDocs Component', () => {
 
         // Wait for dropdown options to appear and select different file
         await waitFor(() => {
-            expect(screen.getByText('Roadmap')).toBeInTheDocument();
+            const roadmapOptions = screen.getAllByText('Roadmap');
+            expect(roadmapOptions.length).toBeGreaterThan(0);
         });
     });
 
@@ -134,16 +140,21 @@ describe('SystemDocs Component', () => {
         render(<SystemDocs />);
         
         await waitFor(() => {
-            expect(screen.getByText('All Documents')).toBeInTheDocument();
+            expect(screen.getByText('📁 All Documents')).toBeInTheDocument();
         });
 
         // Find roadmap file in sidebar and click it
-        const roadmapButton = screen.getAllByText('Roadmap')[0];
-        fireEvent.click(roadmapButton);
+        const sidebarElements = screen.getAllByText('Roadmap');
+        const roadmapButton = sidebarElements.find(el => 
+            el.closest('.lg\\:col-span-1')
+        );
+        if (roadmapButton) {
+            fireEvent.click(roadmapButton);
+        }
 
         // Should trigger a new API call for roadmap.md
         await waitFor(() => {
-            expect(screen.getByText('System Design Document')).toBeInTheDocument();
+            expect(mockFetch).toHaveBeenCalledTimes(2);
         });
     });
 

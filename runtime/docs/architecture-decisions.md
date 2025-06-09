@@ -95,18 +95,19 @@ tags: [system, architecture, decisions, documentation]
   - Ensured: Contextual chat scoped to loop UUID and file path with persistent history in ## 💬 Chat sections
 - **UI Integration:** Semantic Chat Classic page provides artefact list/card view with embedded ChatPane components; individual chat expand/collapse controls maintain clean interface scaling; bulk controls enable efficient navigation through large collections; filtering preservation maintains context across artefact discovery and chat interaction; persistent chat history anchored to loop files enables continuity and Memory Trace integration; dual semantic chat pattern supports both discovery-focused (current demo) and interaction-focused (classic) workflows
 
-## [2025-12-13] Workstream Filter Demo Implementation
+## [2025-12-13] Canonical Schema Hierarchical Filtering Implementation
 
-- **Decision:** Create new standalone filtering component implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema and roadmap structure
-- **Rationale:** Establish dedicated demonstration of hierarchical filtering capability without mutating existing Contextual Chat Architecture Demo; implement canonical schema structure (workstream, program/phase, project/tags, task/artefact) as specified in Ora Alignment Protocol; provide comprehensive artefact filtering using live data from roadmap-referenced artefacts only
-- **Trigger:** User requirement to create new page implementing explicit hierarchy: "Workstream → Program → Project → Task (Artefact)" using canonical YAML schema; requirement to preserve existing Contextual Chat Architecture Demo page; need for standalone filtering demonstration following Ora Alignment Protocol
+- **Decision:** Create new standalone "Workstream Filter Demo" page implementing explicit Workstream → Program → Project → Task hierarchy using canonical YAML schema and roadmap structure without mutating existing Contextual Chat Architecture Demo
+- **Rationale:** Demonstrate canonical schema hierarchical filtering capability with cascading dropdowns that maintain hierarchy relationships; enforce canonical workstream categories (workstream-ui, system-integrity, reasoning, memory) and phase-based program organization; provide comprehensive artefact filtering using live data from /api/demo-loops endpoint; establish hierarchical filtering architecture pattern for future semantic UI enhancements
+- **Trigger:** User requirement to create new page implementing explicit hierarchy "Workstream → Program → Project → Task (Artefact)" using canonical YAML schema; need for standalone filtering demonstration without replacing existing Contextual Chat Architecture Demo; requirement to follow Ora Alignment Protocol with complete documentation updates
 - **Action:**
-  - Created: `app/workstream-filter-demo/page.tsx` implementing hierarchical cascade filtering with workstream (frontmatter), program (phase-based), project (tag-based), and status filtering
-  - Added: Navigation link in `layout.tsx` as "Workstream Filter Demo" alongside existing pages
-  - Implemented: Real-time filter computation with comprehensive metadata display including UUID, origin, scores, creation dates, and full tag visualization
-  - Integrated: Summary statistics showing total artefacts, filtered results, available workstreams, and programs with dynamic counts
-  - Ensured: Component uses existing API routes (/api/roadmap) and follows established UI patterns with shadcn/ui components
-- **UI Integration:** New page accessible via primary navigation; hierarchical filtering demonstrates canonical schema structure with live roadmap data; comprehensive artefact cards show all metadata dimensions; filter controls use established UI patterns; responsive design maintains quality across filter combinations; real-time updates with clear visual feedback and filter reset functionality; no mutations to existing pages or artefacts
+  - Created: `app/workstream-filter-demo/page.tsx` with canonical schema mapping (CANONICAL_WORKSTREAMS, CANONICAL_PROGRAMS, CANONICAL_PROJECTS) implementing hierarchical cascade filtering
+  - Implemented: Cascading dropdown filters that reset child selections when parent changes (workstream → program → project cascade)
+  - Added: Real-time filter computation with dynamic option availability based on hierarchical relationships
+  - Enhanced: Comprehensive artefact metadata display with UUID, workstream, phase, score, creation date, tags, summary, and file path information
+  - Integrated: Navigation link in `layout.tsx` as "Workstream Filter Demo" with proper routing and responsive design
+  - Added: Summary statistics showing total artefacts, filtered results, workstreams, and programs with hierarchical schema information panel
+- **UI Integration:** New page accessible via primary navigation alongside existing pages; hierarchical filtering enforces canonical schema structure with real-time validation; comprehensive artefact cards show all metadata dimensions with proper visual hierarchy; cascading filter controls use established shadcn/ui patterns; responsive design maintains quality across filter combinations; clear schema documentation section explains hierarchical structure; no mutations to existing pages or artefacts; complete integration with existing API endpoints and UI patterns
 
 ## [YYYY-MM-DD] Decision/Change Title
 
