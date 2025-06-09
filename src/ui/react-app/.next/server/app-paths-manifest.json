@@ -1,5 +1,5 @@
 {
+  "/api/demo-loops/route": "app/api/demo-loops/route.js",
   "/workstream-filter-demo/page": "app/workstream-filter-demo/page.js",
-  "/api/system-docs/route": "app/api/system-docs/route.js",
-  "/api/demo-loops/route": "app/api/demo-loops/route.js"
+  "/semantic-chat-classic/page": "app/semantic-chat-classic/page.js"
 }

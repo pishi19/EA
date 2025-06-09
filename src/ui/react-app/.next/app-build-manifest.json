@@ -25,6 +25,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/system-view/page.js"
+    ],
+    "/semantic-chat-classic/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/semantic-chat-classic/page.js"
     ]
   }
 }

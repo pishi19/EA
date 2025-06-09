@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/42</span>
+                <span class='fraction'>0/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/25</span>
+                <span class='fraction'>0/26</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.5% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/40</span>
+                <span class='fraction'>0/40</span>
             </div>
         
             
@@ -176,17 +176,17 @@
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,17 +289,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-import matter from 'gray-matter';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NextResponse } from <span class="cstat-no" title="statement not covered" >'next/server';</span>
+import fs from <span class="cstat-no" title="statement not covered" >'fs/promises';</span>
+import path from <span class="cstat-no" title="statement not covered" >'path';</span>
+import matter from <span class="cstat-no" title="statement not covered" >'gray-matter';</span>
 &nbsp;
 // Force dynamic rendering since we use request.url for search params
-export const <span class="cstat-no" title="statement not covered" >dynamic </span>= 'force-dynamic';
+export const <span class="cstat-no" title="statement not covered" >dynamic </span>= <span class="cstat-no" title="statement not covered" >'force-dynamic';</span>
 &nbsp;
 // --- Path Resolution ---
-const BASE_DIR = path.resolve(process.cwd(), '../../..');
-const LOOPS_DIR = path.join(BASE_DIR, 'runtime/loops');
+const BASE_DIR = <span class="cstat-no" title="statement not covered" >path.resolve(process.cwd(), '../../..');</span>
+const LOOPS_DIR = <span class="cstat-no" title="statement not covered" >path.join(BASE_DIR, 'runtime/loops');</span>
 &nbsp;
 interface LoopMetadata {
   id: string;
@@ -357,7 +357,7 @@ async function <span class="fstat-no" title="function not covered" >loadAllLoops
 <span class="cstat-no" title="statement not covered" >  try {</span>
     const files = <span class="cstat-no" title="statement not covered" >await fs.readdir(LOOPS_DIR);</span>
     const loopFiles = <span class="cstat-no" title="statement not covered" >files.filter(<span class="fstat-no" title="function not covered" >file =&gt; </span></span>
-<span class="cstat-no" title="statement not covered" >      file.startsWith('loop-') &amp;&amp; file.endsWith('.md')</span>
+<span class="cstat-no" title="statement not covered" >      (file.startsWith('loop-') || file.startsWith('task-')) &amp;&amp; file.endsWith('.md')</span>
     );
 &nbsp;
     const loops = <span class="cstat-no" title="statement not covered" >await Promise.all(</span>
@@ -409,7 +409,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-08T23:21:48.460Z
+                at 2025-06-09T05:40:08.953Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
