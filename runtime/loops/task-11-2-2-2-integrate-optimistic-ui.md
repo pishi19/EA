@@ -34,6 +34,7 @@ Implement optimistic UI logic for all inline task mutations in the filtered road
   - Maintained keyboard shortcuts and form validation during optimistic updates
   - Tested successful API integration with task creation/deletion and verified rollback behavior
   - All mutations now provide seamless user experience with 200ms visual feedback and 3-second error recovery
+- 2025-12-14: Canonical taxonomy and roadmap structure committed and tagged at taxonomy-2025-12-14-canonical-structure. Model: workstream ("Ora") → program (phase) → project (grouping) → artefact (task/note/thought). All artefacts versioned and discoverable only within roadmap tree. UI filtering aligned.
 
 ## 🧠 Memory Trace
 

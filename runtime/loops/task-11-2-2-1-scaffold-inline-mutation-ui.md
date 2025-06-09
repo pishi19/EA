@@ -34,6 +34,7 @@ Create reusable UI components for add, edit, and delete task operations within t
   - Integrated mutation controls into workstream-filter-demo with real-time updates
   - Added form validation, error handling, loading states, and confirmation dialogs
   - Tested API functionality with successful task creation and visibility in filtered views
+- 2025-12-14: Canonical taxonomy and roadmap structure committed and tagged at taxonomy-2025-12-14-canonical-structure. Model: workstream ("Ora") → program (phase) → project (grouping) → artefact (task/note/thought). All artefacts versioned and discoverable only within roadmap tree. UI filtering aligned.
 
 ## 🧠 Memory Trace
 

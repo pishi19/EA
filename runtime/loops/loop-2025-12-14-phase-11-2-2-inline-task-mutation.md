@@ -25,6 +25,7 @@ Implement add, edit, and delete actions for tasks inline within the filtered roa
 
 - 2025-12-14: Artefact scaffolded; roadmap updated.
 - 2025-12-14: Status updated to in_progress; first implementation task created (Task 11.2.2.1 - Scaffold UI controls).
+- 2025-12-14: Canonical taxonomy and roadmap structure committed and tagged at taxonomy-2025-12-14-canonical-structure. Model: workstream ("Ora") → program (phase) → project (grouping) → artefact (task/note/thought). All artefacts versioned and discoverable only within roadmap tree. UI filtering aligned.
 
 ## 🧠 Memory Trace
 
