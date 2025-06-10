@@ -1,5 +1,21 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Target, Users, Hash } from 'lucide-react';
+import { 
+    ChevronRight, 
+    ChevronDown, 
+    Folder, 
+    FolderOpen, 
+    FileText, 
+    Target, 
+    Users, 
+    Hash,
+    Edit3,
+    Trash2,
+    CheckCircle,
+    Clock,
+    AlertCircle,
+    Tag,
+    MoreVertical
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +52,14 @@ interface TreeNode {
     roadmapDefined?: boolean; // Indicates if this node comes from roadmap.md
 }
 
+interface MutationAction {
+    type: 'status' | 'tag' | 'edit' | 'delete';
+    value?: string;
+    label: string;
+    icon: React.ReactNode;
+    variant?: 'default' | 'destructive';
+}
+
 interface TreeNavigationProps {
     artefacts: Artefact[];
     roadmapHierarchy: RoadmapHierarchy | null;
@@ -43,6 +67,7 @@ interface TreeNavigationProps {
     selectedNodeId?: string;
     className?: string;
     validateArtefactAlignment?: (artefact: Artefact) => any;
+    onArtefactMutate?: (artefact: Artefact, action: MutationAction) => Promise<void>;
 }
 
 export default function TreeNavigation({ 
@@ -51,9 +76,101 @@ export default function TreeNavigation({
     onNodeSelect, 
     selectedNodeId,
     className = "",
-    validateArtefactAlignment
+    validateArtefactAlignment,
+    onArtefactMutate
 }: TreeNavigationProps) {
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(['Ora'])); // Default expand Ora workstream
+    const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+    const [mutatingNodes, setMutatingNodes] = useState<Set<string>>(new Set());
+
+    // Quick mutation actions for artefacts
+    const getMutationActions = (artefact: Artefact): MutationAction[] => {
+        const actions: MutationAction[] = [];
+        
+        // Status change actions
+        if (artefact.status !== 'complete') {
+            actions.push({
+                type: 'status',
+                value: 'complete',
+                label: 'Mark Complete',
+                icon: <CheckCircle className="h-3 w-3" />
+            });
+        }
+        
+        if (artefact.status !== 'in_progress') {
+            actions.push({
+                type: 'status',
+                value: 'in_progress',
+                label: 'Mark In Progress',
+                icon: <Clock className="h-3 w-3" />
+            });
+        }
+
+        if (artefact.status !== 'blocked') {
+            actions.push({
+                type: 'status',
+                value: 'blocked',
+                label: 'Mark Blocked',
+                icon: <AlertCircle className="h-3 w-3" />
+            });
+        }
+
+        // Tagging actions
+        if (!artefact.tags.includes('urgent')) {
+            actions.push({
+                type: 'tag',
+                value: 'urgent',
+                label: 'Add Urgent Tag',
+                icon: <Tag className="h-3 w-3" />
+            });
+        }
+
+        if (!artefact.tags.includes('review')) {
+            actions.push({
+                type: 'tag',
+                value: 'review',
+                label: 'Add Review Tag',
+                icon: <Tag className="h-3 w-3" />
+            });
+        }
+
+        // Edit and delete actions
+        actions.push({
+            type: 'edit',
+            label: 'Edit Details',
+            icon: <Edit3 className="h-3 w-3" />
+        });
+
+        actions.push({
+            type: 'delete',
+            label: 'Delete Artefact',
+            icon: <Trash2 className="h-3 w-3" />,
+            variant: 'destructive'
+        });
+
+        return actions;
+    };
+
+    const handleMutation = async (artefact: Artefact, action: MutationAction, event: React.MouseEvent) => {
+        event.stopPropagation(); // Prevent node selection
+        
+        if (!onArtefactMutate) return;
+
+        const nodeId = `art-${artefact.id}`;
+        setMutatingNodes(prev => new Set([...prev, nodeId]));
+
+        try {
+            await onArtefactMutate(artefact, action);
+        } catch (error) {
+            console.error('Mutation failed:', error);
+        } finally {
+            setMutatingNodes(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(nodeId);
+                return newSet;
+            });
+        }
+    };
 
     // Build hierarchical tree structure from roadmap.md as source of truth
     const treeData = useMemo(() => {
@@ -115,7 +232,19 @@ export default function TreeNavigation({
                             const alignment = validateArtefactAlignment(artefact);
                             const isAlignedToProject = alignment.validProjects.some((proj: any) => proj.id === project.id);
                             
-                            if (isAlignedToProject) {
+                            // Enhanced hierarchical matching for better project association
+                            let hierarchicalMatch = false;
+                            if (!isAlignedToProject && artefact.phase) {
+                                const projectNumber = project.id.replace('project-', ''); // e.g., "11.2"
+                                const artefactPhase = String(artefact.phase);
+                                
+                                // Check if artefact phase hierarchically matches project (e.g., "11.2.2.1" matches "11.2")
+                                hierarchicalMatch = artefactPhase.startsWith(projectNumber + '.') || 
+                                                  artefactPhase.startsWith(projectNumber) ||
+                                                  artefactPhase === projectNumber;
+                            }
+                            
+                            if (isAlignedToProject || hierarchicalMatch) {
                                 const artefactNode: TreeNode = {
                                     id: `art-${artefact.id}`,
                                     label: artefact.title,
@@ -241,18 +370,23 @@ export default function TreeNavigation({
         const isSelected = selectedNodeId === node.id;
         const hasChildren = node.children.length > 0;
         const indent = node.level * 16;
+        const isHovered = hoveredNode === node.id;
+        const isMutating = mutatingNodes.has(node.id);
+        const isArtefact = node.type === 'artefact' && node.artefact;
 
         return (
             <div key={node.id} className="select-none">
                 <div
                     className={`
-                        flex items-center py-1.5 px-2 mx-1 rounded cursor-pointer
-                        hover:bg-gray-100 transition-colors duration-150
+                        group flex items-center py-1.5 px-2 mx-1 rounded cursor-pointer
+                        hover:bg-gray-100 transition-colors duration-150 relative
                         ${isSelected ? 'bg-blue-50 border border-blue-200' : ''}
                         ${node.roadmapDefined ? 'border-l-2 border-l-green-300' : ''}
                     `}
                     style={{ paddingLeft: `${indent + 8}px` }}
                     onClick={() => handleNodeClick(node)}
+                    onMouseEnter={() => setHoveredNode(node.id)}
+                    onMouseLeave={() => setHoveredNode(null)}
                     title={node.roadmapDefined ? 'Defined in roadmap.md' : 'Data artefact'}
                 >
                     {/* Expand/Collapse Icon */}
@@ -311,6 +445,108 @@ export default function TreeNavigation({
                             )}
                         </div>
                     </div>
+
+                    {/* Mutation Controls for Artefacts */}
+                    {isArtefact && node.artefact && onArtefactMutate && (
+                        <div className={`
+                            flex items-center space-x-1 ml-2 transition-opacity duration-200
+                            ${isHovered || isSelected ? 'opacity-100' : 'opacity-0'}
+                        `}>
+                            {/* Quick Status Actions */}
+                            {node.artefact.status !== 'complete' && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 hover:bg-green-100"
+                                    onClick={(e) => handleMutation(node.artefact!, {
+                                        type: 'status',
+                                        value: 'complete',
+                                        label: 'Mark Complete',
+                                        icon: <CheckCircle className="h-3 w-3" />
+                                    }, e)}
+                                    disabled={isMutating}
+                                    title="Mark Complete"
+                                >
+                                    <CheckCircle className="h-3 w-3 text-green-600" />
+                                </Button>
+                            )}
+
+                            {node.artefact.status !== 'in_progress' && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 hover:bg-blue-100"
+                                    onClick={(e) => handleMutation(node.artefact!, {
+                                        type: 'status',
+                                        value: 'in_progress',
+                                        label: 'Mark In Progress',
+                                        icon: <Clock className="h-3 w-3" />
+                                    }, e)}
+                                    disabled={isMutating}
+                                    title="Mark In Progress"
+                                >
+                                    <Clock className="h-3 w-3 text-blue-600" />
+                                </Button>
+                            )}
+
+                            {/* Add Urgent Tag */}
+                            {!node.artefact.tags.includes('urgent') && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 hover:bg-orange-100"
+                                    onClick={(e) => handleMutation(node.artefact!, {
+                                        type: 'tag',
+                                        value: 'urgent',
+                                        label: 'Add Urgent Tag',
+                                        icon: <Tag className="h-3 w-3" />
+                                    }, e)}
+                                    disabled={isMutating}
+                                    title="Add Urgent Tag"
+                                >
+                                    <Tag className="h-3 w-3 text-orange-600" />
+                                </Button>
+                            )}
+
+                            {/* Edit Action */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 hover:bg-gray-100"
+                                onClick={(e) => handleMutation(node.artefact!, {
+                                    type: 'edit',
+                                    label: 'Edit Details',
+                                    icon: <Edit3 className="h-3 w-3" />
+                                }, e)}
+                                disabled={isMutating}
+                                title="Edit Details"
+                            >
+                                <Edit3 className="h-3 w-3 text-gray-600" />
+                            </Button>
+
+                            {/* Delete Action */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 hover:bg-red-100"
+                                onClick={(e) => handleMutation(node.artefact!, {
+                                    type: 'delete',
+                                    label: 'Delete Artefact',
+                                    icon: <Trash2 className="h-3 w-3" />,
+                                    variant: 'destructive'
+                                }, e)}
+                                disabled={isMutating}
+                                title="Delete Artefact"
+                            >
+                                <Trash2 className="h-3 w-3 text-red-600" />
+                            </Button>
+
+                            {/* Mutation Loading Indicator */}
+                            {isMutating && (
+                                <div className="h-3 w-3 animate-spin rounded-full border border-gray-300 border-t-blue-600"></div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Children */}

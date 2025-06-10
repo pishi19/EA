@@ -201,7 +201,7 @@ export default function ContextualChatDemo() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Workstream</label>
                             <Select value={workstreamFilter} onValueChange={setWorkstreamFilter}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger aria-label="Filter by workstream"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     {allWorkstreams.map(ws => (
                                         <SelectItem key={ws} value={ws}>
@@ -215,7 +215,7 @@ export default function ContextualChatDemo() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Program (Phase)</label>
                             <Select value={programFilter} onValueChange={setProgramFilter}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger aria-label="Filter by program or phase"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     {allPrograms.map(program => (
                                         <SelectItem key={program} value={program}>
@@ -229,7 +229,7 @@ export default function ContextualChatDemo() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Project (Tags)</label>
                             <Select value={projectFilter} onValueChange={setProjectFilter}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger aria-label="Filter by project or tags"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     {allProjects.map(project => (
                                         <SelectItem key={project} value={project}>
@@ -243,7 +243,7 @@ export default function ContextualChatDemo() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger aria-label="Filter by status"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">All Statuses</SelectItem>
                                     <SelectItem value="complete">Complete</SelectItem>
@@ -257,7 +257,7 @@ export default function ContextualChatDemo() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                             <Select value={sortBy} onValueChange={setSortBy}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                <SelectTrigger aria-label="Sort artefacts by"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="created_desc">Newest First</SelectItem>
                                     <SelectItem value="score_desc">Score (High→Low)</SelectItem>

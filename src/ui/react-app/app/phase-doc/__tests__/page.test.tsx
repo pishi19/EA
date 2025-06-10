@@ -350,12 +350,12 @@ describe('PhaseDocView', () => {
     });
 
     it('has all filter controls available', async () => {
-      expect(screen.getByRole('combobox', { name: /phase/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /status/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /type/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /workstream/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /tags/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /sort by/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /select phase/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by status/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by type/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by workstream/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by tags/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /sort loops by/i })).toBeInTheDocument();
     });
 
     it('filters by status correctly', async () => {
@@ -433,12 +433,12 @@ describe('PhaseDocView', () => {
     });
 
     it('has proper ARIA labels for all form controls', async () => {
-      expect(screen.getByRole('combobox', { name: /phase/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /status/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /type/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /workstream/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /tags/i })).toBeInTheDocument();
-      expect(screen.getByRole('combobox', { name: /sort by/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /select phase/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by status/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by type/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by workstream/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by tags/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /sort loops by/i })).toBeInTheDocument();
     });
 
     it('has proper heading structure', async () => {
@@ -451,6 +451,21 @@ describe('PhaseDocView', () => {
       const accordionButtons = screen.getAllByRole('button');
       // Should have accordion trigger buttons for each loop
       expect(accordionButtons.length).toBeGreaterThan(2); // At least the loop accordions
+    });
+
+    it('has proper filter controls accessibility', async () => {
+      render(<PhaseDocView />);
+      
+      await waitFor(() => {
+        expect(screen.getByDisplayValue('Phase 1.2: Development Phase')).toBeInTheDocument();
+      });
+      
+      expect(screen.getByRole('combobox', { name: /select phase/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by status/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by type/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by workstream/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /filter by tags/i })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: /sort loops by/i })).toBeInTheDocument();
     });
   });
 }); 

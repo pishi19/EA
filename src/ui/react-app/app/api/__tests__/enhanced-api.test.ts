@@ -1,4 +1,12 @@
-import { NextRequest } from 'next/server';
+// Mock NextRequest to avoid constructor issues
+const MockNextRequest = class {
+  constructor(url, options = {}) {
+    this.url = url;
+    this.method = options.method || 'GET';
+    this.headers = new Map(Object.entries(options.headers || {}));
+  }
+} as any;
+
 import { POST as demoLoopsHandler } from '../demo-loops/route';
 import { GET as roadmapHandler } from '../roadmap/route';
 
@@ -185,7 +193,7 @@ This file doesn't have proper frontmatter...`
     });
 
     it('successfully loads and parses loop metadata', async () => {
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       expect(response.status).toBe(200);
@@ -210,7 +218,7 @@ This file doesn't have proper frontmatter...`
     it('handles file system errors gracefully', async () => {
       mockFs.promises.readdir.mockRejectedValue(new Error('Directory not found'));
       
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       expect(response.status).toBe(500);
@@ -221,7 +229,7 @@ This file doesn't have proper frontmatter...`
     });
 
     it('filters out invalid loop files', async () => {
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       const data = await response.json();
@@ -242,7 +250,7 @@ Content here`);
         throw new Error('YAML parsing error');
       });
 
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       // Should still return successful response, just filtering out bad files
@@ -250,7 +258,7 @@ Content here`);
     });
 
     it('sorts loops by creation date descending', async () => {
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       const data = await response.json();
@@ -264,7 +272,7 @@ Content here`);
     });
 
     it('includes all required metadata fields', async () => {
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       
       const data = await response.json();
@@ -340,7 +348,7 @@ Content here`);
     });
 
     it('successfully loads roadmap data with workstream information', async () => {
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       expect(response.status).toBe(200);
@@ -358,7 +366,7 @@ Content here`);
     it('handles missing roadmap file', async () => {
       mockFs.existsSync.mockReturnValue(false);
       
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       expect(response.status).toBe(404);
@@ -370,7 +378,7 @@ Content here`);
     it('handles malformed JSON in roadmap file', async () => {
       mockFs.readFileSync.mockReturnValue('invalid json content');
       
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       expect(response.status).toBe(500);
@@ -381,7 +389,7 @@ Content here`);
     });
 
     it('includes all necessary fields for filtering', async () => {
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       const data = await response.json();
@@ -406,7 +414,7 @@ Content here`);
       const emptyRoadmapData = { phases: [] };
       mockFs.readFileSync.mockReturnValue(JSON.stringify(emptyRoadmapData));
       
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       expect(response.status).toBe(200);
@@ -431,7 +439,7 @@ Content here`);
       
       mockFs.readFileSync.mockReturnValue(JSON.stringify(roadmapWithEmptyPhase));
       
-      const request = new NextRequest('http://localhost:3000/api/roadmap');
+      const request = new MockNextRequest('http://localhost:3000/api/roadmap');
       const response = await roadmapHandler(request);
       
       expect(response.status).toBe(200);
@@ -448,7 +456,7 @@ Content here`);
         new Promise(resolve => setTimeout(resolve, 10000))
       );
       
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       
       // In a real scenario, you'd want to implement timeout handling
       // This test verifies the structure exists for timeout handling
@@ -469,8 +477,8 @@ created: 2024-01-01T00:00:00Z
 ---
 Content`);
 
-      const request1 = new NextRequest('http://localhost:3000/api/demo-loops');
-      const request2 = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request1 = new MockNextRequest('http://localhost:3000/api/demo-loops');
+      const request2 = new MockNextRequest('http://localhost:3000/api/demo-loops');
       
       // Fire both requests simultaneously
       const [response1, response2] = await Promise.all([
@@ -507,7 +515,7 @@ created: 2024-01-01T00:00:00Z
 Content`);
 
       const start = Date.now();
-      const request = new NextRequest('http://localhost:3000/api/demo-loops');
+      const request = new MockNextRequest('http://localhost:3000/api/demo-loops');
       const response = await demoLoopsHandler(request);
       const end = Date.now();
       

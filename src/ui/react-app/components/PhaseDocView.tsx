@@ -157,7 +157,7 @@ export default function PhaseDocView() {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Phase</label>
                     <Select value={String(activePhase.phase)} onValueChange={handlePhaseChange}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger aria-label="Select phase"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             {phases.map(p => <SelectItem key={p.id} value={String(p.phase)}>Phase {p.phase}: {p.title}</SelectItem>)}
                         </SelectContent>
@@ -166,7 +166,7 @@ export default function PhaseDocView() {
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
-                         <SelectTrigger><SelectValue /></SelectTrigger>
+                         <SelectTrigger aria-label="Filter by status"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Statuses</SelectItem>
                             <SelectItem value="in_progress">In Progress</SelectItem>
@@ -177,7 +177,7 @@ export default function PhaseDocView() {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                     <Select value={typeFilter} onValueChange={setTypeFilter}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger aria-label="Filter by type"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Types</SelectItem>
                             <SelectItem value="planning">📘 Planning</SelectItem>
@@ -189,7 +189,7 @@ export default function PhaseDocView() {
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Workstream</label>
                     <Select value={workstreamFilter} onValueChange={setWorkstreamFilter}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectTrigger aria-label="Filter by workstream"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             {allWorkstreams.map(ws => <SelectItem key={ws} value={ws}>{ws === 'all' ? 'All Workstreams' : ws}</SelectItem>)}
                         </SelectContent>
@@ -198,7 +198,7 @@ export default function PhaseDocView() {
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
                     <Select value={tagFilter[0] || 'all'} onValueChange={(value) => setTagFilter(value === 'all' ? [] : [value])}>
-                        <SelectTrigger><SelectValue placeholder="Filter by tag..." /></SelectTrigger>
+                        <SelectTrigger aria-label="Filter by tags"><SelectValue placeholder="Filter by tag..." /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Tags</SelectItem>
                             {allTags.map(tag => (
@@ -210,7 +210,7 @@ export default function PhaseDocView() {
                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                     <Select value={sortBy} onValueChange={setSortBy}>
-                         <SelectTrigger><SelectValue /></SelectTrigger>
+                         <SelectTrigger aria-label="Sort loops by"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="created_desc">Newest First</SelectItem>
                             <SelectItem value="score_desc">Score (High to Low)</SelectItem>

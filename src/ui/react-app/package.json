@@ -9,7 +9,12 @@
     "lint": "next lint",
     "test": "npm run test:validate-paths && jest",
     "test:validate-paths": "npm --prefix ../../.. run validate-paths",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:all": "npm run test && npm run test:e2e",
+    "playwright:install": "playwright install"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -39,6 +44,7 @@
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
+    "@playwright/test": "^1.52.0",
     "@swc/jest": "^0.2.38",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",

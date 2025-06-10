@@ -201,7 +201,7 @@ export function BatchTaskControls({
               className="data-[state=indeterminate]:bg-blue-500"
               ref={(el) => {
                 if (el && partiallySelected) {
-                  el.indeterminate = true;
+                  (el as any).indeterminate = true;
                 }
               }}
             />

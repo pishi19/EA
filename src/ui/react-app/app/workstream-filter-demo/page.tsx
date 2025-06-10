@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, Map, Plus, Sidebar } from "lucide-react";
+import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, Map, Plus, Sidebar, CheckSquare, RotateCcw, RefreshCw } from "lucide-react";
 import { InlineTaskEditor } from '@/components/inline-task-editor';
 import { TaskMutationControls, TaskCard } from '@/components/task-mutation-controls';
 import { BatchTaskControls, SelectableTaskCard } from '@/components/batch-task-controls';
@@ -97,6 +97,7 @@ export default function WorkstreamFilterDemo() {
     const [selectedWorkstream, setSelectedWorkstream] = useState<string>('Ora'); // Default to Ora workstream
     const [selectedProgram, setSelectedProgram] = useState<string>('all');
     const [selectedProject, setSelectedProject] = useState<string>('all');
+    const [selectedTask, setSelectedTask] = useState<string>('all');
     const [selectedArtefactType, setSelectedArtefactType] = useState<string>('all');
     const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
@@ -171,17 +172,11 @@ export default function WorkstreamFilterDemo() {
         loadArtefacts();
     }, []);
 
-    // Sync optimistic artefacts with loaded artefacts
     useEffect(() => {
         if (artefacts.length > 0) {
             setOptimisticArtefacts(artefacts);
             }
     }, [artefacts]);
-
-    // Sync tree navigation with filter selections
-    useEffect(() => {
-        treeState.syncWithFilters(selectedWorkstream, selectedProgram, selectedProject);
-    }, [selectedWorkstream, selectedProgram, selectedProject]);
 
     // Computed hierarchical filter options based on roadmap.md (source of truth)
     const availableWorkstreams = useMemo(() => {
@@ -220,11 +215,48 @@ export default function WorkstreamFilterDemo() {
         }
         
         const roadmapProjects = roadmapHierarchy.getAvailableProjects(selectedProgramId);
+        
         return [
             { id: 'all', name: 'All Projects', fullName: 'All Projects', status: 'all' },
             ...roadmapProjects
         ];
     }, [roadmapHierarchy.hierarchy, roadmapHierarchy.loading, selectedProgram]);
+
+    const availableTasks = useMemo(() => {
+        if (roadmapHierarchy.loading || !roadmapHierarchy.hierarchy) {
+            return []; // No tasks until roadmap loads
+        }
+        
+        // Find selected project by matching fullName or id
+        let selectedProjectId = selectedProject;
+        if (selectedProject !== 'all') {
+            const project = roadmapHierarchy.hierarchy.projects.find(p => 
+                p.fullName === selectedProject || 
+                p.id === selectedProject ||
+                p.name === selectedProject
+            );
+            selectedProjectId = project ? project.id : selectedProject;
+        }
+        
+        // Get tasks for the selected project
+        let roadmapTasks = [];
+        if (selectedProjectId === 'all') {
+            roadmapTasks = roadmapHierarchy.hierarchy.tasks;
+        } else {
+            roadmapTasks = roadmapHierarchy.hierarchy.tasks.filter(task => task.projectId === selectedProjectId);
+        }
+        
+        return [
+            { id: 'all', name: 'All Tasks', fullName: 'All Tasks', status: 'all' },
+            ...roadmapTasks.map(task => ({
+                id: task.id,
+                name: task.name,
+                fullName: task.fullName,
+                displayLabel: task.displayLabel,
+                status: task.status
+            }))
+        ];
+    }, [roadmapHierarchy.hierarchy, roadmapHierarchy.loading, selectedProject]);
 
     const availableArtefactTypes = useMemo(() => {
         const types = new Set<string>();
@@ -247,6 +279,11 @@ export default function WorkstreamFilterDemo() {
         });
         return ['all', ...Array.from(statuses).sort()];
     }, [optimisticArtefacts]);
+
+    // Sync tree navigation with filter selections (moved after all useMemo declarations)
+    useEffect(() => {
+        treeState.syncWithFilters(selectedWorkstream, selectedProgram, selectedProject);
+    }, [selectedWorkstream, selectedProgram, selectedProject]);
 
     // Filtered artefacts based on roadmap-driven hierarchy validation
     const filteredArtefacts = useMemo(() => {
@@ -298,9 +335,115 @@ export default function WorkstreamFilterDemo() {
             );
             
             if (selectedProjectData) {
+                console.log('🔍 Project filtering debug:', {
+                    selectedProject: selectedProjectData.name,
+                    projectNumber: selectedProjectData.id.replace('project-', ''),
+                    totalArtefactsBeforeFilter: filtered.length,
+                    artefactSample: filtered.slice(0, 3).map(a => ({
+                        title: a.title,
+                        phase: a.phase,
+                        tags: a.tags
+                    }))
+                });
+                
                 filtered = filtered.filter(artefact => {
                     const alignment = roadmapHierarchy.validateArtefactAlignment(artefact);
-                    return alignment.validProjects.some(proj => proj.id === selectedProjectData.id);
+                    
+                    // Check if artefact is aligned with this specific project
+                    const projectAlignment = alignment.validProjects.some(proj => proj.id === selectedProjectData.id);
+                    
+                    // Also check for loose matches in title, phase, or tags
+                    const projectNumber = selectedProjectData.id.replace('project-', ''); // e.g., "11.3"
+                    const phaseNumber = projectNumber.split('.')[0]; // e.g., "11"
+                    
+                    const titleMatch = artefact.title.toLowerCase().includes(projectNumber) ||
+                                     artefact.title.toLowerCase().includes(selectedProjectData.name.toLowerCase());
+                    
+                    // Enhanced hierarchical phase matching
+                    let phaseMatch = false;
+                    if (artefact.phase) {
+                        const artefactPhase = String(artefact.phase);
+                        // Direct match (e.g., "11.2" === "11.2")
+                        phaseMatch = artefactPhase === phaseNumber || artefactPhase === projectNumber;
+                        
+                        // Hierarchical match (e.g., "11.2.2.1" starts with "11.2")
+                        if (!phaseMatch && projectNumber.includes('.')) {
+                            phaseMatch = artefactPhase.startsWith(projectNumber + '.');
+                        }
+                        
+                        // Also check if artefact phase starts with project number (e.g., "11.2.4.1" matches project "11.2")
+                        if (!phaseMatch) {
+                            phaseMatch = artefactPhase.startsWith(projectNumber);
+                        }
+                    }
+                    
+                    const tagMatch = artefact.tags && artefact.tags.some(tag => 
+                        tag.includes(projectNumber) ||
+                        tag.toLowerCase().includes(selectedProjectData.name.toLowerCase())
+                    );
+                    
+                    const matches = projectAlignment || titleMatch || phaseMatch || tagMatch;
+                    
+                    if (matches && selectedProjectData.id === 'project-11.2') {
+                        console.log('✅ Project 11.2 artefact matched:', {
+                            title: artefact.title,
+                            phase: artefact.phase,
+                            tags: artefact.tags,
+                            projectAlignment,
+                            titleMatch,
+                            phaseMatch,
+                            tagMatch
+                        });
+                    }
+                    
+                    return matches;
+                });
+                
+                console.log('✅ Project filtering result:', {
+                    selectedProject: selectedProjectData.name,
+                    artefactsAfterFilter: filtered.length
+                });
+            }
+        }
+
+        // Roadmap-driven task filtering
+        if (selectedTask !== 'all' && roadmapHierarchy.hierarchy) {
+            const selectedTaskData = roadmapHierarchy.hierarchy.tasks.find(t => 
+                t.id === selectedTask || 
+                t.fullName === selectedTask ||
+                t.name === selectedTask
+            );
+            
+            if (selectedTaskData) {
+                // Get the parent project for this task
+                const parentProject = roadmapHierarchy.hierarchy.projects.find(p => 
+                    p.id === selectedTaskData.projectId
+                );
+                
+                // Filter artefacts that relate to the specific task OR the parent project
+                filtered = filtered.filter(artefact => {
+                    // Check if artefact title contains the task name or task ID
+                    const taskTitleMatch = artefact.title.toLowerCase().includes(selectedTaskData.name.toLowerCase());
+                    const taskIdMatch = artefact.title.includes(selectedTaskData.id.replace('task-', ''));
+                    
+                    // Check if any tags match the task ID or name
+                    const taskTagMatch = artefact.tags && artefact.tags.some(tag => 
+                        tag.toLowerCase().includes(selectedTaskData.name.toLowerCase()) ||
+                        tag.includes(selectedTaskData.id.replace('task-', ''))
+                    );
+                    
+                    // Also include artefacts that belong to the parent project
+                    let projectMatch = false;
+                    if (parentProject) {
+                        const projectTitleMatch = artefact.title.toLowerCase().includes(parentProject.name.toLowerCase());
+                        const projectTagMatch = artefact.tags && artefact.tags.some(tag => 
+                            tag.toLowerCase().includes(parentProject.name.toLowerCase())
+                        );
+                        projectMatch = projectTitleMatch || projectTagMatch;
+                    }
+                    
+                    // Show artefacts that match the task OR belong to the parent project
+                    return taskTitleMatch || taskIdMatch || taskTagMatch || projectMatch;
                 });
             }
         }
@@ -324,24 +467,32 @@ export default function WorkstreamFilterDemo() {
         }
 
         return filtered.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
-    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedArtefactType, selectedStatus, roadmapHierarchy.hierarchy]);
+    }, [optimisticArtefacts, selectedWorkstream, selectedProgram, selectedProject, selectedTask, selectedArtefactType, selectedStatus, roadmapHierarchy.hierarchy]);
 
     // Reset cascade when parent selection changes
     const handleWorkstreamChange = (value: string) => {
         setSelectedWorkstream(value);
         setSelectedProgram('all');
         setSelectedProject('all');
+        setSelectedTask('all');
     };
 
     const handleProgramChange = (value: string) => {
         setSelectedProgram(value);
         setSelectedProject('all');
+        setSelectedTask('all');
+    };
+
+    const handleProjectChange = (value: string) => {
+        setSelectedProject(value);
+        setSelectedTask('all');
     };
 
     const clearAllFilters = () => {
         setSelectedWorkstream('Ora'); // Reset to default Ora workstream
         setSelectedProgram('all');
         setSelectedProject('all');
+        setSelectedTask('all');
         setSelectedArtefactType('all');
         setSelectedStatus('all');
     };
@@ -638,6 +789,98 @@ export default function WorkstreamFilterDemo() {
         }
     };
 
+    // Custom handler for tree node selection that updates filter state
+    const handleTreeNodeSelect = (node: any, artefact?: Artefact) => {
+        // Always update tree state
+        treeState.selectNode(node, artefact);
+        
+        // Update filter state based on node type
+        if (node.type === 'workstream') {
+            const workstreamName = node.label;
+            setSelectedWorkstream(workstreamName);
+            setSelectedProgram('all');
+            setSelectedProject('all');
+            setSelectedTask('all');
+        } else if (node.type === 'program') {
+            // Extract program ID from tree node
+            const programId = node.id.replace('prog-', '');
+            setSelectedProgram(programId);
+            setSelectedProject('all');
+            setSelectedTask('all');
+        } else if (node.type === 'project') {
+            // Extract project ID from tree node
+            const projectId = node.id.replace('proj-', '');
+            setSelectedProject(projectId);
+            setSelectedTask('all');
+        }
+        
+        console.log('🌳 Tree node selected:', {
+            nodeType: node.type,
+            nodeId: node.id,
+            nodeLabel: node.label,
+            updatedFilters: node.type === 'project' ? { selectedProject: node.id.replace('proj-', '') } : 'other'
+        });
+    };
+
+    // Node-based mutation handler for Task 11.3.3
+    const handleArtefactMutation = async (artefact: Artefact, action: any) => {
+        console.log('🔧 Node mutation requested:', { artefact: artefact.title, action });
+        
+        try {
+            let updatedArtefact = { ...artefact };
+            
+            if (action.type === 'status' && action.value) {
+                updatedArtefact.status = action.value;
+                
+                // Optimistic update
+                setOptimisticArtefacts(prev => 
+                    prev.map(a => a.id === artefact.id ? updatedArtefact : a)
+                );
+                
+                console.log(`✅ Status changed: ${artefact.title} → ${action.value}`);
+                
+            } else if (action.type === 'tag' && action.value) {
+                if (!updatedArtefact.tags.includes(action.value)) {
+                    updatedArtefact.tags = [...updatedArtefact.tags, action.value];
+                    
+                    // Optimistic update
+                    setOptimisticArtefacts(prev => 
+                        prev.map(a => a.id === artefact.id ? updatedArtefact : a)
+                    );
+                    
+                    console.log(`🏷️ Tag added: ${artefact.title} → ${action.value}`);
+                }
+                
+            } else if (action.type === 'edit') {
+                // For edit, we'll trigger the existing edit flow
+                setEditingTask(artefact);
+                setAddingTask(false);
+                console.log(`✏️ Edit triggered for: ${artefact.title}`);
+                
+            } else if (action.type === 'delete') {
+                // For delete, we'll trigger the existing delete flow
+                await handleDeleteTask(artefact);
+                console.log(`🗑️ Delete triggered for: ${artefact.title}`);
+                return; // Early return since handleDeleteTask handles its own updates
+            }
+            
+            // Refresh data to get latest state
+            if (action.type === 'status' || action.type === 'tag') {
+                setTimeout(() => {
+                    loadArtefacts();
+                }, 500); // Small delay to allow for any backend processing
+            }
+            
+        } catch (error) {
+            console.error('❌ Mutation failed:', error);
+            // Rollback optimistic update on error
+            setOptimisticArtefacts(prev => 
+                prev.map(a => a.id === artefact.id ? artefact : a)
+            );
+            throw error;
+        }
+    };
+
     if (loading) {
         return (
             <div className="container mx-auto p-6">
@@ -675,6 +918,7 @@ export default function WorkstreamFilterDemo() {
                     <span>Workstreams: <strong>{availableWorkstreams.length - 1}</strong></span>
                     <span>Programs: <strong>{availablePrograms.length - 1}</strong> (roadmap)</span>
                     <span>Projects: <strong>{availableProjects.length - 1}</strong> (roadmap)</span>
+                    <span>Tasks: <strong>{availableTasks.length - 1}</strong> (roadmap)</span>
                     <span>Types: <strong>{availableArtefactTypes.length - 1}</strong></span>
                     {roadmapHierarchy.loading && (
                         <span className="text-orange-600">
@@ -753,7 +997,23 @@ export default function WorkstreamFilterDemo() {
                                 </div>
                             ) : roadmapContent ? (
                                 <div 
-                                    className="prose prose-sm max-w-none mt-4"
+                                    className="prose prose-lg max-w-none mt-6 
+                                             prose-headings:mt-8 prose-headings:mb-4 prose-headings:font-semibold
+                                             prose-h1:text-3xl prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-2
+                                             prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-gray-800
+                                             prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-gray-700
+                                             prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-3 prose-h4:text-gray-600
+                                             prose-p:mb-4 prose-p:leading-relaxed
+                                             prose-ul:space-y-2 prose-ol:space-y-2
+                                             prose-li:mb-2 prose-li:leading-relaxed
+                                             prose-strong:font-semibold prose-strong:text-gray-900
+                                             prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+                                             prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-pre:rounded-lg
+                                             prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic
+                                             prose-hr:my-8 prose-hr:border-gray-300
+                                             prose-table:border prose-table:border-gray-200
+                                             prose-th:bg-gray-50 prose-th:font-semibold prose-th:p-3 prose-th:border prose-th:border-gray-200
+                                             prose-td:p-3 prose-td:border prose-td:border-gray-200"
                                     dangerouslySetInnerHTML={{ __html: roadmapContent }}
                                 />
                             ) : (
@@ -771,13 +1031,13 @@ export default function WorkstreamFilterDemo() {
                 <CardHeader>
                     <CardTitle>🏗️ Roadmap-Driven Hierarchical Filters</CardTitle>
                     <p className="text-sm text-muted-foreground">
-                        Hierarchical filtering based on roadmap.md structure: Workstream → Program → Project → Artefact Type (with status)
+                        Hierarchical filtering based on roadmap.md structure: Workstream → Program → Project → Task → Artefact Type → Status
                     </p>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-8 gap-4 items-start">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
                                 <Users className="inline h-4 w-4 mr-1" />
                                 Workstream
                             </label>
@@ -796,19 +1056,60 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
                                 <Target className="inline h-4 w-4 mr-1" />
                                 Program (Phase)
                             </label>
                             <Select value={selectedProgram} onValueChange={handleProgramChange}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    {availablePrograms.map(program => (
-                                        <SelectItem key={program.id} value={program.id}>
-                                            {(program as any).displayLabel || program.fullName || program.name}
-                                        </SelectItem>
-                                    ))}
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {(() => {
+                                            const selected = availablePrograms.find(p => p.id === selectedProgram);
+                                            if (!selected) return 'Select Program...';
+                                            const displayText = (selected as any).displayLabel || selected.fullName || selected.name;
+                                            return displayText.length > 25 ? displayText.substring(0, 22) + '...' : displayText;
+                                        })()}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="w-80 max-h-80 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+                                    {availablePrograms.map(program => {
+                                        const displayText = (program as any).displayLabel || program.fullName || program.name;
+                                        const isLong = displayText.length > 35;
+                                        const shortText = isLong ? displayText.substring(0, 32) + '...' : displayText;
+                                        
+                                        return (
+                                            <SelectItem 
+                                                key={program.id} 
+                                                value={program.id}
+                                                className={`py-3 px-3 hover:bg-gray-50 focus:bg-blue-50 border-b border-gray-100 last:border-b-0 ${
+                                                    program.id === 'all' ? 'bg-gray-50 font-bold' : ''
+                                                }`}
+                                            >
+                                                <div className="flex flex-col items-start w-full space-y-1">
+                                                    <div className="flex items-center justify-between w-full">
+                                                        <span className="font-semibold text-gray-900 leading-tight text-sm">
+                                                            {shortText}
+                                                        </span>
+                                                        {program.status && program.id !== 'all' && (
+                                                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                                                program.status === 'complete' ? 'bg-green-100 text-green-700' :
+                                                                program.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                                                                'bg-gray-100 text-gray-700'
+                                                            }`}>
+                                                                {program.status}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {isLong && (
+                                                        <span className="text-xs text-gray-600 leading-relaxed pl-2 border-l-2 border-gray-200">
+                                                            {displayText}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </SelectItem>
+                                        );
+                                    })}
                                 </SelectContent>
                             </Select>
                             <p className="text-xs text-gray-500 mt-1">
@@ -816,19 +1117,60 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
                                 <Hash className="inline h-4 w-4 mr-1" />
                                 Project
                             </label>
-                            <Select value={selectedProject} onValueChange={setSelectedProject}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    {availableProjects.map(project => (
-                                        <SelectItem key={project.id} value={project.id}>
-                                            {(project as any).displayLabel || project.fullName || project.name}
-                                        </SelectItem>
-                                    ))}
+                            <Select value={selectedProject} onValueChange={handleProjectChange}>
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {(() => {
+                                            const selected = availableProjects.find(p => p.id === selectedProject);
+                                            if (!selected) return 'Select Project...';
+                                            const displayText = (selected as any).displayLabel || selected.fullName || selected.name;
+                                            return displayText.length > 25 ? displayText.substring(0, 22) + '...' : displayText;
+                                        })()}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="w-80 max-h-80 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+                                    {availableProjects.map(project => {
+                                        const displayText = (project as any).displayLabel || project.fullName || project.name;
+                                        const isLong = displayText.length > 35;
+                                        const shortText = isLong ? displayText.substring(0, 32) + '...' : displayText;
+                                        
+                                        return (
+                                            <SelectItem 
+                                                key={project.id} 
+                                                value={project.id}
+                                                className={`py-3 px-3 hover:bg-gray-50 focus:bg-blue-50 border-b border-gray-100 last:border-b-0 ${
+                                                    project.id === 'all' ? 'bg-gray-50 font-bold' : ''
+                                                }`}
+                                            >
+                                                <div className="flex flex-col items-start w-full space-y-1">
+                                                    <div className="flex items-center justify-between w-full">
+                                                        <span className="font-semibold text-gray-900 leading-tight text-sm">
+                                                            {shortText}
+                                                        </span>
+                                                        {project.status && project.id !== 'all' && (
+                                                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                                                project.status === 'complete' ? 'bg-green-100 text-green-700' :
+                                                                project.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                                                                'bg-gray-100 text-gray-700'
+                                                            }`}>
+                                                                {project.status}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {isLong && (
+                                                        <span className="text-xs text-gray-600 leading-relaxed pl-2 border-l-2 border-gray-200">
+                                                            {displayText}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </SelectItem>
+                                        );
+                                    })}
                                 </SelectContent>
                             </Select>
                             <p className="text-xs text-gray-500 mt-1">
@@ -836,8 +1178,69 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
+                                <CheckSquare className="inline h-4 w-4 mr-1" />
+                                Task
+                            </label>
+                            <Select value={selectedTask} onValueChange={setSelectedTask}>
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {(() => {
+                                            const selected = availableTasks.find(t => t.id === selectedTask);
+                                            if (!selected) return 'Select Task...';
+                                            const displayText = (selected as any).displayLabel || selected.fullName || selected.name;
+                                            return displayText.length > 25 ? displayText.substring(0, 22) + '...' : displayText;
+                                        })()}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="w-80 max-h-80 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+                                    {availableTasks.map(task => {
+                                        const displayText = (task as any).displayLabel || task.fullName || task.name;
+                                        const isLong = displayText.length > 35;
+                                        const shortText = isLong ? displayText.substring(0, 32) + '...' : displayText;
+                                        
+                                        return (
+                                            <SelectItem 
+                                                key={task.id} 
+                                                value={task.id}
+                                                className={`py-3 px-3 hover:bg-gray-50 focus:bg-blue-50 border-b border-gray-100 last:border-b-0 ${
+                                                    task.id === 'all' ? 'bg-gray-50 font-bold' : ''
+                                                }`}
+                                            >
+                                                <div className="flex flex-col items-start w-full space-y-1">
+                                                    <div className="flex items-center justify-between w-full">
+                                                        <span className="font-semibold text-gray-900 leading-tight text-sm">
+                                                            {shortText}
+                                                        </span>
+                                                        {task.status && task.id !== 'all' && (
+                                                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                                                task.status === 'complete' ? 'bg-green-100 text-green-700' :
+                                                                task.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                                                                'bg-gray-100 text-gray-700'
+                                                            }`}>
+                                                                {task.status}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {isLong && (
+                                                        <span className="text-xs text-gray-600 leading-relaxed pl-2 border-l-2 border-gray-200">
+                                                            {displayText}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </SelectItem>
+                                        );
+                                    })}
+                                </SelectContent>
+                            </Select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {availableTasks.length - 1} tasks from roadmap.md
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
                                 <FileText className="inline h-4 w-4 mr-1" />
                                 Artefact Type
                             </label>
@@ -856,8 +1259,8 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
                                 <Calendar className="inline h-4 w-4 mr-1" />
                                 Status
                             </label>
@@ -876,14 +1279,15 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
+                                <RotateCcw className="inline h-4 w-4 mr-1" />
                                 Actions
                             </label>
                             <Button 
                                 variant="outline" 
                                 onClick={clearAllFilters}
-                                className="w-full"
+                                className="w-full h-9 flex items-center justify-center"
                             >
                                 Clear All Filters
                             </Button>
@@ -892,14 +1296,15 @@ export default function WorkstreamFilterDemo() {
                             </p>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="flex flex-col h-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1 h-6 flex items-center">
+                                <RefreshCw className="inline h-4 w-4 mr-1" />
                                 Data
                             </label>
                             <Button 
                                 variant="outline" 
                                 onClick={loadArtefacts}
-                                className="w-full"
+                                className="w-full h-9 flex items-center justify-center"
                             >
                                 Refresh Data
                             </Button>
@@ -919,9 +1324,10 @@ export default function WorkstreamFilterDemo() {
                         <TreeNavigation
                             artefacts={filteredArtefacts}
                             roadmapHierarchy={roadmapHierarchy.hierarchy}
-                            onNodeSelect={treeState.selectNode}
+                            onNodeSelect={handleTreeNodeSelect}
                             selectedNodeId={treeState.selectedNode?.id}
                             validateArtefactAlignment={roadmapHierarchy.validateArtefactAlignment}
+                            onArtefactMutate={handleArtefactMutation}
                             className="sticky top-6"
                         />
                     </div>
@@ -931,6 +1337,15 @@ export default function WorkstreamFilterDemo() {
                         <ContextPane
                             selectedNode={treeState.selectedNode || undefined}
                             selectedArtefact={treeState.selectedArtefact || undefined}
+                            filteredArtefacts={filteredArtefacts}
+                            onArtefactUpdate={(updatedArtefact) => {
+                                // Handle artefact updates from ContextPane (e.g., chat mutations)
+                                setOptimisticArtefacts(prev => 
+                                    prev.map(a => a.id === updatedArtefact.id ? updatedArtefact : a)
+                                );
+                                // Refresh data to ensure consistency
+                                setTimeout(() => loadArtefacts(), 500);
+                            }}
                             className="sticky top-6"
                         />
                     </div>
@@ -1214,7 +1629,7 @@ export default function WorkstreamFilterDemo() {
                         <p className="text-blue-800 font-medium">
                             🎯 Roadmap-aligned filtering: {filteredArtefacts.length} valid artefacts shown from {optimisticArtefacts.length} total
                             {roadmapHierarchy.hierarchy && (
-                                <span> | {roadmapHierarchy.hierarchy.programs.length} programs, {roadmapHierarchy.hierarchy.projects.length} projects</span>
+                                <span> | {roadmapHierarchy.hierarchy.programs.length} programs, {roadmapHierarchy.hierarchy.projects.length} projects, {roadmapHierarchy.hierarchy.tasks.length} tasks</span>
                             )}
                         </p>
                     </div>

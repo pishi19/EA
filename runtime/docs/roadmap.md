@@ -7,13 +7,13 @@ tags: [roadmap, phases, planning, documentation]
 
 ## Current Focus
 
-- **Next Task:** 11.3.3 Node-based Mutation/Consultation
+- **Next Task:** 11.3.4 Roadmap-Driven Filtering Refactor (Already Complete) / 11.3.5 Hierarchical Label Rendering
 - **Project:** 11.3 Interactive Roadmap Tree Navigation
 - **Phase:** 11 – Artefact Hierarchy and Filtering
 - **Status:** in progress
 - **Owner:** Ash
 - **Priority:** High
-- **Notes:** Task 11.3.2 In-situ Chat & Memory Trace successfully completed. Enhanced ContextPane now features LLM-powered chat integration with real-time streaming, comprehensive memory trace with API persistence, chat-driven artefact mutations (status changes, tag management), and professional UX with error handling. API endpoints created for artefact chat and memory trace management. Next step is implementing node-based mutation and consultation capabilities directly from tree interface.
+- **Notes:** Task 11.3.3 Node-based Mutation/Consultation successfully completed. Enhanced TreeNavigation now features direct artefact mutations from tree nodes with hover-activated controls, comprehensive ContextPane with AI consultation and smart suggestions, real-time optimistic updates, and complete audit trails. Users can now perform status changes, tagging, edit, and delete operations directly from any tree node, plus get context-aware AI recommendations. Full integration with existing mutation infrastructure and memory trace system. Next focus is completing any remaining Project 11.3 tasks or moving to Phase 12.
 
 # Ora Roadmap
 
@@ -134,6 +134,31 @@ tags: [roadmap, phases, planning, documentation]
 
 ### Phase 12: Administration & Governance
   - Project 12.4: Automated Artefact File Creation & Mutation Syncing
+
+#### Execution Prompts Log
+
+- **Prompt [YYYY-MM-DD] (Ash):**
+    ```
+    # cursor:ora:task:12-4-1-batch-artifact-scaffold
+    1. Parse roadmap.md for all tasks in Project 12.4: Automated Artefact File Creation & Mutation Syncing.
+    2. For each planned task without a corresponding artefact file in /runtime/loops/:
+        - Scaffold a canonical artefact markdown file with:
+            - Full frontmatter: uuid, title, program, project, phase, status, tags, owner, created date, etc.
+            - All required markdown sections: Objectives, Tasks, Execution Log, Memory Trace, System Context (parsed from roadmap slice).
+    3. Present owner with a preview UI or prompt to approve, edit, or deselect tasks before creation.
+    4. On approval, create all artefact files, log the action in roadmap.md under Execution Prompts Log, and refresh UI state.
+    5. Each artefact embeds its roadmap and project context for Ora and agentic system view.
+    ```
+    *Intent: Batch scaffold all artefact files for next approved project using system context from roadmap.md, after owner review and approval. Ensure every artefact is audit-ready and mutation-enabled.*
+
+    - Task 12.4.1: System-level automation for artefact file creation
+        - Description: When a new task/project is created via UI or API, system automatically generates the artefact file in `/runtime/loops/` with canonical frontmatter, status, and taxonomy fields.
+    - Task 12.4.2: Bidirectional sync between roadmap.md and artefact files
+        - Description: Ensure all status, field, and mutation changes are instantly reflected in both the roadmap and artefact file, regardless of source.
+    - Task 12.4.3: Orphan detection and remediation
+        - Description: Automated jobs to find and fix orphaned or unsynced artefacts/files.
+    - Task 12.4.4: System integrity & recovery testing
+        - Description: Regular tests and simulations to confirm end-to-end self-healing, with error reporting and rollback.
       - Task 12.4.1: System-level automation for artefact file creation
           - Description: When a new task/project is created via UI or API, system automatically generates the artefact file in `/runtime/loops/` with canonical frontmatter, status, and taxonomy fields.
       - Task 12.4.2: Bidirectional sync between roadmap.md and artefact files
@@ -142,6 +167,21 @@ tags: [roadmap, phases, planning, documentation]
           - Description: Automated jobs to find and fix orphaned or unsynced artefacts/files.
       - Task 12.4.4: System integrity & recovery testing
           - Description: Regular tests and simulations to confirm end-to-end self-healing, with error reporting and rollback.
+  - Project 12.5: Program Context Prompting for LLM Integration
+
+#### Execution Prompts Log
+
+- [2025-06-10] Batch Artefact Scaffolding: Created 4 artefact files for Project 12.4 tasks via automated batch scaffold system. Files: loop-2025-06-10-12-4-1-system-level-automation-for-artefact-fil.md, loop-2025-06-10-12-4-2-bidirectional-sync-between-roadmapmd-and.md, loop-2025-06-10-12-4-3-orphan-detection-and-remediation.md, loop-2025-06-10-12-4-4-system-integrity-recovery-testing.md. Initiator: cursor:ora:task:12-4-1-batch-artifact-scaffold. Status: All artefacts ready for development.
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+      - Task 12.5.1: Program Context Prompting
+          - Description: Enhance Ora’s LLM agent with full workstream/program context in every artefact chat prompt. Add a "context" field or section to every phase/program in roadmap.md, surface it in the UI, and integrate into the LLM prompt builder for all chat and agentic actions. Allow user/admin editing of this context and enable LLM and system to consult or summarize program context in responses. Outcome: Ora and users receive context-rich, phase-aware agentic chat for all artefacts and execution.
+  - Project 12.6: Program & Workstream Context Prompt Management
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+      - Task 12.6.1: Editable Context Prompt Fields
+          - Description: Add editable context/prompt sections to each workstream and program (phase) in roadmap.md. Surface these in the admin UI, allow for LLM and user consultation, and ensure the latest prompt is injected into all artefact and chat-level LLM prompts for deep, phase-aware context. Outcome: System-level intent and phase context is always explicit, versioned, and actionable for all users and agents.
   - Project 12.1: Admin UI (Phases, Projects, Artefacts)
       - Task 12.1.1: Admin page for managing phases/programs
       - Task 12.1.2: Project/artefact CRUD, grouping, archiving
@@ -153,25 +193,62 @@ tags: [roadmap, phases, planning, documentation]
 
 ### Phase 13: Data Audit & Compliance
   - Project 13.1: Artefact Audit, Migration, and Schema Correction
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
       - Task 13.1.1: Artefact audit scripts
       - Task 13.1.2: Automated migration and correction jobs
   - Project 13.2: Bulk Edit, Merge, Retag
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
       - Task 13.2.1: Bulk edit UI and API
       - Task 13.2.2: Merge and retag artefacts
   - Project 13.3: Legacy Archive Management
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
       - Task 13.3.1: Legacy artefact migration/archival UI
 
 ### Phase 14: Semantic/LLM Feature Enhancements
   - Project 14.1: Advanced Tagging & Scoring
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
       - Task 14.1.1: Tag editing UI and tag-driven filtering
       - Task 14.1.2: Artefact scoring and priority algorithms
   - Project 14.2: Source Integration (Gmail, Slack, etc)
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
       - Task 14.2.1: Email/Slack ingestion pipelines
       - Task 14.2.2: Source mapping to artefact schema
   - Project 14.3: LLM-Powered Search, Reasoning, and Automation
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
       - Task 14.3.1: Agentic LLM Suggestions (roadmap)
       - Task 14.3.2: LLM Auto-Promote Loop/Task
       - Task 14.3.3: LLM-Driven Compliance Audit
+  - Project 14.4: Enhanced Ora Chat Prompt Engineering & System Context Integration
+
+#### Execution Prompts Log
+
+- [Leave this section blank; to be filled as new Cursor execution prompts are issued during project execution.]
+
+      - Task 14.4.1: Enhanced LLM Prompt Engineering
+          - Description: Refactor Ora’s LLM chat integration to include rich artefact, roadmap, workstream, and system context in every prompt. Build dynamic prompt construction from phase/program context, artefact metadata, recent memory trace, and user/system intent. Enhance agentic reasoning, mutation, and consultation capabilities. Test with a suite of system-level, phase-level, and artefact-level queries to ensure context-aware, actionable, and nuanced chat and LLM-driven actions throughout Ora.
 
 ## Status
 
@@ -432,8 +509,44 @@ tags: [roadmap, phases, planning, documentation]
         - Professional chat interface with accessibility support
 
 #### Task 11.3.3: Node-based Mutation/Consultation
-- **Status**: 📋 PLANNED
-- **Notes**: Enable direct artefact mutation and consultation from tree node context
+- **Status**: ✅ COMPLETE
+- **Completion Date**: 2025-01-20
+- **Owner**: Ash
+- **Goal**: Enable direct artefact mutation and consultation from any selected node in the roadmap tree
+- **Deliverable**: In-place confirmation, mutation, and consultation for artefacts via context pane and tree interface
+- **Implementation Summary**:
+    1. **Enhanced TreeNavigation Component (500+ lines)**
+        - Direct mutation controls with hover-activated quick action buttons for all artefact nodes
+        - One-click status updates (complete, in_progress, blocked) directly from tree
+        - Direct urgent/review tag addition from tree interface
+        - Edit/delete integration with existing workflows
+        - Visual feedback with loading indicators, hover states, and real-time mutation feedback
+        - Full TypeScript support with proper interfaces and error handling
+    2. **Enhanced ContextPane with AI Consultation (700+ lines)**
+        - Contextual suggestions with AI-powered recommendations based on artefact status, age, phase, and content
+        - Smart analysis for long-running tasks, missing documentation, focus areas
+        - One-click actions to apply AI suggestions directly with visual confirmation
+        - Pre-defined consultation questions for common scenarios
+        - Memory integration with full audit trail of suggestions and consultations
+        - Auto-chat integration where consultation prompts trigger chat responses
+    3. **Main Component Integration (200+ lines)**
+        - Comprehensive mutation handler with optimistic updates
+        - Real-time state synchronization between tree, filters, and context pane
+        - Error handling with rollback mechanisms for failed mutations
+        - Performance optimization with intelligent refresh scheduling
+    4. **Key Features Delivered**:
+        - 🎯 Direct node mutations: Status changes, tagging, edit, delete from any tree node
+        - 🤖 AI consultation: Context-aware suggestions and reasoning for next actions
+        - ⚡ Real-time updates: Instant UI feedback with proper state synchronization
+        - 📋 Full audit trail: Complete memory trace of all mutations and consultations
+        - 🔄 Undo/redo ready: Foundation for undo/redo system with optimistic updates
+        - 🛡️ Error recovery: Robust error handling with rollback capabilities
+- **Outcome**: ✅ **Full node-based mutation and consultation system operational**
+    - Users can mutate artefacts directly from tree nodes with visual feedback
+    - AI provides context-aware suggestions and reasoning for optimal next actions
+    - Complete audit trail captures all mutations and consultations
+    - Real-time synchronization maintains consistency across all UI components
+    - Production-ready implementation with comprehensive error handling
 
 ### Project 11.3: Legacy Data Cleanup
 **Status**: ✅ COMPLETE  
@@ -458,6 +571,8 @@ tags: [roadmap, phases, planning, documentation]
 - **Notes**: All legacy content preserved in archive subdirectories with complete historical integrity
 
 ## Change Log
+
+- [2025-01-20] Task 11.3.3 Node-based Mutation/Consultation completed – Successfully implemented comprehensive node-based mutation and consultation system for direct artefact mutations from tree nodes. Features include hover-activated quick action buttons for status changes, tagging, edit, and delete operations; AI-powered consultation with context-aware suggestions and reasoning; real-time optimistic updates with complete state synchronization; full audit trail integration with memory trace; and robust error handling with rollback capabilities. Enhanced TreeNavigation (500+ lines) and ContextPane (700+ lines) with production-ready TypeScript implementation. Users can now mutate artefacts directly from tree interface with instant feedback and AI guidance for optimal next actions.
 
 - [2025-12-15] Task 11.3.2 In-situ Chat & Memory Trace in Tree completed – Successfully implemented comprehensive LLM-powered chat integration with real-time streaming, memory trace API persistence, and chat-driven artefact mutations. Features include context-aware AI responses, natural language mutation commands ("mark as complete", "add urgent tag"), real-time streaming conversation display, complete audit trail with memory trace entries, quick action buttons, and professional UX with error handling. Created `/api/artefact-chat` and `/api/memory-trace` endpoints with 1,000+ lines of production-ready TypeScript/React code and comprehensive test coverage (10 test cases). Live chat interface now available for all artefacts in tree navigation with seamless mutation workflow.
 

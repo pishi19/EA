@@ -76,9 +76,19 @@ interface MemoryTraceEntry {
     metadata?: any;
 }
 
+interface ConsultationSuggestion {
+    title: string;
+    reasoning: string;
+    icon: string;
+    action?: string;
+    priority: 'high' | 'medium' | 'low';
+    type: 'status' | 'tag' | 'workflow' | 'quality';
+}
+
 interface ContextPaneProps {
     selectedNode?: TreeNode;
     selectedArtefact?: Artefact;
+    filteredArtefacts?: Artefact[];
     className?: string;
     onArtefactUpdate?: (artefact: Artefact) => void;
 }
@@ -86,11 +96,13 @@ interface ContextPaneProps {
 export default function ContextPane({ 
     selectedNode, 
     selectedArtefact,
+    filteredArtefacts = [],
     className = "",
     onArtefactUpdate
 }: ContextPaneProps) {
     const [chatExpanded, setChatExpanded] = useState(true);
     const [memoryExpanded, setMemoryExpanded] = useState(false);
+    const [consultationExpanded, setConsultationExpanded] = useState(false);
     const [chatInput, setChatInput] = useState('');
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
     const [memoryTrace, setMemoryTrace] = useState<MemoryTraceEntry[]>([]);
@@ -114,12 +126,33 @@ export default function ContextPane({
     // Initialize chat and memory trace when artefact changes
     useEffect(() => {
         if (selectedArtefact && selectedArtefact.id !== currentArtefact?.id) {
+            console.log('🔄 Switching chat to new artefact:', selectedArtefact.title);
             setCurrentArtefact(selectedArtefact);
             loadChatHistory(selectedArtefact);
             loadMemoryTrace(selectedArtefact);
             setChatError(null);
+            // Clear any streaming state
+            setIsStreaming(false);
+            setStreamingMessage('');
+            if (streamingRef.current) {
+                streamingRef.current.abort();
+                streamingRef.current = null;
+            }
+        } else if (!selectedArtefact && currentArtefact) {
+            // Handle case when artefact is deselected
+            console.log('🔄 Clearing chat (no artefact selected)');
+            setCurrentArtefact(null);
+            setChatHistory([]);
+            setMemoryTrace([]);
+            setChatError(null);
+            setIsStreaming(false);
+            setStreamingMessage('');
+            if (streamingRef.current) {
+                streamingRef.current.abort();
+                streamingRef.current = null;
+            }
         }
-    }, [selectedArtefact, currentArtefact]);
+    }, [selectedArtefact]); // Remove currentArtefact from dependencies to avoid circular updates
 
     // Scroll to bottom when chat updates
     useEffect(() => {
@@ -127,24 +160,49 @@ export default function ContextPane({
     }, [chatHistory, streamingMessage]);
 
     const scrollToBottom = () => {
-        setTimeout(() => {
-            chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        if (!chatEndRef.current) return;
+        
+        // Use requestAnimationFrame for better timing with DOM updates
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                try {
+                    chatEndRef.current?.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'end',
+                        inline: 'nearest'
+                    });
+                } catch (error) {
+                    // Fallback for older browsers
+                    chatEndRef.current?.scrollIntoView(false);
+                }
+            });
+        });
     };
 
     const loadChatHistory = async (artefact: Artefact) => {
         try {
-            // Initialize with welcome message
+            console.log('💬 Loading chat history for:', artefact.title);
+            
+            // Clear existing chat first to show immediate feedback
+            setChatHistory([]);
+            
+            // Initialize with welcome message specific to this artefact
             const mockHistory: ChatMessage[] = [
                 {
-                    id: '1',
+                    id: `welcome-${artefact.id}`,
                     role: 'assistant',
-                    content: `Hello! I'm here to help you with "${artefact.title}". You can ask me questions about this artefact, request status updates, or ask me to perform actions like changing the status or adding tags.`,
+                    content: `Hello! I'm here to help you with "${artefact.title}". This artefact is in **${artefact.status}** status and belongs to ${artefact.phase}. I can help you update its status, add tags, or answer questions about this specific artefact.`,
                     timestamp: new Date(Date.now() - 7200000).toISOString(),
                     status: 'sent'
                 }
             ];
-            setChatHistory(mockHistory);
+            
+            // Use a small delay to show the chat is switching
+            setTimeout(() => {
+                setChatHistory(mockHistory);
+                console.log('✅ Chat history loaded for:', artefact.title);
+            }, 100);
+            
         } catch (error) {
             console.error('Failed to load chat history:', error);
         }
@@ -155,7 +213,11 @@ export default function ContextPane({
             const response = await fetch(`/api/memory-trace?artefactId=${artefact.id}`);
             if (response.ok) {
                 const data = await response.json();
-                setMemoryTrace(data.trace || []);
+                // Filter out any empty entries from the loaded trace
+                const validTrace = (data.trace || []).filter((entry: MemoryTraceEntry) => 
+                    entry.content && entry.content.trim()
+                );
+                setMemoryTrace(validTrace);
             } else {
                 // Fallback to mock data
                 const entries: MemoryTraceEntry[] = [
@@ -196,6 +258,12 @@ export default function ContextPane({
 
     const addMemoryTraceEntry = async (entry: Omit<MemoryTraceEntry, 'id' | 'timestamp'>) => {
         if (!currentArtefact) return;
+        
+        // Validate content - don't add entries with empty content
+        if (!entry.content || !entry.content.trim()) {
+            console.warn('Skipping memory trace entry with empty content:', entry);
+            return;
+        }
 
         try {
             const response = await fetch('/api/memory-trace', {
@@ -537,6 +605,127 @@ export default function ContextPane({
         }
     };
 
+    const getContextualSuggestions = (artefact: Artefact): ConsultationSuggestion[] => {
+        const suggestions: ConsultationSuggestion[] = [];
+        
+        // Status-based suggestions
+        if (artefact.status === 'planning') {
+            suggestions.push({
+                title: 'Ready to Start Implementation',
+                reasoning: 'This task has been in planning phase. Consider moving to in_progress to begin work.',
+                icon: '🚀',
+                action: 'Mark In Progress',
+                priority: 'high',
+                type: 'status'
+            });
+        }
+        
+        if (artefact.status === 'in_progress' && artefact.created) {
+            const daysSinceCreated = Math.floor((Date.now() - new Date(artefact.created).getTime()) / (1000 * 60 * 60 * 24));
+            if (daysSinceCreated > 7) {
+                suggestions.push({
+                    title: 'Long-Running Task Review',
+                    reasoning: `This task has been in progress for ${daysSinceCreated} days. Consider reviewing progress or breaking it down.`,
+                    icon: '⏰',
+                    action: 'Add Review Tag',
+                    priority: 'medium',
+                    type: 'tag'
+                });
+            }
+        }
+
+        // Tag-based suggestions
+        if (!artefact.tags.includes('urgent') && artefact.phase && artefact.phase.includes('11.3')) {
+            suggestions.push({
+                title: 'Current Focus Area',
+                reasoning: 'This artefact is part of the current roadmap focus (Phase 11.3). Consider prioritizing.',
+                icon: '🎯',
+                action: 'Add Urgent Tag',
+                priority: 'high',
+                type: 'tag'
+            });
+        }
+
+        // Quality suggestions
+        if (!artefact.summary || artefact.summary.length < 50) {
+            suggestions.push({
+                title: 'Improve Documentation',
+                reasoning: 'This artefact needs better documentation to improve clarity and maintainability.',
+                icon: '📝',
+                action: 'Edit Details',
+                priority: 'medium',
+                type: 'quality'
+            });
+        }
+
+        // Workflow suggestions
+        if (artefact.type === 'task' && !artefact.tags.includes('tested')) {
+            suggestions.push({
+                title: 'Add Testing Validation',
+                reasoning: 'Tasks should include testing validation to ensure quality delivery.',
+                icon: '✅',
+                action: 'Add Tested Tag',
+                priority: 'medium',
+                type: 'workflow'
+            });
+        }
+
+        return suggestions.slice(0, 3); // Limit to top 3 suggestions
+    };
+
+    const applySuggestion = async (suggestion: ConsultationSuggestion) => {
+        if (!currentArtefact) return;
+
+        try {
+            let mutation: ChatMessage['mutation'] | undefined;
+            
+            if (suggestion.type === 'status') {
+                const statusValue = suggestion.action?.includes('Progress') ? 'in_progress' : 
+                                   suggestion.action?.includes('Complete') ? 'complete' : 'planning';
+                mutation = { type: 'status_change' as const, action: `Set status to ${statusValue}`, applied: false };
+            } else if (suggestion.type === 'tag') {
+                const tagValue = suggestion.action?.toLowerCase().includes('urgent') ? 'urgent' :
+                               suggestion.action?.toLowerCase().includes('review') ? 'review' :
+                               suggestion.action?.toLowerCase().includes('tested') ? 'tested' : 'suggested';
+                mutation = { type: 'add_tag' as const, action: `Add "${tagValue}" tag`, applied: false };
+            }
+
+            if (mutation) {
+                await applyMutation(mutation);
+                
+                // Add consultation entry to memory trace
+                await addMemoryTraceEntry({
+                    type: 'mutation',
+                    content: `Applied AI suggestion: ${suggestion.title} - ${suggestion.action}`,
+                    source: 'assistant',
+                    metadata: { suggestion, reasoning: suggestion.reasoning }
+                });
+            }
+        } catch (error) {
+            console.error('Failed to apply suggestion:', error);
+        }
+    };
+
+    const handleConsultation = async (prompt: string) => {
+        if (!currentArtefact) return;
+
+        // Add the consultation prompt to chat input and send
+        setChatInput(prompt);
+        
+        // Add memory trace for consultation
+        await addMemoryTraceEntry({
+            type: 'chat',
+            content: `Consultation request: ${prompt}`,
+            source: 'user',
+            metadata: { consultation: true, artefact: currentArtefact.id }
+        });
+
+        // Auto-send the consultation after a brief delay
+        setTimeout(() => {
+            handleSendChat();
+        }, 100);
+    };
+
     // If no node is selected, show empty state
     if (!selectedNode) {
         return (
@@ -636,14 +825,70 @@ export default function ContextPane({
 
                 {/* Node Summary for non-artefacts */}
                 {!currentArtefact && selectedNode.count !== undefined && (
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="flex items-center space-x-2">
-                            <Activity className="h-4 w-4 text-gray-500" />
-                            <span className="font-medium text-sm">Contains {selectedNode.count} artefacts</span>
+                    <div className="space-y-3">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                            <div className="flex items-center space-x-2">
+                                <Activity className="h-4 w-4 text-gray-500" />
+                                <span className="font-medium text-sm">Contains {selectedNode.count} artefacts</span>
+                            </div>
+                            <p className="text-xs text-gray-600 mt-1">
+                                This {selectedNode.type} groups multiple artefacts and sub-components.
+                            </p>
                         </div>
-                        <p className="text-xs text-gray-600 mt-1">
-                            This {selectedNode.type} groups multiple artefacts and sub-components.
-                        </p>
+
+                        {/* Show filtered artefacts for the selected node */}
+                        {filteredArtefacts.length > 0 && (
+                            <div className="space-y-2">
+                                <label className="font-medium text-gray-700 text-sm">Artefacts in this {selectedNode.type}</label>
+                                <div className="space-y-2 max-h-64 overflow-y-auto">
+                                    {filteredArtefacts.map((artefact) => (
+                                        <div key={artefact.id} className="border rounded-lg p-3 bg-white">
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="font-medium text-sm truncate">{artefact.title}</h4>
+                                                    <div className="flex items-center space-x-2 mt-1">
+                                                        <Badge className={getStatusColor(artefact.status)} variant="outline">
+                                                            {artefact.status}
+                                                        </Badge>
+                                                        <span className="text-xs text-gray-500">Phase {artefact.phase}</span>
+                                                    </div>
+                                                    {artefact.tags && artefact.tags.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {artefact.tags.slice(0, 3).map((tag, idx) => (
+                                                                <Badge key={idx} variant="outline" className="text-xs">
+                                                                    {tag}
+                                                                </Badge>
+                                                            ))}
+                                                            {artefact.tags.length > 3 && (
+                                                                <span className="text-xs text-gray-500">
+                                                                    +{artefact.tags.length - 3} more
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="ml-2 text-right">
+                                                    <div className="text-xs text-gray-500">
+                                                        {artefact.created}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {artefact.summary && (
+                                                <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                                                    {artefact.summary}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        
+                        {filteredArtefacts.length === 0 && selectedNode.count > 0 && (
+                            <div className="text-center py-4 text-sm text-gray-500">
+                                No artefacts match the current filters for this {selectedNode.type}.
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -813,7 +1058,7 @@ export default function ContextPane({
                                     <History className="h-4 w-4" />
                                     <span>Memory Trace</span>
                                     <Badge variant="outline" className="text-xs">
-                                        {memoryTrace.length} entries
+                                        {memoryTrace.filter(entry => entry.content && entry.content.trim()).length} entries
                                     </Badge>
                                 </div>
                                 {memoryExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -822,7 +1067,7 @@ export default function ContextPane({
                         <CollapsibleContent className="mt-3">
                             <div className="border rounded-lg p-3">
                                 <div className="max-h-48 overflow-y-auto space-y-3">
-                                    {memoryTrace.map((entry) => (
+                                    {memoryTrace.filter(entry => entry.content && entry.content.trim()).map((entry) => (
                                         <div key={entry.id} className="text-sm border-l-2 border-gray-200 pl-3">
                                             <div className="flex items-start justify-between">
                                                 <div className="flex items-center space-x-2 mb-1">
@@ -839,7 +1084,7 @@ export default function ContextPane({
                                                 </span>
                                             </div>
                                             <div className="text-gray-600 text-xs bg-gray-50 p-2 rounded">
-                                                {entry.content}
+                                                {entry.content || <span className="italic text-gray-400">No content recorded</span>}
                                             </div>
                                             {entry.metadata && (
                                                 <div className="text-xs text-gray-500 mt-1 font-mono">
@@ -848,6 +1093,103 @@ export default function ContextPane({
                                             )}
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                )}
+
+                {/* Consultation Section - New Feature for Task 11.3.3 */}
+                {currentArtefact && (
+                    <Collapsible open={consultationExpanded} onOpenChange={setConsultationExpanded}>
+                        <CollapsibleTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <Target className="h-4 w-4" />
+                                    <span>AI Consultation</span>
+                                    <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700">
+                                        Smart Suggestions
+                                    </Badge>
+                                </div>
+                                {consultationExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-3">
+                            <div className="space-y-3">
+                                {/* Context-Aware Suggestions */}
+                                <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <Target className="h-4 w-4 text-purple-600" />
+                                        <span className="font-medium text-purple-900 text-sm">Recommended Actions</span>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {(() => {
+                                            const suggestions = getContextualSuggestions(currentArtefact);
+                                            return suggestions.map((suggestion, index) => (
+                                                <div key={index} className="bg-white p-2 rounded border border-purple-100">
+                                                    <div className="flex items-start space-x-2">
+                                                        <div className="text-purple-600 mt-0.5">{suggestion.icon}</div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-medium text-purple-900">{suggestion.title}</p>
+                                                            <p className="text-xs text-purple-700 mt-1">{suggestion.reasoning}</p>
+                                                            {suggestion.action && (
+                                                                <Button 
+                                                                    variant="outline" 
+                                                                    size="sm" 
+                                                                    className="mt-2 text-xs h-6"
+                                                                    onClick={() => applySuggestion(suggestion)}
+                                                                >
+                                                                    {suggestion.action}
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ));
+                                        })()}
+                                    </div>
+                                </div>
+
+                                {/* Consultation Prompt */}
+                                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <MessageSquare className="h-4 w-4 text-blue-600" />
+                                        <span className="font-medium text-blue-900 text-sm">Ask Ora for Guidance</span>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="w-full text-xs justify-start"
+                                            onClick={() => handleConsultation("What should be the next step for this artefact?")}
+                                        >
+                                            💡 What's the next best action?
+                                        </Button>
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="w-full text-xs justify-start"
+                                            onClick={() => handleConsultation("What dependencies or blockers might affect this artefact?")}
+                                        >
+                                            🔍 Identify dependencies & blockers
+                                        </Button>
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="w-full text-xs justify-start"
+                                            onClick={() => handleConsultation("How does this artefact align with the overall roadmap?")}
+                                        >
+                                            🎯 Check roadmap alignment
+                                        </Button>
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="w-full text-xs justify-start"
+                                            onClick={() => handleConsultation("What quality checks should be performed on this artefact?")}
+                                        >
+                                            ✅ Suggest quality checks
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </CollapsibleContent>

@@ -39,14 +39,7 @@ export default function useRoadmapHierarchy(): UseRoadmapHierarchyReturn {
             
             const data = await response.json();
             if (data.selectedFile && data.selectedFile.rawContent) {
-                console.log('🔄 Loading roadmap content, length:', data.selectedFile.rawContent.length);
                 const parsedHierarchy = parseRoadmapContent(data.selectedFile.rawContent);
-                console.log('📊 Parsed hierarchy result:', {
-                    workstreams: parsedHierarchy.workstreams.length,
-                    programs: parsedHierarchy.programs.length,
-                    projects: parsedHierarchy.projects.length,
-                    tasks: parsedHierarchy.tasks.length
-                });
                 setHierarchy(parsedHierarchy);
             } else {
                 throw new Error('No roadmap content found');
@@ -87,16 +80,21 @@ export default function useRoadmapHierarchy(): UseRoadmapHierarchyReturn {
 
     const getAvailableProjects = useMemo(() => {
         return (programId: string) => {
-            if (!hierarchy) return [];
+            if (!hierarchy) {
+                return [];
+            }
             
             const projects = getProjectsForProgram(hierarchy, programId);
-            return projects.map(project => ({
+            
+            const result = projects.map(project => ({
                 id: project.id,
                 name: project.name,
                 fullName: project.fullName,
                 displayLabel: project.displayLabel,
                 status: project.status
             }));
+            
+            return result;
         };
     }, [hierarchy]);
 

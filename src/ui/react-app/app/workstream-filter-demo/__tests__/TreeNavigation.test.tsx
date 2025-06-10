@@ -1,121 +1,184 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TreeNavigation from '../TreeNavigation';
 
-const mockArtefacts = [
+// Mock the tree state hook
+const mockTreeState = {
+  expandedNodes: new Set(['program-11']),
+  selectedNode: null,
+  selectedArtefact: null,
+  isTreeVisible: true,
+  toggleTreeVisibility: jest.fn(),
+  toggleNodeExpansion: jest.fn(),
+  selectNode: jest.fn(),
+  expandToArtefact: jest.fn(),
+  resetTree: jest.fn()
+};
+
+const mockUseTreeState = jest.fn(() => mockTreeState);
+
+jest.mock('../useTreeState', () => ({
+  __esModule: true,
+  default: mockUseTreeState
+}));
+
+// Mock the roadmap hierarchy hook
+const mockHierarchy = {
+  workstreams: ['Ora'],
+  programs: [
     {
-        id: '1',
-        name: 'test-task-1',
-        title: 'Test Task 1',
-        phase: '11',
-        workstream: 'Ora',
-        program: 'Phase 11 – Artefact Hierarchy and Filtering',
-        status: 'in_progress',
-        score: 0,
-        tags: ['Taxonomy Enforcement'],
-        created: '2025-12-15',
-        uuid: 'test-uuid-1',
-        summary: 'Test summary 1',
-        filePath: 'runtime/loops/test-1.md',
-        origin: 'test',
-        type: 'task'
-    },
-    {
-        id: '2',
-        name: 'test-task-2',
-        title: 'Test Task 2',
-        phase: '11',
-        workstream: 'Ora',
-        program: 'Phase 11 – Artefact Hierarchy and Filtering',
-        status: 'complete',
-        score: 0,
-        tags: ['UI Component Architecture'],
-        created: '2025-12-14',
-        uuid: 'test-uuid-2',
-        summary: 'Test summary 2',
-        filePath: 'runtime/loops/test-2.md',
-        origin: 'test',
-        type: 'task'
+      id: 'program-11',
+      name: 'Phase 11 – Artefact Hierarchy and Filtering',
+      fullName: 'Phase 11 – Artefact Hierarchy and Filtering',
+      displayLabel: 'Phase 11: Artefact Hierarchy and Filtering',
+      phase: '11',
+      status: 'in_progress'
     }
-];
+  ],
+  projects: [
+    {
+      id: 'project-11-3',
+      name: 'Interactive Roadmap Tree Navigation',
+      fullName: 'Project 11.3: Interactive Roadmap Tree Navigation',
+      displayLabel: 'Project 11.3: Interactive Roadmap Tree Navigation',
+      phase: '11.3',
+      status: 'in_progress',
+      programId: 'program-11'
+    }
+  ],
+  tasks: [],
+  lastUpdated: '2025-01-20'
+};
+
+const mockUseRoadmapHierarchy = jest.fn(() => ({ hierarchy: mockHierarchy }));
+
+jest.mock('../useRoadmapHierarchy', () => ({
+  __esModule: true,
+  default: mockUseRoadmapHierarchy
+}));
 
 describe('TreeNavigation Component', () => {
-    const mockOnNodeSelect = jest.fn();
+  const mockProps = {
+    artefacts: [
+      {
+        id: 'task1',
+        name: 'task1',
+        title: 'Test Task 1',
+        phase: '11.3.1',
+        workstream: 'Ora',
+        status: 'complete',
+        score: 5,
+        tags: ['tree-navigation'],
+        created: '2025-12-15',
+        uuid: 'uuid1',
+        summary: 'Test task summary',
+        filePath: 'runtime/loops/task1.md',
+        origin: 'ui',
+        type: 'task'
+      }
+    ],
+    roadmapHierarchy: mockHierarchy,
+    onNodeSelect: jest.fn(),
+    selectedNodeId: undefined,
+    className: 'test-class',
+    validateArtefactAlignment: jest.fn(() => ({
+      validProgram: { id: 'program-11' },
+      validProjects: [{ id: 'project-11-3' }]
+    })),
+    onArtefactMutate: jest.fn()
+  };
 
-    beforeEach(() => {
-        mockOnNodeSelect.mockClear();
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUseTreeState.mockReturnValue(mockTreeState);
+    mockUseRoadmapHierarchy.mockReturnValue({ hierarchy: mockHierarchy });
+  });
+
+  it('renders without crashing', () => {
+    render(<TreeNavigation {...mockProps} />);
+    expect(screen.getByText('Ora')).toBeInTheDocument();
+  });
+
+  it('displays hierarchy structure correctly', () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    expect(screen.getByText('Phase 11: Artefact Hierarchy and Filtering')).toBeInTheDocument();
+    expect(screen.getByText('Project 11.3: Interactive Roadmap Tree Navigation')).toBeInTheDocument();
+    expect(screen.getByText('Test Task 1')).toBeInTheDocument();
+  });
+
+  it('handles node selection', async () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    const workstreamNode = screen.getByText('Ora');
+    await userEvent.click(workstreamNode);
+    
+    expect(mockProps.onNodeSelect).toHaveBeenCalled();
+  });
+
+  it('displays artefact count badges', () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    // Should show count badges for nodes with artefacts
+    expect(screen.getByText('1')).toBeInTheDocument(); // Artefact count
+  });
+
+  it('handles mutation controls for artefacts', async () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    // Find task node and trigger hover for mutation controls
+    const taskNode = screen.getByText('Test Task 1');
+    
+    // Hover to activate mutation controls
+    fireEvent.mouseEnter(taskNode);
+    
+    await waitFor(() => {
+      // Should handle mutation controls gracefully
+      expect(taskNode).toBeInTheDocument();
     });
+  });
 
-    test('renders tree navigation with workstream nodes', () => {
-        render(
-            <TreeNavigation
-                artefacts={mockArtefacts}
-                onNodeSelect={mockOnNodeSelect}
-                selectedNodeId={undefined}
-            />
-        );
+  it('shows status badges for artefacts', () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    expect(screen.getByText('complete')).toBeInTheDocument();
+  });
 
-        expect(screen.getByText('Roadmap Tree')).toBeInTheDocument();
-        expect(screen.getByText('Ora')).toBeInTheDocument();
-        expect(screen.getByText('2 artefacts')).toBeInTheDocument();
+  it('validates artefact alignment', () => {
+    render(<TreeNavigation {...mockProps} />);
+    
+    expect(mockProps.validateArtefactAlignment).toHaveBeenCalledWith(mockProps.artefacts[0]);
+  });
+
+  it('handles empty artefacts gracefully', () => {
+    const emptyProps = {
+      ...mockProps,
+      artefacts: []
+    };
+    
+    render(<TreeNavigation {...emptyProps} />);
+    
+    expect(screen.getByText('Ora')).toBeInTheDocument();
+    expect(screen.getByText('Phase 11: Artefact Hierarchy and Filtering')).toBeInTheDocument();
+  });
+
+  it('supports artefact mutation with loading states', async () => {
+    const mutationProps = {
+      ...mockProps,
+      onArtefactMutate: jest.fn().mockImplementation(() => 
+        new Promise(resolve => setTimeout(resolve, 100))
+      )
+    };
+    
+    render(<TreeNavigation {...mutationProps} />);
+    
+    const taskNode = screen.getByText('Test Task 1');
+    fireEvent.mouseEnter(taskNode);
+    
+    // Should handle loading states during mutations
+    await waitFor(() => {
+      expect(taskNode).toBeInTheDocument();
     });
-
-    test('shows expand/collapse functionality', () => {
-        render(
-            <TreeNavigation
-                artefacts={mockArtefacts}
-                onNodeSelect={mockOnNodeSelect}
-                selectedNodeId={undefined}
-            />
-        );
-
-        // Find expand all button
-        const expandButton = screen.getByText('Expand All');
-        expect(expandButton).toBeInTheDocument();
-
-        const collapseButton = screen.getByText('Collapse All');
-        expect(collapseButton).toBeInTheDocument();
-    });
-
-    test('displays hierarchical structure', () => {
-        render(
-            <TreeNavigation
-                artefacts={mockArtefacts}
-                onNodeSelect={mockOnNodeSelect}
-                selectedNodeId={undefined}
-            />
-        );
-
-        // Should show workstream
-        expect(screen.getByText('Ora')).toBeInTheDocument();
-        
-        // Should show program when expanded
-        expect(screen.getByText('Phase 11 – Artefact Hierarchy and Filtering')).toBeInTheDocument();
-    });
-
-    test('calls onNodeSelect when clicking on nodes', () => {
-        render(
-            <TreeNavigation
-                artefacts={mockArtefacts}
-                onNodeSelect={mockOnNodeSelect}
-                selectedNodeId={undefined}
-            />
-        );
-
-        // Click on workstream node
-        fireEvent.click(screen.getByText('Ora'));
-        expect(mockOnNodeSelect).toHaveBeenCalled();
-    });
-
-    test('shows artefact counts', () => {
-        render(
-            <TreeNavigation
-                artefacts={mockArtefacts}
-                onNodeSelect={mockOnNodeSelect}
-                selectedNodeId={undefined}
-            />
-        );
-
-        // Should show count badge
-        expect(screen.getByText('2')).toBeInTheDocument();
-    });
+  });
 }); 

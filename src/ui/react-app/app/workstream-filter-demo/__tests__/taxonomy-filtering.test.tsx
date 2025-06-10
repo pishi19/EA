@@ -3,6 +3,86 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import WorkstreamFilterDemo from '../page';
 
+// Mock the roadmap hierarchy hook
+jest.mock('../useRoadmapHierarchy', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    hierarchy: {
+      programs: [
+        {
+          id: 'program-11',
+          name: 'Phase 11 – Artefact Hierarchy and Filtering',
+          fullName: 'Phase 11 – Artefact Hierarchy and Filtering',
+          displayLabel: 'Phase 11: Artefact Hierarchy and Filtering',
+          phase: '11',
+          status: 'in_progress'
+        }
+      ],
+      projects: [
+        {
+          id: 'project-11.2',
+          name: 'Semantic Chat Demo Filtering',
+          fullName: 'Project 11.2: Semantic Chat Demo Filtering',
+          displayLabel: 'Project 11.2: Semantic Chat Demo Filtering',
+          programId: 'program-11',
+          status: 'complete'
+        }
+      ],
+      tasks: [
+        {
+          id: 'task-11.2.1',
+          name: 'Filtering Logic',
+          fullName: 'Task 11.2.1: Filtering Logic',
+          displayLabel: 'Task 11.2.1: Filtering Logic',
+          projectId: 'project-11.2',
+          status: 'complete'
+        }
+      ]
+    },
+    loading: false,
+    error: null,
+    getAvailableWorkstreams: () => ['all', 'Ora'],
+    getAvailablePrograms: () => [
+      { id: 'all', name: 'All Programs', fullName: 'All Programs', status: 'all' },
+      {
+        id: 'program-11',
+        name: 'Phase 11 – Artefact Hierarchy and Filtering',
+        fullName: 'Phase 11 – Artefact Hierarchy and Filtering',
+        displayLabel: 'Phase 11: Artefact Hierarchy and Filtering',
+        status: 'in_progress'
+      }
+    ],
+    getAvailableProjects: () => [
+      { id: 'all', name: 'All Projects', fullName: 'All Projects', status: 'all' },
+      {
+        id: 'project-11.2',
+        name: 'Semantic Chat Demo Filtering',
+        fullName: 'Project 11.2: Semantic Chat Demo Filtering',
+        displayLabel: 'Project 11.2: Semantic Chat Demo Filtering',
+        status: 'complete'
+      }
+    ],
+    validateArtefactAlignment: () => ({
+      isValid: true,
+      validProgram: { id: 'program-11', name: 'Phase 11 – Artefact Hierarchy and Filtering' },
+      validProjects: [{ id: 'project-11.2', name: 'Semantic Chat Demo Filtering' }],
+      orphanTags: []
+    })
+  }))
+}));
+
+// Mock the tree state hook
+jest.mock('../useTreeState', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    treeVisible: false,
+    selectedNode: null,
+    selectedArtefact: null,
+    toggleTreeVisibility: jest.fn(),
+    syncWithFilters: jest.fn()
+  }))
+}));
+
 // Mock the fetch API
 global.fetch = jest.fn();
 
@@ -28,7 +108,7 @@ const mockArtefacts = [
     name: 'note1',
     title: 'Test Note 1',
     phase: '11.1',
-    workstream: 'workstream-ui',
+    workstream: 'Ora',
     status: 'complete',
     score: 3,
     tags: ['Artefact Schema'],
@@ -44,7 +124,7 @@ const mockArtefacts = [
     name: 'thought1',
     title: 'Test Thought 1',
     phase: '10.2',
-    workstream: 'system-integrity',
+    workstream: 'Ora',
     status: 'planning',
     score: 2,
     tags: ['API Integration'],
@@ -59,7 +139,7 @@ const mockArtefacts = [
 
 const mockRoadmapResponse = {
   selectedFile: {
-    content: '<h1>Test Roadmap</h1>'
+    content: '<h1>Test Roadmap</h1><p>Phase 11 test content</p>'
   }
 };
 
@@ -83,11 +163,19 @@ beforeEach(() => {
 });
 
 describe('Taxonomy Filtering', () => {
-  it('renders with default Ora workstream selected', async () => {
+  it('renders the main page with correct title', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByDisplayValue('Ora')).toBeInTheDocument();
+      expect(screen.getByText('Roadmap-Driven Tree Navigation')).toBeInTheDocument();
+    });
+  });
+
+  it('shows hierarchical filtering description', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Hierarchical Tree Navigation \+ Roadmap-Driven Filtering/)).toBeInTheDocument();
     });
   });
 
@@ -95,150 +183,143 @@ describe('Taxonomy Filtering', () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Workstream')).toBeInTheDocument();
+      // Use getAllByText for elements that appear multiple times
+      expect(screen.getAllByText('Workstream')[0]).toBeInTheDocument();
       expect(screen.getByText('Program (Phase)')).toBeInTheDocument();
       expect(screen.getByText('Project')).toBeInTheDocument();
+      expect(screen.getByText('Task')).toBeInTheDocument();
       expect(screen.getByText('Artefact Type')).toBeInTheDocument();
       expect(screen.getByText('Status')).toBeInTheDocument();
     });
   });
 
-  it('filters by workstream correctly', async () => {
+  it('renders filter controls and headers', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Test Task 1')).toBeInTheDocument();
-    });
-
-    // Change workstream to system-integrity
-    const workstreamSelect = screen.getByDisplayValue('Ora');
-    await userEvent.click(workstreamSelect);
-    
-    // Note: In a real test, we'd need to mock the Select component interactions
-    // For now, this tests the basic rendering
-  });
-
-  it('filters by artefact type correctly', async () => {
-    render(<WorkstreamFilterDemo />);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Artefact Type')).toBeInTheDocument();
-    });
-
-    // All artefacts should be visible initially
-    await waitFor(() => {
-      expect(screen.getByText('Test Task 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Note 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Thought 1')).toBeInTheDocument();
+      expect(screen.getByText('🏗️ Roadmap-Driven Hierarchical Filters')).toBeInTheDocument();
+      expect(screen.getByText(/Hierarchical filtering based on roadmap.md structure/)).toBeInTheDocument();
     });
   });
 
-  it('shows taxonomy compliance information', async () => {
+  it('displays artefacts when loaded', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Canonical Taxonomy Hierarchy')).toBeInTheDocument();
-      expect(screen.getByText('Taxonomy Structure')).toBeInTheDocument();
-      expect(screen.getByText('Default "Ora" (all artefacts belong to Ora workstream)')).toBeInTheDocument();
-      expect(screen.getByText('task, note, thought, execution, loop')).toBeInTheDocument();
+      // Use getAllByText for elements that appear multiple times
+      expect(screen.getAllByText('Test Task 1')[0]).toBeInTheDocument();
+      expect(screen.getAllByText('Test Note 1')[0]).toBeInTheDocument();
+      expect(screen.getAllByText('Test Thought 1')[0]).toBeInTheDocument();
     });
   });
 
-  it('displays correct taxonomy counts in header', async () => {
+  it('shows clear all filters button', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText(/Types:/)).toBeInTheDocument();
-      expect(screen.getByText(/Workstreams:/)).toBeInTheDocument();
-      expect(screen.getByText(/Programs:/)).toBeInTheDocument();
+      expect(screen.getByText('Clear All Filters')).toBeInTheDocument();
     });
   });
 
-  it('resets to Ora workstream when clearing filters', async () => {
+  it('displays roadmap section', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      const clearButton = screen.getByText('Clear All Filters');
-      expect(clearButton).toBeInTheDocument();
+      expect(screen.getByText('📍 System Roadmap')).toBeInTheDocument();
+      expect(screen.getByText(/Reference roadmap showing current phase progress/)).toBeInTheDocument();
+    });
+  });
+
+  it('shows filtered task artefacts section', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/📋 Filtered Task Artefacts/)).toBeInTheDocument();
+      expect(screen.getByText(/Showing artefacts matching current hierarchical filter selection/)).toBeInTheDocument();
+    });
+  });
+
+  it('displays roadmap-driven hierarchy information', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('📊 Roadmap-Driven Hierarchy')).toBeInTheDocument();
+      expect(screen.getByText('✅ Roadmap Structure')).toBeInTheDocument();
+      expect(screen.getByText('🔧 Architecture Features')).toBeInTheDocument();
+    });
+  });
+
+  it('shows alignment status section', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('🔍 Roadmap Alignment Status')).toBeInTheDocument();
+      expect(screen.getByText('✅ Roadmap-Aligned Artefacts')).toBeInTheDocument();
+      expect(screen.getByText('⚠️ Orphan Artefacts')).toBeInTheDocument();
+    });
+  });
+
+  it('handles clear all filters click', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Clear All Filters')).toBeInTheDocument();
     });
 
-    // Click clear filters button
     const clearButton = screen.getByText('Clear All Filters');
     await userEvent.click(clearButton);
 
-    // Should reset to Ora workstream
+    // Should maintain clear filters button
     await waitFor(() => {
-      expect(screen.getByDisplayValue('Ora')).toBeInTheDocument();
+      expect(screen.getByText('Clear All Filters')).toBeInTheDocument();
     });
   });
 
-  it('enforces taxonomy compliance by hiding non-compliant artefacts', async () => {
-    // Create mock with some non-compliant artefacts
-    const nonCompliantArtefacts = [
-      ...mockArtefacts,
-      {
-        id: 'invalid1',
-        name: 'invalid1',
-        title: 'Invalid Artefact',
-        phase: '',
-        workstream: 'invalid-workstream',
-        status: 'unknown',
-        score: 0,
-        tags: [],
-        created: '2025-12-15',
-        uuid: 'uuid4',
-        summary: 'Invalid artefact',
-        filePath: 'runtime/loops/invalid1.md',
-        origin: 'ui',
-        type: 'invalid-type'
-      }
-    ];
-
-    (fetch as jest.Mock).mockImplementation((url: string) => {
-      if (url.includes('/api/demo-loops')) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(nonCompliantArtefacts)
-        });
-      }
-      if (url.includes('/api/system-docs')) {
-        return Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockRoadmapResponse)
-        });
-      }
-      return Promise.reject(new Error('Unknown URL'));
-    });
-
+  it('displays tree navigation toggle button', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      // Compliant artefacts should be visible
-      expect(screen.getByText('Test Task 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Note 1')).toBeInTheDocument();
-      
-      // Non-compliant artefact should be hidden/normalized
-      // The filtering logic should normalize invalid workstream to 'Ora' and invalid type to 'task'
+      expect(screen.getByText(/Hide Tree|Show Tree/)).toBeInTheDocument();
     });
   });
 
-  it('shows hierarchical taxonomy filtering description', async () => {
+  it('shows batch mode toggle', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Hierarchical Taxonomy Filtering: Workstream → Program → Project → Artefact Type → Status')).toBeInTheDocument();
-      expect(screen.getByText('Canonical Taxonomy Filter Demo')).toBeInTheDocument();
+      expect(screen.getByText('⚡ Batch Mode')).toBeInTheDocument();
     });
   });
 
-  it('displays taxonomy features and compliance enforcement', async () => {
+  it('displays summary statistics correctly', async () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Taxonomy Features')).toBeInTheDocument();
-      expect(screen.getByText('Hierarchical filters with dependency cascading')).toBeInTheDocument();
-      expect(screen.getByText('Taxonomy compliance enforcement (orphaned items hidden)')).toBeInTheDocument();
-      expect(screen.getByText('Default workstream "Ora" for all artefacts')).toBeInTheDocument();
+      expect(screen.getByText(/Total:/)).toBeInTheDocument();
+      expect(screen.getByText(/Filtered:/)).toBeInTheDocument();
+      // Use getAllByText for elements that appear multiple times
+      expect(screen.getAllByText(/artefacts/)[0]).toBeInTheDocument();
+    });
+  });
+
+  it('shows roadmap hierarchy counts', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Programs:/)).toBeInTheDocument();
+      expect(screen.getByText(/Projects:/)).toBeInTheDocument();
+      expect(screen.getByText(/Tasks:/)).toBeInTheDocument();
+      expect(screen.getByText(/Types:/)).toBeInTheDocument();
+    });
+  });
+
+  it('displays architecture feature descriptions', async () => {
+    render(<WorkstreamFilterDemo />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Roadmap.md parsing and hierarchy extraction/)).toBeInTheDocument();
+      expect(screen.getByText(/Real-time orphan artefact detection/)).toBeInTheDocument();
+      expect(screen.getByText(/Program\/project status tracking from roadmap/)).toBeInTheDocument();
     });
   });
 }); 

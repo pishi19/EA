@@ -312,6 +312,7 @@ export function getProjectsForProgram(hierarchy: RoadmapHierarchy, programId: st
     if (programId === 'all') {
         return hierarchy.projects;
     }
+    
     return hierarchy.projects.filter(project => project.programId === programId);
 }
 
