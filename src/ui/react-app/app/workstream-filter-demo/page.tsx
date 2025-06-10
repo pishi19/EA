@@ -10,6 +10,7 @@ import { FileText, Calendar, Tag, Hash, Users, Target, ChevronDown, ChevronUp, M
 import { InlineTaskEditor } from '@/components/inline-task-editor';
 import { TaskMutationControls, TaskCard } from '@/components/task-mutation-controls';
 import { BatchTaskControls, SelectableTaskCard } from '@/components/batch-task-controls';
+import UnifiedArtefactCard from '@/components/UnifiedArtefactCard';
 
 // Import tree navigation components
 import TreeNavigation from './TreeNavigation';
@@ -115,6 +116,9 @@ export default function WorkstreamFilterDemo() {
     // Batch operation states
     const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
     const [batchMode, setBatchMode] = useState<boolean>(false);
+    
+    // Expanded artefacts tracking
+    const [expandedArtefacts, setExpandedArtefacts] = useState<Set<string>>(new Set());
 
     // Tree navigation state
     const treeState = useTreeState();
@@ -824,33 +828,37 @@ export default function WorkstreamFilterDemo() {
 
     // Node-based mutation handler for Task 11.3.3
     const handleArtefactMutation = async (artefact: Artefact, action: any) => {
-        console.log('🔧 Node mutation requested:', { artefact: artefact.title, action });
-        
         try {
-            let updatedArtefact = { ...artefact };
+            console.log(`🔧 Mutation triggered:`, {
+                artefact: artefact.title,
+                action: action.type,
+                value: action.value
+            });
             
-            if (action.type === 'status' && action.value) {
-                updatedArtefact.status = action.value;
+            if (action.type === 'status') {
+                // Update status optimistically
+                const updatedArtefact = { ...artefact, status: action.value };
                 
                 // Optimistic update
                 setOptimisticArtefacts(prev => 
                     prev.map(a => a.id === artefact.id ? updatedArtefact : a)
                 );
                 
-                console.log(`✅ Status changed: ${artefact.title} → ${action.value}`);
-                
-            } else if (action.type === 'tag' && action.value) {
-                if (!updatedArtefact.tags.includes(action.value)) {
-                    updatedArtefact.tags = [...updatedArtefact.tags, action.value];
-                    
-                    // Optimistic update
-                    setOptimisticArtefacts(prev => 
-                        prev.map(a => a.id === artefact.id ? updatedArtefact : a)
-                    );
-                    
-                    console.log(`🏷️ Tag added: ${artefact.title} → ${action.value}`);
+                console.log(`✅ Status updated: ${artefact.title} → ${action.value}`);
+            } else if (action.type === 'tag') {
+                // Add tag optimistically
+                const newTags = [...(artefact.tags || [])];
+                if (!newTags.includes(action.value)) {
+                    newTags.push(action.value);
                 }
+                const updatedArtefact = { ...artefact, tags: newTags };
                 
+                // Optimistic update
+                setOptimisticArtefacts(prev => 
+                    prev.map(a => a.id === artefact.id ? updatedArtefact : a)
+                );
+                
+                console.log(`🏷️ Tag added: ${artefact.title} → ${action.value}`);
             } else if (action.type === 'edit') {
                 // For edit, we'll trigger the existing edit flow
                 setEditingTask(artefact);
@@ -879,6 +887,27 @@ export default function WorkstreamFilterDemo() {
             );
             throw error;
         }
+    };
+
+    // Expand/collapse handlers for unified artefact cards
+    const handleToggleArtefactExpand = (artefactId: string, expanded: boolean) => {
+        setExpandedArtefacts(prev => {
+            const newSet = new Set(prev);
+            if (expanded) {
+                newSet.add(artefactId);
+            } else {
+                newSet.delete(artefactId);
+            }
+            return newSet;
+        });
+    };
+
+    const handleExpandAll = () => {
+        setExpandedArtefacts(new Set(filteredArtefacts.map(a => a.id)));
+    };
+
+    const handleCollapseAll = () => {
+        setExpandedArtefacts(new Set());
     };
 
     if (loading) {
@@ -1432,18 +1461,38 @@ export default function WorkstreamFilterDemo() {
                 </Card>
             )}
 
-            {/* Filtered Artefacts Display */}
+            {/* Unified Artefact View */}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
                         <div>
-                    <CardTitle>📋 Filtered Task Artefacts ({filteredArtefacts.length})</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                        Showing artefacts matching current hierarchical filter selection
+                            <CardTitle>🎯 Unified Artefact View ({filteredArtefacts.length})</CardTitle>
+                            <p className="text-sm text-muted-foreground">
+                                Expandable artefact cards with full content, sections, and integrated chat
                                 {batchMode && ' - Batch mode enabled'}
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
+                            {/* Expand/Collapse All Controls */}
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleExpandAll}
+                                    className="text-xs"
+                                >
+                                    Expand All
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCollapseAll}
+                                    className="text-xs"
+                                >
+                                    Collapse All
+                                </Button>
+                            </div>
+                            
                             <Button
                                 onClick={toggleBatchMode}
                                 variant={batchMode ? "default" : "outline"}
@@ -1526,68 +1575,45 @@ export default function WorkstreamFilterDemo() {
                             {filteredArtefacts.map((artefact) => {
                                 const isPending = pendingMutations.has(artefact.id);
                                 const isFailed = failedMutations.has(artefact.id);
-                                const task = {
-                                    id: artefact.id,
-                                    title: artefact.title,
-                                    description: artefact.summary,
-                                    status: artefact.status as any,
-                                    phase: artefact.phase,
-                                    workstream: artefact.workstream,
-                                    tags: artefact.tags,
-                                    uuid: artefact.uuid
-                                };
+                                const isExpanded = expandedArtefacts.has(artefact.id);
                                 
                                 return (
                                     <div key={artefact.id} className="relative">
-                                        {batchMode ? (
-                                            <SelectableTaskCard
-                                                task={task}
-                                                selected={selectedTasks.has(artefact.id)}
-                                                onSelectionChange={handleTaskSelectionChange}
-                                                onEdit={() => handleEditTask(artefact)}
-                                                onDelete={() => handleDeleteTask(artefact)}
-                                                isPending={isPending}
-                                                isFailed={isFailed}
-                                                className={`border-l-4 transition-all duration-200 ${
-                                                    isPending 
-                                                        ? 'border-l-yellow-500 bg-yellow-50 opacity-75' 
-                                                        : isFailed 
-                                                            ? 'border-l-red-500 bg-red-50' 
-                                                            : 'border-l-purple-500'
-                                                }`}
-                                            />
-                                        ) : (
-                                            <TaskCard
-                                                task={task}
-                                                onEdit={() => handleEditTask(artefact)}
-                                                onDelete={() => handleDeleteTask(artefact)}
-                                                className={`border-l-4 transition-all duration-200 ${
-                                                    isPending 
-                                                        ? 'border-l-yellow-500 bg-yellow-50 opacity-75' 
-                                                        : isFailed 
-                                                            ? 'border-l-red-500 bg-red-50' 
-                                                            : 'border-l-purple-500'
-                                                }`}
-                                                showControls={!addingTask && !editingTask && !isPending}
-                                            />
-                                        )}
+                                        <UnifiedArtefactCard
+                                            artefact={artefact}
+                                            isExpanded={isExpanded}
+                                            onToggleExpand={(expanded) => handleToggleArtefactExpand(artefact.id, expanded)}
+                                            onEdit={() => handleEditTask(artefact)}
+                                            onDelete={() => handleDeleteTask(artefact)}
+                                            onMutate={(action) => handleArtefactMutation(artefact, action)}
+                                            showControls={!addingTask && !editingTask && !isPending && !batchMode}
+                                            isPending={isPending}
+                                            isFailed={isFailed}
+                                            className={`transition-all duration-200 ${
+                                                isPending 
+                                                    ? 'opacity-75 bg-yellow-50' 
+                                                    : isFailed 
+                                                        ? 'bg-red-50' 
+                                                        : ''
+                                            }`}
+                                        />
                                         
                                         {/* Pending indicator */}
                                         {isPending && (
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                                                 Saving...
-                                                    </div>
-                                                )}
-                                                
+                                            </div>
+                                        )}
+                                        
                                         {/* Failed indicator */}
                                         {isFailed && (
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                                                 Failed - Rolled Back
-                                                </div>
-                                        )}
                                             </div>
+                                        )}
+                                    </div>
                                 );
                             })}
                         </div>
