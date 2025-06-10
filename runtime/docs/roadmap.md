@@ -191,6 +191,13 @@ tags: [roadmap, phases, planning, documentation]
 - **Goal**: Replace workstream-filter-demo task cards with expandable, full-content artefact cards with integrated semantic chat
 - **Owner**: Ash
 - **Deliverable**: Unified artefact view with expandable cards, lazy loading, and semantic chat integration
+
+#### Task 12.8.2: UI Archival and Protocol Update
+- **Status**: ✅ COMPLETE
+- **Completion Date**: 2025-01-20
+- **Goal**: Archive legacy UI pages and establish canonical three-page workflow protocol
+- **Owner**: Ash
+- **Deliverable**: Streamlined navigation with only core workflow pages, archived legacy pages preserved for audit
 - **Implementation Summary**:
     1. **UnifiedArtefactCard Component** (`/components/UnifiedArtefactCard.tsx`)
         - Summary view with artefact title, badges, tags, status, and description
@@ -244,7 +251,7 @@ tags: [roadmap, phases, planning, documentation]
     - Maintained performance with lazy loading and section collapse
     - Preserved all existing filters and audit surfaces
     - Enhanced UX with professional visual hierarchy and interactions
-- **Live Demo**: http://localhost:3000/workstream-filter-demo
+- **Live Demo**: workstream
     - Browse artefact summary cards in "🎯 Unified Artefact View" section
     - Click chevron buttons (▶️/🔽) to expand/collapse individual artefacts
     - Use "Expand All"/"Collapse All" for bulk operations
@@ -252,6 +259,20 @@ tags: [roadmap, phases, planning, documentation]
     - Chat with any artefact using integrated "💬 Chat & Memory" section
     - Filter and navigate normally - all existing functionality preserved
 - **Production Ready**: ✅ System provides unified experience for efficient artefact scanning and deep content exploration with chat capabilities, maintaining powerful filtering and navigation features
+
+#### Task 12.8.2: UI Archival and Protocol Update Implementation
+- **Canonical UI Protocol Established**: Three-page workflow for optimal user experience
+- **Navigation Streamlined**: Removed legacy pages from main navigation while preserving in codebase
+- **Archived Pages**: task-executor, system-view, contextual-chat-demo, system-docs, phase-doc
+- **Core Workflow Pages**:
+  1. **Planning** (`/planning`) - Task Board for project planning and task management
+  2. **Workstream** (`/workstream-filter-demo`) - Unified artefact view with roadmap-driven filtering and semantic chat
+  3. **Contextual Chat** (`/semantic-chat-classic`) - Context-aware chat architecture for individual artefact discussions
+- **Protocol Benefits**: 
+  - Simplified navigation reduces cognitive load
+  - Clear workflow progression: Plan → Execute → Discuss
+  - All legacy functionality preserved for audit and reference
+  - Focused user experience on proven, production-ready features
   - Project 12.6: Program & Workstream Context Prompt Management
 
 #### Execution Prompts Log

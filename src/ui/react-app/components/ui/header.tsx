@@ -8,10 +8,10 @@ export function Header() {
     const pathname = usePathname();
 
     const navLinks = [
-        { href: '/task-executor', label: 'Task Executor' },
-        { href: '/system-view', label: 'System View' },
-        { href: '/phase-doc', label: 'Phase Document' },
-        { href: '/planning', label: 'Task Board' },
+        { href: '/planning', label: 'Planning' },
+        { href: '/workstream-filter-demo', label: 'Workstream' },
+        { href: '/semantic-chat-classic', label: 'Contextual Chat' },
+        // Archived: task-executor, system-view, phase-doc, contextual-chat-demo, system-docs
     ];
 
     return (

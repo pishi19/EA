@@ -1,3 +1,17 @@
+/**
+ * Ora System Layout - Canonical UI Protocol (Task 12.8.2)
+ * 
+ * Navigation streamlined to three core workflow pages:
+ * 1. Planning (/planning) - Task Board for project planning and management
+ * 2. Workstream (/workstream-filter-demo) - Unified artefact view with roadmap filtering and chat
+ * 3. Contextual Chat (/semantic-chat-classic) - Context-aware chat architecture
+ * 
+ * Archived pages (preserved in codebase for audit):
+ * - task-executor, system-view, contextual-chat-demo, system-docs, phase-doc
+ * 
+ * Protocol Benefits: Simplified navigation, clear workflow progression, focused UX
+ */
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -25,14 +39,11 @@ export default function RootLayout({
         <header className="p-4 border-b">
           <nav className="flex items-center space-x-4">
             <Link href="/" className="font-bold">Ora System</Link>
-            <Link href="/task-executor" className="text-sm text-muted-foreground hover:text-primary">Task Executor</Link>
-            <Link href="/system-view" className="text-sm text-muted-foreground hover:text-primary">System View</Link>
-            <Link href="/contextual-chat-demo" className="text-sm text-muted-foreground hover:text-primary">Semantic Chat</Link>
-            <Link href="/semantic-chat-classic" className="text-sm text-muted-foreground hover:text-primary">Contextual Chat Architecture</Link>
-            <Link href="/workstream-filter-demo" className="text-sm text-muted-foreground hover:text-primary">Workstream Filter Demo</Link>
-            <Link href="/system-docs" className="text-sm text-muted-foreground hover:text-primary">System Docs</Link>
-            <Link href="/phase-doc" className="text-sm text-muted-foreground hover:text-primary">Phase Document</Link>
-            <Link href="/planning" className="text-sm text-muted-foreground hover:text-primary">Task Board</Link>
+            {/* Canonical UI Protocol - Three Core Workflows */}
+            <Link href="/planning" className="text-sm text-muted-foreground hover:text-primary">Planning</Link>
+            <Link href="/workstream-filter-demo" className="text-sm text-muted-foreground hover:text-primary">Workstream</Link>
+            <Link href="/semantic-chat-classic" className="text-sm text-muted-foreground hover:text-primary">Contextual Chat</Link>
+            {/* Legacy pages archived: task-executor, system-view, contextual-chat-demo, system-docs, phase-doc */}
           </nav>
         </header>
         <main>{children}</main>
