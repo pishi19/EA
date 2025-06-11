@@ -107,7 +107,7 @@ export default function WorkstreamFilterDemo() {
     const [roadmapOpen, setRoadmapOpen] = useState(false);
 
     // Filter states - hierarchical cascade
-    const [selectedWorkstream, setSelectedWorkstream] = useState<string>(''); // Remove hardcoded default
+    const [selectedWorkstream, setSelectedWorkstream] = useState<string>('ora'); // Default to 'ora' instead of empty
     const [selectedProgram, setSelectedProgram] = useState<string>('all');
     const [selectedProject, setSelectedProject] = useState<string>('all');
     const [selectedTask, setSelectedTask] = useState<string>('all');
@@ -166,7 +166,18 @@ export default function WorkstreamFilterDemo() {
             setLoading(true);
             setError(null);
             
-            const response = await fetch(`/api/demo-loops?workstream=${selectedWorkstream}`);
+            // Use current workstream from context, fallback to 'ora' if not valid
+            const workstream = (currentWorkstream && isValidWorkstream(currentWorkstream)) 
+                ? currentWorkstream 
+                : selectedWorkstream || 'ora';
+            
+            // Don't make API call if workstream is still empty
+            if (!workstream || workstream === '') {
+                setLoading(false);
+                return;
+            }
+            
+            const response = await fetch(`/api/demo-loops?workstream=${workstream}`);
             
             if (!response.ok) {
                 throw new Error(`Failed to load artefacts: ${response.status}`);
@@ -185,8 +196,11 @@ export default function WorkstreamFilterDemo() {
 
     useEffect(() => {
         loadRoadmap();
-        loadArtefacts();
-    }, [selectedWorkstream]);
+        // Only load artefacts if we have a valid workstream
+        if (selectedWorkstream || (currentWorkstream && isValidWorkstream(currentWorkstream))) {
+            loadArtefacts();
+        }
+    }, [selectedWorkstream, currentWorkstream]);
 
     useEffect(() => {
         if (artefacts.length > 0) {
