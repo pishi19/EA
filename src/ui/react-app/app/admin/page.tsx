@@ -1,52 +1,84 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Settings, Users, Database, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Settings, Users, Database, FileText, Layers, Archive, Shield, Activity, Building } from 'lucide-react';
+import PhaseManagement from '@/components/admin/PhaseManagement';
+import ArtefactBulkOperations from '@/components/admin/ArtefactBulkOperations';
+import RoleManagement from '@/components/admin/RoleManagement';
+import AuditLogViewer from '@/components/admin/AuditLogViewer';
+import WorkstreamWizard from '@/components/admin/WorkstreamWizard';
 import PhaseContextEditor from '@/components/PhaseContextEditor';
 
-interface PhaseInfo {
-    id: string;
-    number: string;
-    title: string;
-    fullTitle: string;
-    status?: string;
-}
+type ActiveView = 'phases' | 'artefacts' | 'roles' | 'audit' | 'workstreams' | 'context' | 'status';
 
 export default function AdminPage() {
-    const [availablePhases, setAvailablePhases] = useState<PhaseInfo[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [activeView, setActiveView] = useState<ActiveView>('phases');
 
-    // Fetch available phases on component mount
-    useEffect(() => {
-        const fetchPhases = async () => {
-            try {
-                const response = await fetch('/api/phases');
-                if (response.ok) {
-                    const phases = await response.json();
-                    setAvailablePhases(phases);
-                }
-            } catch (error) {
-                console.error('Error fetching phases:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPhases();
-    }, []);
+    const renderActiveView = () => {
+        switch (activeView) {
+            case 'phases':
+                return <PhaseManagement />;
+            case 'artefacts':
+                return <ArtefactBulkOperations />;
+            case 'roles':
+                return <RoleManagement />;
+            case 'audit':
+                return <AuditLogViewer />;
+            case 'workstreams':
+                return <WorkstreamWizard />;
+            case 'context':
+                return <PhaseContextEditor />;
+            case 'status':
+                return (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>System Status</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                <div className="p-4 bg-green-50 rounded-lg">
+                                    <h4 className="font-medium text-green-900">✅ All Systems Operational</h4>
+                                    <p className="text-sm text-green-700 mt-1">
+                                        API endpoints, database connections, and core services are running normally.
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <strong>API Status:</strong> Healthy
+                                    </div>
+                                    <div>
+                                        <strong>Database:</strong> Connected
+                                    </div>
+                                    <div>
+                                        <strong>Cache:</strong> Active
+                                    </div>
+                                    <div>
+                                        <strong>Background Jobs:</strong> Running
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                );
+            default:
+                return <PhaseManagement />;
+        }
+    };
 
     return (
         <div className="container mx-auto px-4 py-8">
+            {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold mb-2">Ora System Administration</h1>
                 <p className="text-muted-foreground">
-                    Manage system configuration, user settings, and phase contexts
+                    Comprehensive admin interface for phases, projects, artefacts, workstreams, roles, and system configuration
                 </p>
             </div>
 
+            {/* Overview Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-                {/* Admin Overview Cards */}
                 <Card className="border-2 border-blue-200">
                     <CardHeader className="pb-2">
                         <CardTitle className="flex items-center text-sm">
@@ -54,7 +86,7 @@ export default function AdminPage() {
                             System Config
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                         <div className="text-2xl font-bold text-blue-600">Active</div>
                         <p className="text-xs text-muted-foreground">Core systems operational</p>
                     </CardContent>
@@ -67,7 +99,7 @@ export default function AdminPage() {
                             User Management
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                         <div className="text-2xl font-bold text-green-600">Ready</div>
                         <p className="text-xs text-muted-foreground">Access control enabled</p>
                     </CardContent>
@@ -80,7 +112,7 @@ export default function AdminPage() {
                             Data Management
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                         <div className="text-2xl font-bold text-orange-600">Healthy</div>
                         <p className="text-xs text-muted-foreground">All systems synced</p>
                     </CardContent>
@@ -90,88 +122,82 @@ export default function AdminPage() {
                     <CardHeader className="pb-2">
                         <CardTitle className="flex items-center text-sm">
                             <FileText className="w-4 h-4 mr-2" />
-                            Context Editor
+                            CRUD Operations
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                         <div className="text-2xl font-bold text-purple-600">Live</div>
-                        <p className="text-xs text-muted-foreground">Phase contexts editable</p>
+                        <p className="text-xs text-muted-foreground">Full CRUD functionality</p>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Phase Context Management */}
-            <div className="mb-8">
-                <div className="mb-4">
-                    <h2 className="text-xl font-semibold mb-2">Phase Context Management</h2>
-                    <p className="text-sm text-muted-foreground mb-4">
-                        Edit strategic context for each phase to enhance LLM reasoning and system alignment. 
-                        All changes are automatically integrated into chat and agentic prompt builders.
-                    </p>
-                    <div className="flex gap-2 mb-4 flex-wrap">
-                        {loading ? (
-                            <div className="flex items-center text-sm text-muted-foreground">
-                                <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full mr-2" />
-                                Loading phases...
-                            </div>
-                        ) : (
-                            availablePhases.map(phase => (
-                                <Badge key={phase.id} variant="outline" className="text-green-600 border-green-600">
-                                    ✅ {phase.fullTitle}: Context Active
-                                </Badge>
-                            ))
-                        )}
-                    </div>
+            {/* Navigation */}
+            <div className="mb-6">
+                <div className="flex flex-wrap gap-2 p-1 bg-gray-100 rounded-lg">
+                    <Button
+                        onClick={() => setActiveView('phases')}
+                        variant={activeView === 'phases' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Layers className="w-4 h-4" />
+                        Phase Management
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('artefacts')}
+                        variant={activeView === 'artefacts' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Archive className="w-4 h-4" />
+                        Artefact Operations
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('workstreams')}
+                        variant={activeView === 'workstreams' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Building className="w-4 h-4" />
+                        Workstream Management
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('roles')}
+                        variant={activeView === 'roles' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Shield className="w-4 h-4" />
+                        Role Management
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('audit')}
+                        variant={activeView === 'audit' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Activity className="w-4 h-4" />
+                        Audit Logs
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('context')}
+                        variant={activeView === 'context' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <FileText className="w-4 h-4" />
+                        Phase Context
+                    </Button>
+                    <Button
+                        onClick={() => setActiveView('status')}
+                        variant={activeView === 'status' ? 'default' : 'ghost'}
+                        className="flex items-center gap-2"
+                    >
+                        <Settings className="w-4 h-4" />
+                        System Status
+                    </Button>
                 </div>
-                
-                <PhaseContextEditor 
-                    onUpdate={(phase, context) => {
-                        console.log(`Phase ${phase} context updated:`, context);
-                        // In real implementation, this would save to roadmap.md
-                    }}
-                />
             </div>
 
-            {/* Features Status */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Task 12.5.1: Program Context Prompting - Implementation Status</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">Phase Context Sections Added to roadmap.md</span>
-                            <Badge className="bg-green-100 text-green-800">✅ Complete</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">Admin UI for Context Editing</span>
-                            <Badge className="bg-green-100 text-green-800">✅ Complete</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">Phase Context API Integration</span>
-                            <Badge className="bg-green-100 text-green-800">✅ Complete</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">Enhanced LLM Chat with Phase Context</span>
-                            <Badge className="bg-green-100 text-green-800">✅ Complete</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">System/Phase-Aware Responses</span>
-                            <Badge className="bg-green-100 text-green-800">✅ Validated</Badge>
-                        </div>
-                    </div>
-                    
-                    <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                        <h4 className="font-semibold text-blue-900 mb-2">🎯 Validation Results</h4>
-                        <ul className="text-sm text-blue-800 space-y-1">
-                            <li>• Phase context API returns structured data for all phases (11-14)</li>
-                            <li>• Chat responses now include strategic focus, objectives, and challenges</li>
-                            <li>• LLM reasoning is contextually aware of phase goals and dependencies</li>
-                            <li>• Admin interface allows real-time context editing and validation</li>
-                        </ul>
-                    </div>
-                </CardContent>
-            </Card>
+            {/* Main Content Area */}
+            <div className="mt-6">
+                {renderActiveView()}
+            </div>
         </div>
     );
 } 

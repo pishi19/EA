@@ -44,11 +44,12 @@ const PhaseContextEditor: React.FC<PhaseContextEditorProps> = ({ onUpdate }) => 
             try {
                 const response = await fetch('/api/phases');
                 if (response.ok) {
-                    const phases = await response.json();
-                    setAvailablePhases(phases);
+                    const phasesData = await response.json();
+                    setAvailablePhases(Array.isArray(phasesData) ? phasesData : []);
                 }
             } catch (error) {
                 console.error('Error fetching phases:', error);
+                setAvailablePhases([]);
             }
         };
         fetchPhases();
@@ -188,15 +189,21 @@ const PhaseContextEditor: React.FC<PhaseContextEditorProps> = ({ onUpdate }) => 
                         Phase Context Editor
                         <div className="flex items-center gap-2">
                             <Select value={selectedPhase} onValueChange={handlePhaseSelect}>
-                                <SelectTrigger className="w-32">
+                                <SelectTrigger className="w-48">
                                     <SelectValue placeholder="Select Phase" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {availablePhases.map(phase => (
-                                        <SelectItem key={phase.number} value={phase.number}>
-                                            {phase.fullTitle}
+                                    {availablePhases && availablePhases.length > 0 ? (
+                                        availablePhases.map(phase => (
+                                            <SelectItem key={phase.number} value={phase.number}>
+                                                {phase.fullTitle}
+                                            </SelectItem>
+                                        ))
+                                    ) : (
+                                        <SelectItem value="loading" disabled>
+                                            Loading phases...
                                         </SelectItem>
-                                    ))}
+                                    )}
                                 </SelectContent>
                             </Select>
                             
