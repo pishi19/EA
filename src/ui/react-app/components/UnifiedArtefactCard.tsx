@@ -177,6 +177,11 @@ export default function UnifiedArtefactCard({
                             <CardTitle className="text-lg font-semibold leading-tight">
                                 {artefact.title}
                             </CardTitle>
+                            {!expanded && (
+                                <p className="text-xs text-muted-foreground">
+                                    ▶️ Click to expand and access chat • Memory trace • Full content
+                                </p>
+                            )}
                             <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                                 <Badge variant="outline" className="text-xs">
                                     {artefact.id}
@@ -214,30 +219,54 @@ export default function UnifiedArtefactCard({
                         </div>
                         
                         {/* Action buttons */}
-                        {showControls && !isPending && (
-                            <div className="flex items-center gap-1">
-                                {onEdit && (
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={onEdit}
-                                        className="h-8 w-8 p-0 hover:bg-blue-50"
-                                    >
-                                        <Edit className="h-3 w-3" />
-                                    </Button>
-                                )}
-                                {onDelete && (
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={onDelete}
-                                        className="h-8 w-8 p-0 hover:bg-red-50"
-                                    >
-                                        <Trash2 className="h-3 w-3" />
-                                    </Button>
-                                )}
-                            </div>
-                        )}
+                        <div className="flex items-center gap-1">
+                            {/* Quick Chat Button - Always visible */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    if (!expanded) {
+                                        handleToggleExpand();
+                                    }
+                                    // Scroll to chat section after a brief delay
+                                    setTimeout(() => {
+                                        const chatSection = document.querySelector('[data-chat-section="true"]');
+                                        if (chatSection) {
+                                            chatSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        }
+                                    }, 300);
+                                }}
+                                className="h-8 w-8 p-0 hover:bg-blue-50"
+                                title="Open chat for this artefact"
+                            >
+                                <MessageSquare className="h-3 w-3 text-blue-600" />
+                            </Button>
+                            
+                            {showControls && !isPending && (
+                                <>
+                                    {onEdit && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={onEdit}
+                                            className="h-8 w-8 p-0 hover:bg-blue-50"
+                                        >
+                                            <Edit className="h-3 w-3" />
+                                        </Button>
+                                    )}
+                                    {onDelete && (
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={onDelete}
+                                            className="h-8 w-8 p-0 hover:bg-red-50"
+                                        >
+                                            <Trash2 className="h-3 w-3" />
+                                        </Button>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             </CardHeader>
@@ -285,11 +314,61 @@ export default function UnifiedArtefactCard({
                         )}
 
                         {contentError && (
-                            <div className="text-center py-8">
-                                <p className="text-sm text-red-600">{contentError}</p>
-                                <Button variant="outline" size="sm" onClick={loadFullContent} className="mt-2">
-                                    Retry
-                                </Button>
+                            <div className="space-y-6">
+                                <div className="text-center py-8">
+                                    <p className="text-sm text-red-600">{contentError}</p>
+                                    <Button variant="outline" size="sm" onClick={loadFullContent} className="mt-2">
+                                        Retry
+                                    </Button>
+                                </div>
+                                
+                                {/* Chat Section - Always available even if content fails */}
+                                <div className="border-t pt-6" data-chat-section="true">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <MessageSquare className="h-5 w-5 text-blue-600" />
+                                        <h3 className="text-lg font-semibold text-gray-900">💬 Chat & Memory</h3>
+                                    </div>
+                                    <div 
+                                        className="border rounded-lg overflow-hidden bg-gray-50"
+                                        style={{ height: `${chatHeight}px` }}
+                                    >
+                                        <ChatPane
+                                            contextType="loop"
+                                            contextId={artefact.id}
+                                            filePath={artefact.filePath}
+                                            title={`💬 Chat - ${artefact.name}`}
+                                        />
+                                    </div>
+                                    <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
+                                        <span>Resize chat panel:</span>
+                                        <div className="flex gap-1">
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(300)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Small
+                                            </Button>
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(400)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Medium
+                                            </Button>
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(600)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Large
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
 
@@ -376,59 +455,55 @@ export default function UnifiedArtefactCard({
                                             </AccordionContent>
                                         </AccordionItem>
                                     )}
-
-                                    {/* Chat Section - Always available when expanded */}
-                                    <AccordionItem value="chat">
-                                        <AccordionTrigger className="text-sm font-medium">
-                                            <div className="flex items-center gap-2">
-                                                <MessageSquare className="h-4 w-4" />
-                                                💬 Chat & Memory
-                                            </div>
-                                        </AccordionTrigger>
-                                        <AccordionContent>
-                                            <div 
-                                                className="border rounded-lg overflow-hidden bg-gray-50"
-                                                style={{ height: `${chatHeight}px` }}
-                                            >
-                                                <ChatPane
-                                                    contextType="loop"
-                                                    contextId={artefact.id}
-                                                    filePath={artefact.filePath}
-                                                    title={`💬 Chat - ${artefact.name}`}
-                                                />
-                                            </div>
-                                            <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
-                                                <span>Resize chat panel:</span>
-                                                <div className="flex gap-1">
-                                                    <Button 
-                                                        size="sm" 
-                                                        variant="ghost" 
-                                                        onClick={() => setChatHeight(300)}
-                                                        className="h-6 px-2 text-xs"
-                                                    >
-                                                        Small
-                                                    </Button>
-                                                    <Button 
-                                                        size="sm" 
-                                                        variant="ghost" 
-                                                        onClick={() => setChatHeight(400)}
-                                                        className="h-6 px-2 text-xs"
-                                                    >
-                                                        Medium
-                                                    </Button>
-                                                    <Button 
-                                                        size="sm" 
-                                                        variant="ghost" 
-                                                        onClick={() => setChatHeight(600)}
-                                                        className="h-6 px-2 text-xs"
-                                                    >
-                                                        Large
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </AccordionContent>
-                                    </AccordionItem>
                                 </Accordion>
+
+                                {/* Chat Section - Always visible when expanded */}
+                                <div className="border-t pt-6" data-chat-section="true">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <MessageSquare className="h-5 w-5 text-blue-600" />
+                                        <h3 className="text-lg font-semibold text-gray-900">💬 Chat & Memory</h3>
+                                    </div>
+                                    <div 
+                                        className="border rounded-lg overflow-hidden bg-gray-50"
+                                        style={{ height: `${chatHeight}px` }}
+                                    >
+                                        <ChatPane
+                                            contextType="loop"
+                                            contextId={artefact.id}
+                                            filePath={artefact.filePath}
+                                            title={`💬 Chat - ${artefact.name}`}
+                                        />
+                                    </div>
+                                    <div className="flex justify-between items-center mt-2 text-xs text-muted-foreground">
+                                        <span>Resize chat panel:</span>
+                                        <div className="flex gap-1">
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(300)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Small
+                                            </Button>
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(400)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Medium
+                                            </Button>
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => setChatHeight(600)}
+                                                className="h-6 px-2 text-xs"
+                                            >
+                                                Large
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </CollapsibleContent>

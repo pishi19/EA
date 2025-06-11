@@ -167,7 +167,7 @@ describe('Taxonomy Filtering', () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('Roadmap-Driven Tree Navigation')).toBeInTheDocument();
+              expect(screen.getByText('Workstream')).toBeInTheDocument();
     });
   });
 
@@ -197,7 +197,7 @@ describe('Taxonomy Filtering', () => {
     render(<WorkstreamFilterDemo />);
     
     await waitFor(() => {
-      expect(screen.getByText('🏗️ Roadmap-Driven Hierarchical Filters')).toBeInTheDocument();
+              expect(screen.getByText('🏗️ Workstreams')).toBeInTheDocument();
       expect(screen.getByText(/Hierarchical filtering based on roadmap.md structure/)).toBeInTheDocument();
     });
   });

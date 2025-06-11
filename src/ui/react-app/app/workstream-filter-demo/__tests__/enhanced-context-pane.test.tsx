@@ -96,7 +96,7 @@ describe('Enhanced ContextPane', () => {
         render(<ContextPane />);
         
         expect(screen.getByText('Select a node to view details')).toBeInTheDocument();
-        expect(screen.getByText(/Click on any item in the roadmap tree/)).toBeInTheDocument();
+        expect(screen.getByText(/Click on any item in the workstream tree/)).toBeInTheDocument();
     });
 
     test('loads and displays artefact details', async () => {

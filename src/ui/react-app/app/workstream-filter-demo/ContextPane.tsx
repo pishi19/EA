@@ -137,7 +137,7 @@ export default function ContextPane({
             if (streamingRef.current) {
                 streamingRef.current.abort();
                 streamingRef.current = null;
-            }
+        }
         } else if (!selectedArtefact && currentArtefact) {
             // Handle case when artefact is deselected
             console.log('🔄 Clearing chat (no artefact selected)');
@@ -199,7 +199,7 @@ export default function ContextPane({
             
             // Use a small delay to show the chat is switching
             setTimeout(() => {
-                setChatHistory(mockHistory);
+            setChatHistory(mockHistory);
                 console.log('✅ Chat history loaded for:', artefact.title);
             }, 100);
             
@@ -305,14 +305,18 @@ export default function ContextPane({
         }
 
         try {
-            // Call the real chat API
-            const response = await fetch('/api/artefact-chat', {
+            // Call the conversational chat API instead of the structured artefact-chat API
+            const response = await fetch('/api/contextual-chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    artefactId: currentArtefact.id,
-                    message: prompt,
-                    context: { artefact: currentArtefact }
+                    contextType: 'loop',
+                    contextId: currentArtefact.id,
+                    filePath: currentArtefact.filePath,
+                    message: {
+                        speaker: 'user',
+                        message: prompt
+                    }
                 })
             });
 
@@ -326,13 +330,25 @@ export default function ContextPane({
                 throw new Error(chatResponse.error);
             }
 
-            // Simulate streaming the response
-            return new Promise((resolve, reject) => {
-                const controller = new AbortController();
-                streamingRef.current = controller;
+            // Wait a moment for AI response to be generated, then fetch chat history
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Fetch the latest chat history to get the AI response
+            const historyResponse = await fetch(`/api/contextual-chat?contextType=loop&contextId=${currentArtefact.id}&filePath=${currentArtefact.filePath}`);
+            
+            if (historyResponse.ok) {
+                const chatHistory = await historyResponse.json();
+                const latestMessage = chatHistory[chatHistory.length - 1];
+                
+                if (latestMessage && latestMessage.speaker === 'ora') {
+                    const responseText = latestMessage.message;
+                    
+                    // Simulate streaming the response
+                    return new Promise((resolve, reject) => {
+                        const controller = new AbortController();
+                        streamingRef.current = controller;
 
-                let index = 0;
-                const responseText = chatResponse.message;
+                        let index = 0;
                 
                 const streamInterval = setInterval(() => {
                     if (controller.signal.aborted) {
@@ -357,10 +373,16 @@ export default function ContextPane({
                     if (!controller.signal.aborted) {
                         clearInterval(streamInterval);
                         setStreamingMessage('');
-                        resolve(responseText);
+                                                 resolve(responseText);
                     }
                 }, 3000);
             });
+                } else {
+                    throw new Error('No AI response found in chat history');
+                }
+            } else {
+                throw new Error('Failed to fetch chat history');
+            }
 
         } catch (error) {
             console.error('LLM API error:', error);
@@ -735,7 +757,7 @@ export default function ContextPane({
                         <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
                         <p className="text-lg mb-2">Select a node to view details</p>
                         <p className="text-sm">
-                            Click on any item in the roadmap tree to see its details, chat with the AI assistant, and view the memory trace.
+                            Click on any item in the workstream tree to see its details, chat with the AI assistant, and view the memory trace.
                         </p>
                     </div>
                 </CardContent>

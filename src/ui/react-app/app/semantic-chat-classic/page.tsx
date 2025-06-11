@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import LoopCard from '@/components/LoopCard';
+import { useWorkstream } from '@/lib/workstream-context';
 
 // --- Types ---
 interface Loop {
@@ -23,6 +24,9 @@ export default function SemanticChatClassic() {
     const [loops, setLoops] = useState<Loop[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    
+    // Use workstream context instead of local state
+    const { currentWorkstream, isValidWorkstream } = useWorkstream();
 
     // Load loops from API
     const loadLoops = async () => {
@@ -30,14 +34,19 @@ export default function SemanticChatClassic() {
             setLoading(true);
             setError(null);
             
-            const response = await fetch('/api/demo-loops');
+            // Use current workstream from context, fallback to 'ora' if not valid
+            const workstream = (currentWorkstream && isValidWorkstream(currentWorkstream)) 
+                ? currentWorkstream 
+                : 'ora';
+            
+            const response = await fetch(`/api/demo-loops?workstream=${workstream}`);
             
             if (!response.ok) {
                 throw new Error(`Failed to load loops: ${response.status}`);
             }
             
-            const loopsData = await response.json();
-            setLoops(loopsData);
+            const response_data = await response.json();
+            setLoops(response_data.artefacts || []);
             
         } catch (err) {
             console.error('Error loading loops:', err);
@@ -49,13 +58,13 @@ export default function SemanticChatClassic() {
 
     useEffect(() => {
         loadLoops();
-    }, []);
+    }, [currentWorkstream]); // Re-load when workstream changes
 
     if (loading) {
         return (
             <div className="container mx-auto p-6">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Contextual Chat Architecture Demo</h1>
+                    <h1 className="text-3xl font-bold mb-4">Artefacts</h1>
                     <p className="text-muted-foreground">Loading loops with embedded contextual chat...</p>
                 </div>
             </div>
@@ -66,7 +75,7 @@ export default function SemanticChatClassic() {
         return (
             <div className="container mx-auto p-6">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Contextual Chat Architecture Demo</h1>
+                    <h1 className="text-3xl font-bold mb-4">Artefacts</h1>
                     <div className="text-red-600 mb-4">Error: {error}</div>
                     <button 
                         onClick={loadLoops} 
@@ -83,7 +92,7 @@ export default function SemanticChatClassic() {
         <div className="container mx-auto p-6 space-y-6">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold">Contextual Chat Architecture Demo</h1>
+                <h1 className="text-3xl font-bold">Artefacts</h1>
                 <p className="text-lg text-muted-foreground">
                     Scoped GPT Chat Integration - Each Loop with Embedded Contextual Chat
                 </p>

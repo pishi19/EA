@@ -1,14 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
+import { 
+  withWorkstreamContext, 
+  WorkstreamContext,
+  createWorkstreamResponse,
+  createWorkstreamErrorResponse,
+  getWorkstreamArtefactsPath,
+  listWorkstreamFiles,
+  readWorkstreamFile,
+  logWorkstreamOperation,
+  hasWorkstreamPermission
+} from '@/lib/workstream-api';
 
 // Force dynamic rendering since we use request.url for search params
 export const dynamic = 'force-dynamic';
-
-// --- Path Resolution ---
-const BASE_DIR = path.resolve(process.cwd(), '../../..');
-const LOOPS_DIR = path.join(BASE_DIR, 'runtime/loops');
 
 interface LoopMetadata {
   id: string;
@@ -29,10 +36,12 @@ interface LoopMetadata {
 }
 
 // --- Helper Functions ---
-async function loadLoopMetadata(fileName: string): Promise<LoopMetadata | null> {
+async function loadWorkstreamLoopMetadata(
+  workstream: string, 
+  fileName: string
+): Promise<LoopMetadata | null> {
   try {
-    const filePath = path.join(LOOPS_DIR, fileName);
-    const fileContent = await fs.readFile(filePath, 'utf-8');
+    const fileContent = await readWorkstreamFile(workstream, fileName);
     const { data: frontmatter, content } = matter(fileContent);
 
     // Extract summary from content (first few lines after frontmatter)
@@ -50,7 +59,7 @@ async function loadLoopMetadata(fileName: string): Promise<LoopMetadata | null> 
       name: loopId,
       title: frontmatter.title || loopId,
       phase: frontmatter.phase || '0.0',
-      workstream: frontmatter.workstream || 'Ora',
+      workstream: frontmatter.workstream || workstream,
       program: frontmatter.program,
       status: frontmatter.status || 'unknown',
       score: frontmatter.score || 0.0,
@@ -58,63 +67,225 @@ async function loadLoopMetadata(fileName: string): Promise<LoopMetadata | null> 
       created: frontmatter.created || new Date().toISOString().split('T')[0],
       uuid: frontmatter.uuid || loopId,
       summary: frontmatter.summary || summary,
-      filePath: `runtime/loops/${fileName}`,
+      filePath: `runtime/workstreams/${workstream}/${fileName}`,
       type: frontmatter.type || 'task',
       origin: frontmatter.origin || 'file',
     };
   } catch (error) {
-    console.error(`Failed to load loop metadata for ${fileName}:`, error);
+    console.error(`Failed to load loop metadata for ${fileName} in workstream ${workstream}:`, error);
     return null;
   }
 }
 
-async function loadAllLoops(): Promise<LoopMetadata[]> {
+async function loadAllWorkstreamLoops(workstream: string): Promise<LoopMetadata[]> {
   try {
+    // Try to load from workstream-specific artefacts directory first
+    let files: string[] = [];
+    try {
+      files = await listWorkstreamFiles(workstream, 'artefacts');
+    } catch {
+      // If no artefacts directory, try root workstream directory
+      try {
+        files = await listWorkstreamFiles(workstream);
+      } catch {
+        // If workstream doesn't exist, return empty array
+        return [];
+      }
+    }
+
+    const loopFiles = files.filter(file => 
+      (file.startsWith('loop-') || file.startsWith('task-')) && file.endsWith('.md')
+    );
+
+    const loops = await Promise.all(
+      loopFiles.map(fileName => {
+        // Try artefacts directory first, then root
+        return loadWorkstreamLoopMetadata(workstream, `artefacts/${fileName}`)
+          .catch(() => loadWorkstreamLoopMetadata(workstream, fileName));
+      })
+    );
+
+    return loops.filter(loop => loop !== null) as LoopMetadata[];
+  } catch (error) {
+    console.error(`Failed to load loops for workstream ${workstream}:`, error);
+    return [];
+  }
+}
+
+// Legacy fallback for existing loop files in runtime/loops
+async function loadLegacyLoops(): Promise<LoopMetadata[]> {
+  try {
+    const BASE_DIR = path.resolve(process.cwd(), '../../..');
+    const LOOPS_DIR = path.join(BASE_DIR, 'runtime/loops');
     const files = await fs.readdir(LOOPS_DIR);
     const loopFiles = files.filter(file => 
       (file.startsWith('loop-') || file.startsWith('task-')) && file.endsWith('.md')
     );
 
     const loops = await Promise.all(
-      loopFiles.map(fileName => loadLoopMetadata(fileName))
+      loopFiles.map(async (fileName) => {
+        try {
+          const filePath = path.join(LOOPS_DIR, fileName);
+          const fileContent = await fs.readFile(filePath, 'utf-8');
+          const { data: frontmatter, content } = matter(fileContent);
+
+          const contentLines = content.trim().split('\n');
+          const summary = contentLines
+            .slice(0, 3)
+            .join(' ')
+            .replace(/#+\s*/g, '')
+            .substring(0, 200) + '...';
+
+          const loopId = fileName.replace('.md', '');
+          
+          return {
+            id: loopId,
+            name: loopId,
+            title: frontmatter.title || loopId,
+            phase: frontmatter.phase || '0.0',
+            workstream: frontmatter.workstream || 'unknown',
+            program: frontmatter.program,
+            status: frontmatter.status || 'unknown',
+            score: frontmatter.score || 0.0,
+            tags: frontmatter.tags || [],
+            created: frontmatter.created || new Date().toISOString().split('T')[0],
+            uuid: frontmatter.uuid || loopId,
+            summary: frontmatter.summary || summary,
+            filePath: `runtime/loops/${fileName}`,
+            type: frontmatter.type || 'task',
+            origin: frontmatter.origin || 'file',
+          };
+        } catch (error) {
+          console.error(`Failed to load legacy loop ${fileName}:`, error);
+          return null;
+        }
+      })
     );
 
-    return loops.filter((loop): loop is LoopMetadata => loop !== null);
+    return loops.filter(loop => loop !== null) as LoopMetadata[];
   } catch (error) {
-    console.error('Failed to load loops directory:', error);
+    console.error('Failed to load legacy loops directory:', error);
     return [];
   }
 }
 
 // --- API Handlers ---
-export async function GET(request: Request) {
+async function handleDemoLoopsRequest(
+  request: NextRequest, 
+  workstreamContext: WorkstreamContext
+): Promise<NextResponse> {
+  const { workstream, isValid } = workstreamContext;
+  
+  // Require explicit and valid workstream context
+  if (!isValid || !workstream) {
+    await logWorkstreamOperation({
+      workstream: workstream || 'unknown',
+      operation: 'read',
+      endpoint: '/api/demo-loops',
+      result: 'error',
+      error: 'Missing or invalid workstream parameter'
+    });
+    
+    return createWorkstreamErrorResponse(
+      'Missing or invalid workstream parameter. Please provide a valid workstream (ora, mecca, sales).',
+      workstreamContext,
+      400
+    );
+  }
+  
+  // Check permissions
+  if (!hasWorkstreamPermission(workstream, 'read')) {
+    await logWorkstreamOperation({
+      workstream,
+      operation: 'read',
+      endpoint: '/api/demo-loops',
+      result: 'error',
+      error: 'Insufficient permissions'
+    });
+    
+    return createWorkstreamErrorResponse(
+      'Insufficient permissions for workstream',
+      workstreamContext,
+      403
+    );
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const loopId = searchParams.get('id');
 
     if (loopId) {
       // Load specific loop
       const fileName = loopId.endsWith('.md') ? loopId : `${loopId}.md`;
-      const loop = await loadLoopMetadata(fileName);
+      const loop = await loadWorkstreamLoopMetadata(workstream, `artefacts/${fileName}`)
+        .catch(() => loadWorkstreamLoopMetadata(workstream, fileName));
       
       if (!loop) {
-        return NextResponse.json(
-          { message: `Loop not found: ${loopId}` },
-          { status: 404 }
+        await logWorkstreamOperation({
+          workstream,
+          operation: 'read',
+          endpoint: '/api/demo-loops',
+          data: { loopId },
+          result: 'error',
+          error: 'Loop not found'
+        });
+        
+        return createWorkstreamErrorResponse(
+          `Loop not found: ${loopId}`,
+          workstreamContext,
+          404
         );
       }
 
-      return NextResponse.json(loop);
+      await logWorkstreamOperation({
+        workstream,
+        operation: 'read',
+        endpoint: '/api/demo-loops',
+        data: { loopId },
+        result: 'success'
+      });
+
+      return createWorkstreamResponse(loop, workstreamContext);
     } else {
-      // Load all loops
-      const loops = await loadAllLoops();
-      return NextResponse.json(loops);
+      // Load all loops for the workstream
+      const workstreamLoops = await loadAllWorkstreamLoops(workstream);
+      
+      // For backwards compatibility, include legacy loops for all workstreams if they exist
+      const legacyLoops = await loadLegacyLoops();
+      const allLoops = [...workstreamLoops, ...legacyLoops];
+
+      // Apply strict workstream filtering to ensure data isolation
+      const filteredLoops = allLoops.filter(loop => 
+        loop.workstream.toLowerCase() === workstream.toLowerCase()
+      );
+
+      await logWorkstreamOperation({
+        workstream,
+        operation: 'read',
+        endpoint: '/api/demo-loops',
+        data: { count: filteredLoops.length },
+        result: 'success'
+      });
+
+      return createWorkstreamResponse({ artefacts: filteredLoops }, workstreamContext);
     }
   } catch (error) {
-    console.error('Error in demo-loops API:', error);
-    return NextResponse.json(
-      { message: 'Internal server error' },
-      { status: 500 }
+    console.error(`Error in demo-loops API for workstream ${workstream}:`, error);
+    
+    await logWorkstreamOperation({
+      workstream,
+      operation: 'read',
+      endpoint: '/api/demo-loops',
+      result: 'error',
+      error: String(error)
+    });
+
+    return createWorkstreamErrorResponse(
+      'Internal server error',
+      workstreamContext,
+      500
     );
   }
-} 
+}
+
+export const GET = withWorkstreamContext(handleDemoLoopsRequest); 

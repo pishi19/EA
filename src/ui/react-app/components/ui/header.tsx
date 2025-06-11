@@ -10,7 +10,7 @@ export function Header() {
     const navLinks = [
         { href: '/planning', label: 'Planning' },
         { href: '/workstream-filter-demo', label: 'Workstream' },
-        { href: '/semantic-chat-classic', label: 'Contextual Chat' },
+        { href: '/semantic-chat-classic', label: 'Artefacts' },
         // Archived: task-executor, system-view, phase-doc, contextual-chat-demo, system-docs
     ];
 

@@ -4,6 +4,7 @@ import { parseRoadmapContent, RoadmapHierarchy, getProgramsForWorkstream, getPro
 export interface UseRoadmapHierarchyReturn {
     hierarchy: RoadmapHierarchy | null;
     loading: boolean;
+    isLoading: boolean; // Alias for backwards compatibility
     error: string | null;
     refreshHierarchy: () => Promise<void>;
     
@@ -160,6 +161,7 @@ export default function useRoadmapHierarchy(): UseRoadmapHierarchyReturn {
     return {
         hierarchy,
         loading,
+        isLoading: loading, // Alias for backwards compatibility
         error,
         refreshHierarchy: loadRoadmapHierarchy,
         getAvailableWorkstreams,

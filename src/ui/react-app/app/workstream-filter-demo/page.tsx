@@ -17,6 +17,7 @@ import TreeNavigation from './TreeNavigation';
 import ContextPane from './ContextPane';
 import useTreeState from './useTreeState';
 import useRoadmapHierarchy from './useRoadmapHierarchy';
+import { useWorkstream } from '@/lib/workstream-context';
 
 // --- Types ---
 interface Artefact {
@@ -85,6 +86,17 @@ const CANONICAL_ARTEFACT_TYPES = [
 
 // --- Component ---
 export default function WorkstreamFilterDemo() {
+    // Workstream context - get current workstream from URL
+    const { currentWorkstream, isValidWorkstream, loading: workstreamLoading, error: workstreamError } = useWorkstream();
+    
+    // Initialize workstream from context
+    useEffect(() => {
+        if (currentWorkstream && isValidWorkstream(currentWorkstream)) {
+            setSelectedWorkstream(currentWorkstream);
+        }
+    }, [currentWorkstream, isValidWorkstream]);
+
+    // Core state
     const [artefacts, setArtefacts] = useState<Artefact[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -95,7 +107,7 @@ export default function WorkstreamFilterDemo() {
     const [roadmapOpen, setRoadmapOpen] = useState(false);
 
     // Filter states - hierarchical cascade
-    const [selectedWorkstream, setSelectedWorkstream] = useState<string>('Ora'); // Default to Ora workstream
+    const [selectedWorkstream, setSelectedWorkstream] = useState<string>(''); // Remove hardcoded default
     const [selectedProgram, setSelectedProgram] = useState<string>('all');
     const [selectedProject, setSelectedProject] = useState<string>('all');
     const [selectedTask, setSelectedTask] = useState<string>('all');
@@ -154,14 +166,14 @@ export default function WorkstreamFilterDemo() {
             setLoading(true);
             setError(null);
             
-            const response = await fetch('/api/demo-loops');
+            const response = await fetch(`/api/demo-loops?workstream=${selectedWorkstream}`);
             
             if (!response.ok) {
                 throw new Error(`Failed to load artefacts: ${response.status}`);
             }
             
-            const artefactsData = await response.json();
-            setArtefacts(artefactsData);
+            const response_data = await response.json();
+            setArtefacts(response_data.artefacts || []);
             
         } catch (err) {
             console.error('Error loading artefacts:', err);
@@ -174,7 +186,7 @@ export default function WorkstreamFilterDemo() {
     useEffect(() => {
         loadRoadmap();
         loadArtefacts();
-    }, []);
+    }, [selectedWorkstream]);
 
     useEffect(() => {
         if (artefacts.length > 0) {
@@ -308,9 +320,11 @@ export default function WorkstreamFilterDemo() {
             };
         });
 
-        // Workstream filtering
+        // Workstream filtering (case-insensitive)
         if (selectedWorkstream !== 'all') {
-            filtered = filtered.filter(artefact => artefact.workstream === selectedWorkstream);
+            filtered = filtered.filter(artefact => 
+                artefact.workstream.toLowerCase() === selectedWorkstream.toLowerCase()
+            );
         }
 
         // Roadmap-driven program filtering
@@ -493,7 +507,8 @@ export default function WorkstreamFilterDemo() {
     };
 
     const clearAllFilters = () => {
-        setSelectedWorkstream('Ora'); // Reset to default Ora workstream
+        // Preserve current workstream context instead of hardcoding
+        // setSelectedWorkstream('ora'); // REMOVED: No hardcoded workstream
         setSelectedProgram('all');
         setSelectedProject('all');
         setSelectedTask('all');
@@ -852,13 +867,13 @@ export default function WorkstreamFilterDemo() {
                     newTags.push(action.value);
                 }
                 const updatedArtefact = { ...artefact, tags: newTags };
-                
-                // Optimistic update
-                setOptimisticArtefacts(prev => 
-                    prev.map(a => a.id === artefact.id ? updatedArtefact : a)
-                );
-                
-                console.log(`🏷️ Tag added: ${artefact.title} → ${action.value}`);
+                    
+                    // Optimistic update
+                    setOptimisticArtefacts(prev => 
+                        prev.map(a => a.id === artefact.id ? updatedArtefact : a)
+                    );
+                    
+                    console.log(`🏷️ Tag added: ${artefact.title} → ${action.value}`);
             } else if (action.type === 'edit') {
                 // For edit, we'll trigger the existing edit flow
                 setEditingTask(artefact);
@@ -937,7 +952,7 @@ export default function WorkstreamFilterDemo() {
         <div className="container mx-auto p-6 space-y-6">
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold">Roadmap-Driven Tree Navigation</h1>
+                <h1 className="text-3xl font-bold">Workstream</h1>
                 <p className="text-lg text-muted-foreground">
                     Hierarchical Tree Navigation + Roadmap-Driven Filtering: Workstream → Program → Project → Artefact Type → Status
                 </p>
@@ -1058,7 +1073,7 @@ export default function WorkstreamFilterDemo() {
             {/* Hierarchical Filter Controls */}
             <Card>
                 <CardHeader>
-                    <CardTitle>🏗️ Roadmap-Driven Hierarchical Filters</CardTitle>
+                    <CardTitle>🏗️ Workstreams</CardTitle>
                     <p className="text-sm text-muted-foreground">
                         Hierarchical filtering based on roadmap.md structure: Workstream → Program → Project → Task → Artefact Type → Status
                     </p>
@@ -1136,7 +1151,7 @@ export default function WorkstreamFilterDemo() {
                                                         </span>
                                                     )}
                                                 </div>
-                                            </SelectItem>
+                                        </SelectItem>
                                         );
                                     })}
                                 </SelectContent>
@@ -1197,7 +1212,7 @@ export default function WorkstreamFilterDemo() {
                                                         </span>
                                                     )}
                                                 </div>
-                                            </SelectItem>
+                                        </SelectItem>
                                         );
                                     })}
                                 </SelectContent>
@@ -1258,7 +1273,7 @@ export default function WorkstreamFilterDemo() {
                                                         </span>
                                                     )}
                                                 </div>
-                                            </SelectItem>
+                                        </SelectItem>
                                         );
                                     })}
                                 </SelectContent>
@@ -1357,7 +1372,7 @@ export default function WorkstreamFilterDemo() {
                             selectedNodeId={treeState.selectedNode?.id}
                             validateArtefactAlignment={roadmapHierarchy.validateArtefactAlignment}
                             onArtefactMutate={handleArtefactMutation}
-                            className="sticky top-6"
+                            workstream={selectedWorkstream}
                         />
                     </div>
 
@@ -1467,7 +1482,7 @@ export default function WorkstreamFilterDemo() {
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle>🎯 Unified Artefact View ({filteredArtefacts.length})</CardTitle>
-                            <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                                 Expandable artefact cards with full content, sections, and integrated chat
                                 {batchMode && ' - Batch mode enabled'}
                             </p>
@@ -1583,37 +1598,37 @@ export default function WorkstreamFilterDemo() {
                                             artefact={artefact}
                                             isExpanded={isExpanded}
                                             onToggleExpand={(expanded) => handleToggleArtefactExpand(artefact.id, expanded)}
-                                            onEdit={() => handleEditTask(artefact)}
-                                            onDelete={() => handleDeleteTask(artefact)}
+                                                onEdit={() => handleEditTask(artefact)}
+                                                onDelete={() => handleDeleteTask(artefact)}
                                             onMutate={(action) => handleArtefactMutation(artefact, action)}
                                             showControls={!addingTask && !editingTask && !isPending && !batchMode}
-                                            isPending={isPending}
-                                            isFailed={isFailed}
+                                                isPending={isPending}
+                                                isFailed={isFailed}
                                             className={`transition-all duration-200 ${
-                                                isPending 
+                                                    isPending 
                                                     ? 'opacity-75 bg-yellow-50' 
-                                                    : isFailed 
+                                                        : isFailed 
                                                         ? 'bg-red-50' 
                                                         : ''
-                                            }`}
-                                        />
+                                                }`}
+                                            />
                                         
                                         {/* Pending indicator */}
                                         {isPending && (
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                                                 Saving...
-                                            </div>
-                                        )}
-                                        
+                                                    </div>
+                                                )}
+                                                
                                         {/* Failed indicator */}
                                         {isFailed && (
                                             <div className="absolute top-2 right-2 flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium z-10">
                                                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                                                 Failed - Rolled Back
-                                            </div>
+                                                </div>
                                         )}
-                                    </div>
+                                            </div>
                                 );
                             })}
                         </div>

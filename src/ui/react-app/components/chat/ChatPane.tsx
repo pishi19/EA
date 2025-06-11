@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, BookOpen, FileText } from 'lucide-react';
 
@@ -71,6 +71,7 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
     const [newMessage, setNewMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isAIThinking, setIsAIThinking] = useState(false);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     const displayTitle = title || `💬 Chat - ${contextType} ${contextId}`;
@@ -99,9 +100,10 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
     useEffect(() => {
         // Auto-scroll to bottom
         if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+            const scrollElement = scrollAreaRef.current;
+            scrollElement.scrollTop = scrollElement.scrollHeight;
         }
-    }, [messages]);
+    }, [messages, isAIThinking]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -109,6 +111,8 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
 
         const messageToSend = { speaker: 'user' as 'user' | 'ora', message: newMessage.trim() };
         setNewMessage('');
+        setIsAIThinking(true); // Show AI thinking indicator
+        
         // Add message optimistically with proper sorting
         const optimisticMessage = { ...messageToSend, timestamp: new Date().toISOString() };
         setMessages(prev => [...prev, optimisticMessage].sort((a, b) => 
@@ -117,12 +121,25 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
 
         try {
             const postedMessage = await api.postMessage(contextType, contextId, messageToSend, filePath);
-            // Optionally, update the message with the one from the server
-            setMessages(prev => prev.map(m => m.timestamp.endsWith('Z') ? m : postedMessage));
-            fetchChat(); // Refresh from source
+            
+            // Wait for AI response to be generated, then refresh multiple times
+            const refreshAttempts = [1000, 2000, 3000]; // Try refreshing at 1s, 2s, and 3s
+            refreshAttempts.forEach((delay) => {
+                setTimeout(() => {
+                    fetchChat();
+                }, delay);
+            });
+            
+            // Stop AI thinking indicator after reasonable time
+            setTimeout(() => {
+                setIsAIThinking(false);
+            }, 4000);
+            
         } catch (err) {
             setError('Failed to send message.');
-            // Optionally, remove the optimistic message
+            setIsAIThinking(false);
+            // Remove the optimistic message on error
+            setMessages(prev => prev.filter(m => m.timestamp !== optimisticMessage.timestamp));
         }
     };
 
@@ -141,11 +158,11 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
 
     return (
         <Card className="flex flex-col h-full">
-            <CardHeader>
-                <CardTitle>{displayTitle}</CardTitle>
+            <CardHeader className="pb-3">
+                <CardTitle className="text-sm">{displayTitle}</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-0">
-                <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+            <CardContent className="flex-1 flex flex-col p-0 min-h-0">
+                <div className="flex-1 overflow-y-auto p-4" ref={scrollAreaRef}>
                     <div className="space-y-4">
                         {isLoading && <p>Loading chat...</p>}
                         {error && (
@@ -201,20 +218,52 @@ export default function ChatPane({ contextType, contextId, filePath, title }: Ch
                                 )}
                             </div>
                         ))}
+                        
+                        {/* AI Thinking indicator */}
+                        {isAIThinking && (
+                            <div className="flex items-start gap-3">
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage src="/ora-avatar.png" />
+                                    <AvatarFallback>O</AvatarFallback>
+                                </Avatar>
+                                <div className="rounded-lg px-3 py-2 text-sm bg-muted max-w-[80%]">
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex space-x-1">
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                        </div>
+                                        <span className="text-xs text-muted-foreground">Ora is thinking...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </ScrollArea>
-                <div className="p-4 border-t">
+                </div>
+                <div className="p-4 border-t bg-white flex-shrink-0">
                     <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                         <Input
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Type a message..."
                             autoComplete="off"
+                            className="flex-1"
+                            disabled={isAIThinking}
                         />
-                        <Button type="submit" size="icon" disabled={!newMessage.trim()}>
+                        <Button 
+                            type="submit" 
+                            size="icon" 
+                            disabled={!newMessage.trim() || isAIThinking}
+                            className="flex-shrink-0"
+                        >
                             <Send className="h-4 w-4" />
                         </Button>
                     </form>
+                    {isAIThinking && (
+                        <p className="text-xs text-muted-foreground mt-2 text-center">
+                            AI is generating response...
+                        </p>
+                    )}
                 </div>
             </CardContent>
         </Card>

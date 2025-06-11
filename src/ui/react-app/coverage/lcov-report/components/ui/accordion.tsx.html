@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -123,15 +123,13 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,9 +139,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,7 +159,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,18 +176,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">81x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use client"
 &nbsp;
-import * as React from <span class="cstat-no" title="statement not covered" >"react"</span>
-import * as AccordionPrimitive from <span class="cstat-no" title="statement not covered" >"@radix-ui/react-accordion"</span>
-import { ChevronDown } from <span class="cstat-no" title="statement not covered" >"lucide-react"</span>
+import * as React from "react"
+import * as AccordionPrimitive from "@radix-ui/react-accordion"
+import { ChevronDown } from "lucide-react"
 &nbsp;
-import { cn } from <span class="cstat-no" title="statement not covered" >"@/lib/utils"</span>
+import { cn } from "@/lib/utils"
 &nbsp;
-const Accordion = <span class="cstat-no" title="statement not covered" >AccordionPrimitive.Root</span>
+const Accordion = AccordionPrimitive.Root
 &nbsp;
 const AccordionItem = React.forwardRef&lt;
   React.ElementRef&lt;typeof AccordionPrimitive.Item&gt;,
@@ -199,7 +199,7 @@ const AccordionItem = React.forwardRef&lt;
     {...props}
   /&gt;
 ))
-<span class="cstat-no" title="statement not covered" >AccordionItem.displayName = "AccordionItem"</span>
+AccordionItem.displayName = "AccordionItem"
 &nbsp;
 const AccordionTrigger = React.forwardRef&lt;
   React.ElementRef&lt;typeof AccordionPrimitive.Trigger&gt;,
@@ -219,7 +219,7 @@ const AccordionTrigger = React.forwardRef&lt;
     &lt;/AccordionPrimitive.Trigger&gt;
   &lt;/AccordionPrimitive.Header&gt;
 ))
-<span class="cstat-no" title="statement not covered" >AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName</span>
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
 &nbsp;
 const AccordionContent = React.forwardRef&lt;
   React.ElementRef&lt;typeof AccordionPrimitive.Content&gt;,
@@ -234,9 +234,9 @@ const AccordionContent = React.forwardRef&lt;
   &lt;/AccordionPrimitive.Content&gt;
 ))
 &nbsp;
-<span class="cstat-no" title="statement not covered" >AccordionContent.displayName = AccordionPrimitive.Content.displayName</span>
+AccordionContent.displayName = AccordionPrimitive.Content.displayName
 &nbsp;
-export { <span class="cstat-no" title="statement not covered" >Accordion,</span> <span class="cstat-no" title="statement not covered" >AccordionItem,</span> <span class="cstat-no" title="statement not covered" >AccordionTrigger,</span> <span class="cstat-no" title="statement not covered" >AccordionContent </span>}
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -244,7 +244,7 @@ export { <span class="cstat-no" title="statement not covered" >Accordion,</span>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-09T05:40:08.953Z
+                at 2025-06-09T13:17:19.308Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

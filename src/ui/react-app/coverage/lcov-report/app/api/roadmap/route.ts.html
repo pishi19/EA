@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">22.53% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/71</span>
+                <span class='fraction'>16/71</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">2.27% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/44</span>
+                <span class='fraction'>1/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">7.69% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>1/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">23.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/68</span>
+                <span class='fraction'>16/68</span>
             </div>
         
             
@@ -215,15 +215,15 @@
 <a name='L150'></a><a href='#L150'>150</a>
 <a name='L151'></a><a href='#L151'>151</a>
 <a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L153'></a><a href='#L153'>153</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -319,13 +319,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -363,19 +363,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NextResponse } from <span class="cstat-no" title="statement not covered" >'next/server';</span>
-import fs from <span class="cstat-no" title="statement not covered" >'fs/promises';</span>
-import path from <span class="cstat-no" title="statement not covered" >'path';</span>
-import yaml from <span class="cstat-no" title="statement not covered" >'js-yaml';</span>
-import matter from <span class="cstat-no" title="statement not covered" >'gray-matter';</span>
-import { marked } from <span class="cstat-no" title="statement not covered" >'marked';</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NextResponse } from 'next/server';
+import fs from 'fs/promises';
+import path from 'path';
+import yaml from 'js-yaml';
+import matter from 'gray-matter';
+import { marked } from 'marked';
 import { Phase, Loop, EnrichedPhase, EnrichedLoop } from '@/lib/types';
-import { matterOptions } from <span class="cstat-no" title="statement not covered" >'@/lib/yaml-engine';</span>
-import { PATHS } from <span class="cstat-no" title="statement not covered" >'@/lib/path-utils';</span>
+import { matterOptions } from '@/lib/yaml-engine';
+import { PATHS } from '@/lib/path-utils';
 &nbsp;
 // --- Data Enrichment Functions ---
 &nbsp;
@@ -471,13 +471,13 @@ async function <span class="fstat-no" title="function not covered" >getLoopsForP
 }
 &nbsp;
 // --- API Handler ---
-export async function <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >GET() {</span></span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const yamlContent = <span class="cstat-no" title="statement not covered" >await fs.readFile(PATHS.ROADMAP_YAML_PATH, 'utf-8');</span>
-        const roadmapData = <span class="cstat-no" title="statement not covered" >yaml.load(yamlContent) as { phases: Phase[] };</span>
+export async function GET() {
+    try {
+        const yamlContent = await fs.readFile(PATHS.ROADMAP_YAML_PATH, 'utf-8');
+        const roadmapData = yaml.load(yamlContent) as { phases: Phase[] };
         
         // Process phases with improved loop handling
-        const phasesWithLoops = <span class="cstat-no" title="statement not covered" >await Promise.all(</span>
+        const phasesWithLoops = await Promise.all(
             roadmapData.phases.map(<span class="fstat-no" title="function not covered" >async (p</span>) =&gt; {
                 // Start with explicitly defined loops from YAML
                 let loops: Array&lt;{ id: string; title: string; phase: number }&gt; = <span class="cstat-no" title="statement not covered" >[];</span>
@@ -515,9 +515,9 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
 <span class="cstat-no" title="statement not covered" >        return NextResponse.json(phases);</span>
 &nbsp;
     } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error('Failed to get roadmap data:', error);</span>
-        const errorMessage = <span class="cstat-no" title="statement not covered" >error instanceof Error ? error.message : 'Internal Server Error';</span>
-<span class="cstat-no" title="statement not covered" >        return NextResponse.json({ message: 'Failed to get roadmap data', error: errorMessage }, { status: 500 });</span>
+        console.error('Failed to get roadmap data:', error);
+        const errorMessage = error instanceof Error ? error.message : <span class="branch-1 cbranch-no" title="branch not covered" >'Internal Server Error';</span>
+        return NextResponse.json({ message: 'Failed to get roadmap data', error: errorMessage }, { status: 500 });
     }
 } </pre></td></tr></table></pre>
 
@@ -526,7 +526,7 @@ export async function <span class="cstat-no" title="statement not covered" ><spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-09T05:40:08.953Z
+                at 2025-06-09T13:17:19.308Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

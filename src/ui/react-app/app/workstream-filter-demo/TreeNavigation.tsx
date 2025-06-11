@@ -68,6 +68,7 @@ interface TreeNavigationProps {
     className?: string;
     validateArtefactAlignment?: (artefact: Artefact) => any;
     onArtefactMutate?: (artefact: Artefact, action: MutationAction) => Promise<void>;
+    workstream?: string;
 }
 
 export default function TreeNavigation({ 
@@ -77,7 +78,8 @@ export default function TreeNavigation({
     selectedNodeId,
     className = "",
     validateArtefactAlignment,
-    onArtefactMutate
+    onArtefactMutate,
+    workstream
 }: TreeNavigationProps) {
     const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set(['Ora'])); // Default expand Ora workstream
     const [hoveredNode, setHoveredNode] = useState<string | null>(null);
@@ -192,10 +194,8 @@ export default function TreeNavigation({
                 roadmapDefined: true
             };
             
-            // Add programs from roadmap
-            const workstreamPrograms = roadmapHierarchy.programs.filter(program => 
-                workstream === 'Ora' // All programs belong to Ora for now
-            );
+            // Add programs from roadmap for current workstream
+            const workstreamPrograms = roadmapHierarchy.programs; // All programs available for current workstream context
             
             workstreamPrograms.forEach(program => {
                 const programNode: TreeNode = {
@@ -577,7 +577,7 @@ export default function TreeNavigation({
             <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center space-x-2">
                     <Folder className="h-5 w-5" />
-                    <span>Roadmap Tree</span>
+                                            <span>Workstream Tree</span>
                     <Badge variant="outline" className="text-xs bg-green-50 text-green-700">
                         roadmap.md
                     </Badge>
