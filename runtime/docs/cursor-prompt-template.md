@@ -17,12 +17,16 @@
 
 **Instructions:**
 1. Review and follow the alignment protocol.
-2. Perform the following actions:
+2. **Server Management:** Always start the development server on port 3000:
+    - If port 3000 is in use: `lsof -ti:3000 | xargs kill -9`
+    - Then start server: `npm run dev -- -p 3000`
+    - Server should be accessible at `http://localhost:3000`
+3. Perform the following actions:
     - [List each mutation, update, or documentation step clearly and in order]
     - [Ensure all changes are saved in the appropriate file(s)]
     - [Reference any affected loop(s) or doc(s) by filename/UUID]
     - [Update and cross-link checklist as required]
-3. After all actions, **validate** that:
+4. After all actions, **validate** that:
     - The change is present in `/runtime/docs/` and/or `/runtime/loops/`
     - Docs and loops are cross-linked and UI-visible
     - The system-update-protocol-checklist.md has been updated
