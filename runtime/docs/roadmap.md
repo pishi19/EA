@@ -655,7 +655,7 @@ tags: [roadmap, phases, planning, documentation]
       - Task 14.4.1: Enhanced LLM Prompt Engineering
           - Description: Refactor Ora's LLM chat integration to include rich artefact, roadmap, workstream, and system context in every prompt. Build dynamic prompt construction from phase/program context, artefact metadata, recent memory trace, and user/system intent. Enhance agentic reasoning, mutation, and consultation capabilities. Test with a suite of system-level, phase-level, and artefact-level queries to ensure context-aware, actionable, and nuanced chat and LLM-driven actions throughout Ora.
 
-### Phase 15: Data Flow Integrity, Policy & Systems Safeguards
+  - Project 12.10: Data Flow Integrity & Systems Safeguards
 
 #### LLM Prompt Context
 **Strategic Focus**: Ensure long-term data reliability, agentic safety, and systems integrity across all workstreams and future workflows.
@@ -680,19 +680,17 @@ tags: [roadmap, phases, planning, documentation]
 - New contributors and agents are trained to this phase as part of onboarding
 
 **Dependencies**: 
-- Phase 11-14 foundations: canonical schema, admin systems, data quality assurance, and semantic enhancements
+- Phase 11 artefact schema canonicalization and filtering infrastructure
+- Phase 12.9 multi-workstream architecture and admin systems
 - Robust audit infrastructure for ongoing integrity monitoring
-- Advanced agentic safety protocols and training systems
 
-**Next Phase Preparation**: Systematic integrity foundation for all future phases and agentic capabilities.
-
-  - Project 15.1: Data Flow Integrity & Audit Protocols
+**Next Phase Preparation**: Systematic integrity foundation for Phase 13 audit and compliance capabilities.
 
 #### Execution Prompts Log
 
 - **Prompt 2025-12-21 (Ash):**
     ```
-    # cursor:ora:task:15-1-1-data-flow-integrity-safeguards
+    # cursor:ora:task:12-10-1-data-flow-integrity-safeguards
     1. Review and document all critical workflows (load, mutate, chat, batch ops, audit) with explicit diagrams/tables mapping data sources, triggers, and syncs.
     2. Enforce explicit workstream context and logging in all actions.
     3. Implement orphan/stale data audits as a quarterly scheduled task.
@@ -700,13 +698,13 @@ tags: [roadmap, phases, planning, documentation]
     5. Make agentic onboarding and LLM prompt consistency a required step for future releases.
     ```
     *Intent: Establish long-term, testable, and enforceable system integrity. Data flow, audit, and agentic safety will be treated as a recurring, test-gated system phase for all current and future workstreams.*
-    *Result: 🔄 IN PROGRESS – Data flow integrity now a first-class roadmap phase, with all core policies explicit and tracked.*
+    *Result: 🔄 IN PROGRESS – Data flow integrity now a first-class project within Phase 12, with all core policies explicit and tracked.*
 
-      - Task 15.1.1: Document All Data Flows
-      - Task 15.1.2: Enforce Explicit Workstream Context
-      - Task 15.1.3: Implement Regular Audit Cycles
-      - Task 15.1.4: Codify Batch Operations Protocol
-      - Task 15.1.5: Formalize Agentic Safety Training
+      - Task 12.10.1: Document All Data Flows
+      - Task 12.10.2: Enforce Explicit Workstream Context
+      - Task 12.10.3: Implement Regular Audit Cycles
+      - Task 12.10.4: Codify Batch Operations Protocol
+      - Task 12.10.5: Formalize Agentic Safety Training
 
 ## Status
 
