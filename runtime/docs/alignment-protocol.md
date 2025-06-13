@@ -1,9 +1,3 @@
----
-title: Ora Alignment Protocol
-created: 2025-06-08
-last_updated: 2025-06-08
-tags: [alignment, protocol, cursor, chatgpt, loops, docs, documentation]
----
 
 # Ora Alignment Protocol
 
@@ -11,7 +5,7 @@ tags: [alignment, protocol, cursor, chatgpt, loops, docs, documentation]
 
 To ensure ChatGPT (assistant), Cursor (execution environment), and the Ora loops/docs model remain perfectly aligned, traceable, and mutually reinforcing at every stage of system evolution.
 
----
+----TEST
 
 ## Alignment Principles
 

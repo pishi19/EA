@@ -2,16 +2,12 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, Plus } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import RoadmapPanel from './components/RoadmapPanel';
 import DocFilterControls from './components/DocFilterControls';
 import DocList from './components/DocList';
 import DocHeader from './components/DocHeader';
 import DocContent from './components/DocContent';
-import DocEditor from './components/DocEditor';
-import EditControls from './components/EditControls';
-import CreateDocumentDialog from './components/CreateDocumentDialog';
 import { useDocs } from './hooks/useDocs';
 import { useDocFilters } from './hooks/useDocFilters';
 
@@ -25,23 +21,11 @@ export default function SystemDocsPage() {
         error,
         totalCount,
         selectedFileName,
-        isEditing,
-        editContent,
-        hasUnsavedChanges,
-        autoSaveStatus,
         selectDocument,
         refreshDocuments,
         downloadDocument,
         formatFileSize,
         formatDate,
-        // Editing operations
-        startEditing,
-        cancelEditing,
-        updateEditContent,
-        saveDocument,
-        createDocument,
-        deleteDocument,
-        previewContent,
     } = useDocs();
 
     // Filtering capabilities
@@ -60,20 +44,7 @@ export default function SystemDocsPage() {
     // Handle document download
     const handleDownload = () => {
         if (selectedDocument) {
-            const content = isEditing ? editContent : selectedDocument.rawContent;
-            downloadDocument(selectedDocument, content);
-        }
-    };
-
-    // Handle document edit
-    const handleEdit = () => {
-        startEditing();
-    };
-
-    // Handle document delete
-    const handleDelete = () => {
-        if (selectedDocument) {
-            deleteDocument(selectedDocument.filename);
+            downloadDocument(selectedDocument, selectedDocument.rawContent);
         }
     };
 
@@ -116,34 +87,19 @@ export default function SystemDocsPage() {
             {/* System Roadmap Panel */}
             <RoadmapPanel />
 
-            {/* Filter Controls with Create Button */}
-            <div className="mb-6 flex items-start gap-4">
-                <div className="flex-1">
-                    <DocFilterControls
-                        filters={filters}
-                        filterOptions={filterOptions}
-                        onSearchChange={setSearch}
-                        onTagFilterChange={setTagFilter}
-                        onSortByChange={setSortBy}
-                        onSortOrderChange={setSortOrder}
-                        onClearFilters={clearFilters}
-                        totalCount={totalCount}
-                        filteredCount={filteredDocuments.length}
-                        activeFilterCount={activeFilterCount}
-                    />
-                </div>
-                <div className="flex-shrink-0 pt-10">
-                    <CreateDocumentDialog 
-                        onCreateDocument={createDocument}
-                        trigger={
-                            <Button className="flex items-center gap-2">
-                                <Plus className="h-4 w-4" />
-                                New Document
-                            </Button>
-                        }
-                    />
-                </div>
-            </div>
+            {/* Filter Controls */}
+            <DocFilterControls
+                filters={filters}
+                filterOptions={filterOptions}
+                onSearchChange={setSearch}
+                onTagFilterChange={setTagFilter}
+                onSortByChange={setSortBy}
+                onSortOrderChange={setSortOrder}
+                onClearFilters={clearFilters}
+                totalCount={totalCount}
+                filteredCount={filteredDocuments.length}
+                activeFilterCount={activeFilterCount}
+            />
 
             {/* Main Content Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -166,33 +122,12 @@ export default function SystemDocsPage() {
                                 <CardHeader>
                                     <DocHeader
                                         document={selectedDocument}
-                                        isEditing={isEditing}
                                         onDownload={handleDownload}
-                                        onEdit={handleEdit}
-                                        onDelete={handleDelete}
                                         formatFileSize={formatFileSize}
                                         formatDate={formatDate}
                                     />
                                 </CardHeader>
-                                
-                                {/* Content or Editor */}
-                                {isEditing ? (
-                                    <div className="flex flex-col">
-                                        <DocEditor
-                                            content={editContent}
-                                            onChange={updateEditContent}
-                                            onPreview={previewContent}
-                                        />
-                                        <EditControls
-                                            hasUnsavedChanges={hasUnsavedChanges}
-                                            autoSaveStatus={autoSaveStatus}
-                                            onSave={saveDocument}
-                                            onCancel={cancelEditing}
-                                        />
-                                    </div>
-                                ) : (
-                                    <DocContent document={selectedDocument} />
-                                )}
+                                <DocContent document={selectedDocument} />
                             </>
                         ) : (
                             <DocContent document={null} />
