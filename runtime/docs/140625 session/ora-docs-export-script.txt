@@ -1,0 +1,316 @@
+#!/bin/bash
+# Save this as: export-ora-docs.sh
+# Make executable: chmod +x export-ora-docs.sh
+# Run: ./export-ora-docs.sh
+
+echo "🚀 Creating Ora Documentation Structure..."
+
+# Create directory structure
+mkdir -p docs/ora-development/{constitution,prompts,design,strategy,process}
+
+echo "📁 Directory structure created"
+
+# Create MOC
+cat > docs/ora-development/ORA_DEVELOPMENT_MOC.md << 'EOF'
+# Ora Development - Map of Content (MOC)
+
+## 🗺️ Document Navigation
+
+### 1. Constitutional Documents
+- **[Ora Roadmap as Constitution](constitution/ora-roadmap-constitution.md)** - Ora's purpose and living roadmap
+- **[Ora Constitutional OKRs](constitution/ora-constitutional-okrs.md)** - Q1/Q2 2025 OKRs with Supabase evolution
+- **[Constitutional Hierarchy](constitution/ora-constitution-hierarchy.md)** - How all documents relate
+
+### 2. Development Strategy
+- **[Admin to DB Transformation Roadmap](strategy/admin-to-db-transformation-roadmap.md)** - Original phased approach
+- **[Ora Emergent Roadmap](strategy/ora-emergent-roadmap.md)** - Revised approach: creation-first
+- **[Ora Development Strategy](strategy/ora-claude-code-strategy.md)** - Claude Code + Cursor workflow
+
+### 3. System Design
+- **[Workstream Contract Schema](design/workstream-contract-schema.md)** - Contract structure options
+- **[Ora Database Schema](design/ora-database-schema.sql)** - Supabase-ready PostgreSQL design
+- **[Ora Seed Components](design/ora-seed-components.md)** - Minimal viable components
+
+### 4. Implementation Guides
+- **[Complete Claude Code Prompt](prompts/complete-claude-code-prompt.md)** - Full prompt with autonomous instructions
+- **[Claude Code Project Management](process/claude-code-project-management.md)** - Best practices for Claude Code
+- **[Ora Build Methodology](process/ora-build-methodology.md)** - Systematic build approach
+
+### 5. Process Documents
+- **[Admin UI Analysis Process](process/admin-ui-analysis-process.md)** - How to analyze existing UI
+- **[Roadmap Reconciliation](strategy/roadmap-reconciliation.md)** - Bridging current to future state
+
+## 📊 Document Relationships
+
+```
+Constitutional Level
+├── Ora Roadmap as Constitution (WHY)
+├── Constitutional OKRs (MEASURES)
+├── Constitutional Hierarchy (RELATIONSHIPS)
+│
+Strategy Level
+├── Emergent Roadmap (HOW)
+├── Development Strategy (TOOLS)
+│
+Design Level
+├── Contract Schema (DATA)
+├── Database Schema (STORAGE)
+├── Seed Components (UI)
+│
+Implementation Level
+├── Claude Code Prompt (BUILD)
+├── Build Methodology (PROCESS)
+└── Project Management (QUALITY)
+```
+
+## 🎯 Current Status
+
+**Active Documents** (for current build):
+1. Complete Claude Code Prompt - Building Ora
+2. Constitutional OKRs - Tracking progress
+3. Build Methodology - Following loops
+
+**Reference Documents** (for decisions):
+1. Contract Schema - What constitutions need
+2. Database Schema - How to store data
+3. Emergent Roadmap - Why creation-first
+
+**Future Documents** (post-build):
+1. Refactoring Guide - After Claude Code completes
+2. Pattern Library - As patterns emerge
+3. Supabase Migration Plan - When OKRs met
+
+## 📝 Best Practices for Document Management
+
+1. **Reference by ID** - Use artifact IDs in discussions
+2. **Update MOC** - Add new documents here as created
+3. **Version Major Changes** - Create new artifacts vs endless updates
+4. **Link Related Docs** - Reference other documents within each
+5. **Archive Superseded** - Note which documents replace others
+
+## 🚀 Next Documents Needed
+
+- [ ] Ora Refactoring Guide (after build)
+- [ ] Pattern Library Template
+- [ ] Workstream Case Studies
+- [ ] Weekly OKR Tracking Template
+
+---
+
+*This MOC is the navigation hub for all Ora development documents. Update as new documents are created.*
+EOF
+
+echo "✅ Created ORA_DEVELOPMENT_MOC.md"
+
+# Create Constitutional Hierarchy
+cat > docs/ora-development/constitution/ora-constitution-hierarchy.md << 'EOF'
+# How All Documents Relate to Ora's Constitution
+
+## The Constitutional Hierarchy
+
+```
+🏛️ ORA'S CONSTITUTION (The Why)
+"To serve workstreams by ensuring they have strong foundations"
+         |
+         ├── 📊 Constitutional OKRs (The Measures)
+         |    "How we know we're serving well"
+         |
+         ├── 🗺️ Emergent Roadmap (The How) 
+         |    "Learn by creating, not predetermined features"
+         |
+         ├── 🏗️ System Design (The What)
+         |    ├── Contract Schema → "What makes a strong foundation"
+         |    ├── Database Schema → "How we remember and learn"
+         |    └── UI Components → "How we converse and guide"
+         |
+         └── 📋 Implementation (The Execution)
+              ├── Claude Code Prompt → "Birth Ora with right DNA"
+              ├── Build Methodology → "Stay true while building"
+              └── Process Documents → "Maintain constitutional alignment"
+```
+
+## Constitutional Principles Flowing Through Documents
+
+### 1. **Service First** (Core Constitutional Principle)
+- **OKRs**: "90% workstream creation success" - measuring service effectiveness
+- **Contract Schema**: Enforces vision/mission - serving through strong foundations
+- **Database Schema**: Stores patterns - learning to serve better
+- **Claude Code Prompt**: "Be helpful but firm" - service with standards
+
+### 2. **Learning Always** (Constitutional Principle)
+- **Emergent Roadmap**: "Discover through creation" not predetermined
+- **Database Schema**: `ora_patterns` table - systematic learning
+- **Build Methodology**: Weekly retros - continuous improvement
+- **MOC**: Living document - grows with learning
+
+### 3. **Constitution-Driven** (Constitutional Principle)
+- **Contract Schema**: No workstream without constitution
+- **OKRs**: "100% have vision/mission/cadence"
+- **Admin UI Analysis**: Preserve workstream wizard
+- **Claude Code Prompt**: Ora enforces requirements
+
+### 4. **Evolution Through Service** (Constitutional Principle)
+- **Supabase OKRs**: Migration when it serves workstreams better
+- **Emergent Roadmap**: Features emerge from needs
+- **Build Loops**: Validate against workstream value
+- **Refactoring**: Always asking "does this serve better?"
+
+## Document Roles in Constitutional System
+
+### **Foundational Documents** (Define the Constitution)
+1. **Ora Roadmap as Constitution** - The living constitution itself
+2. **Constitutional OKRs** - How we measure constitutional adherence
+
+### **Strategic Documents** (Interpret the Constitution)
+3. **Emergent Roadmap** - Constitutional philosophy in action
+4. **Development Strategy** - How to build constitutionally
+
+### **Design Documents** (Embody the Constitution)
+5. **Contract Schema** - Constitutional requirements made concrete
+6. **Database Schema** - Constitutional memory and learning
+
+### **Implementation Documents** (Execute the Constitution)
+7. **Claude Code Prompt** - Birth Ora with constitutional DNA
+8. **Build Methodology** - Stay constitutionally aligned while building
+
+### **Operational Documents** (Maintain the Constitution)
+9. **MOC** - Navigate the constitutional system
+10. **Process Guides** - Ensure constitutional compliance
+
+## The Key Insight
+
+**Every document serves the constitution differently:**
+
+- Some **define** it (what Ora is)
+- Some **measure** it (are we serving well?)
+- Some **implement** it (how to build it)
+- Some **maintain** it (keep us aligned)
+
+But all documents answer to the same constitutional question:
+
+> "Does this help workstreams succeed with strong foundations?"
+
+## Constitutional Integrity Check
+
+When reviewing any document or decision, ask:
+1. Does it serve workstreams? (Service First)
+2. Does it help Ora learn? (Learning Always)
+3. Does it enforce foundations? (Constitution-Driven)
+4. Does it enable evolution? (Continuous Improvement)
+
+If yes to all → Constitutionally aligned ✅
+If no to any → Needs revision 🔄
+
+## The Living System
+
+The constitution isn't just the roadmap document - it's the **living system** created by all these documents working together:
+
+- **Constitution** states the purpose
+- **OKRs** measure the purpose
+- **Design** embodies the purpose
+- **Implementation** executes the purpose
+- **Process** maintains the purpose
+
+Together, they create Ora's constitutional consciousness.
+EOF
+
+echo "✅ Created Constitutional Hierarchy"
+
+# Create README
+cat > docs/ora-development/README.md << 'EOF'
+# Ora Development Documentation
+
+This directory contains all documentation for the Ora platform development.
+
+## Quick Start
+- See [ORA_DEVELOPMENT_MOC.md](./ORA_DEVELOPMENT_MOC.md) for complete navigation
+
+## Directory Structure
+- `/constitution` - Ora's foundational documents and OKRs
+- `/prompts` - Claude Code and Cursor prompts  
+- `/design` - System design and schemas
+- `/strategy` - Development strategy documents
+- `/process` - Build methodologies and workflows
+
+## Key Documents
+1. [Ora Constitutional OKRs](./constitution/ora-constitutional-okrs.md)
+2. [Complete Claude Code Prompt](./prompts/complete-claude-code-prompt.md)
+3. [Ora Database Schema](./design/ora-database-schema.sql)
+4. [How Documents Relate to Constitution](./constitution/ora-constitution-hierarchy.md)
+
+## Current Status
+- Claude Code is building Ora using the Complete Prompt
+- Tracking progress via BUILD_LOG.md
+- Following Constitutional OKRs for Q1 2025
+
+Generated on: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+EOF
+
+echo "✅ Created README.md"
+
+# Create a file list for reference
+cat > docs/ora-development/DOCUMENT_LIST.txt << 'EOF'
+# Complete Document List for Manual Creation
+
+Due to size limits, please manually create these documents using the artifacts from our chat:
+
+## Constitution Documents
+1. constitution/ora-roadmap-constitution.md
+   - From artifact: ora-roadmap-constitution
+   
+2. constitution/ora-constitutional-okrs.md
+   - From artifact: ora-constitutional-goal-supabase
+
+## Strategy Documents
+3. strategy/ora-emergent-roadmap.md
+   - From artifact: ora-emergent-roadmap
+   
+4. strategy/ora-claude-code-strategy.md
+   - From artifact: ora-claude-code-strategy
+   
+5. strategy/admin-to-db-transformation-roadmap.md
+   - From artifact: admin-to-db-transformation-roadmap
+
+## Design Documents
+6. design/workstream-contract-schema.md
+   - From artifact: workstream-contract-schema
+   
+7. design/ora-database-schema.sql
+   - From artifact: ora-database-schema
+   
+8. design/ora-seed-components.md
+   - From artifact: ora-seed-components
+
+## Prompts
+9. prompts/complete-claude-code-prompt.md
+   - From artifact: complete-claude-code-prompt
+
+## Process Documents
+10. process/ora-build-methodology.md
+    - From artifact: ora-build-methodology
+    
+11. process/claude-code-project-management.md
+    - From artifact: claude-code-project-management
+    
+12. process/admin-ui-analysis-process.md
+    - From artifact: admin-ui-analysis-process
+
+To export each artifact:
+1. Ask me to show the artifact by ID
+2. Copy the content
+3. Save to the appropriate file path
+EOF
+
+echo "📄 Created DOCUMENT_LIST.txt with instructions"
+
+echo ""
+echo "✨ Export complete!"
+echo ""
+echo "📁 Structure created at: docs/ora-development/"
+echo ""
+echo "📝 Next steps:"
+echo "1. The MOC, Constitutional Hierarchy, and README are complete"
+echo "2. For the remaining documents, see DOCUMENT_LIST.txt"
+echo "3. Ask me to show any artifact by ID to copy its content"
+echo ""
+echo "Example: 'Show me the complete-claude-code-prompt artifact'"

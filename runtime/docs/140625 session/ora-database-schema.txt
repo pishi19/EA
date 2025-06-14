@@ -1,0 +1,306 @@
+-- Ora Database Schema (PostgreSQL/Supabase-Ready)
+-- Design Principles:
+-- 1. Explicit relationships (no implicit file paths)
+-- 2. Audit trails on every table
+-- 3. Soft deletes (deleted_at timestamps)
+-- 4. RLS-ready with user/role relationships
+-- 5. Semantic search via pgvector
+
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgvector";
+
+-- ==========================================
+-- USERS & AUTHENTICATION (Supabase Auth)
+-- ==========================================
+-- Note: Supabase provides auth.users table
+-- We extend with profile information
+
+CREATE TABLE user_profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT UNIQUE NOT NULL,
+    display_name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'member', -- admin, member, viewer
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- ==========================================
+-- PLATFORM CONFIGURATION
+-- ==========================================
+CREATE TABLE platform_config (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    key TEXT UNIQUE NOT NULL,
+    value JSONB NOT NULL,
+    description TEXT,
+    updated_by UUID REFERENCES user_profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Platform-level context (vision, mission, etc.)
+INSERT INTO platform_config (key, value, description) VALUES
+('platform_contract', '{
+    "vision": "Transform team execution through contract-driven workstreams",
+    "mission": "Provide unified platform for planning, execution, and learning",
+    "constraints": ["All work must be traceable", "No shadow operations"]
+}', 'Platform-level contract document');
+
+-- ==========================================
+-- WORKSTREAMS (Core Entity)
+-- ==========================================
+CREATE TABLE workstreams (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT UNIQUE NOT NULL, -- URL-safe: sales, product, engineering
+    display_name TEXT NOT NULL, -- Human-friendly: "Sales Enablement"
+    
+    -- Contract fields (denormalized for performance)
+    vision TEXT NOT NULL,
+    mission TEXT NOT NULL,
+    okrs JSONB NOT NULL DEFAULT '[]',
+    kpis JSONB DEFAULT '[]',
+    constraints JSONB DEFAULT '[]',
+    llm_guidance JSONB NOT NULL,
+    
+    -- Metadata
+    owner_id UUID NOT NULL REFERENCES user_profiles(id),
+    status TEXT NOT NULL DEFAULT 'draft', -- draft, active, archived
+    
+    -- Audit fields
+    created_by UUID NOT NULL REFERENCES user_profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+    
+    -- Search
+    embedding vector(1536), -- For semantic search
+    
+    CONSTRAINT valid_status CHECK (status IN ('draft', 'active', 'archived'))
+);
+
+-- Workstream membership for RLS
+CREATE TABLE workstream_members (
+    workstream_id UUID NOT NULL REFERENCES workstreams(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES user_profiles(id) ON DELETE CASCADE,
+    role TEXT NOT NULL DEFAULT 'member', -- admin, member, viewer
+    added_by UUID NOT NULL REFERENCES user_profiles(id),
+    added_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (workstream_id, user_id)
+);
+
+-- ==========================================
+-- SOURCE INTEGRATIONS (Platform-level)
+-- ==========================================
+CREATE TABLE source_integrations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    source_type TEXT NOT NULL, -- gmail, slack, jira, confluence
+    display_name TEXT NOT NULL,
+    config JSONB NOT NULL, -- OAuth tokens, API keys (encrypted)
+    status TEXT NOT NULL DEFAULT 'pending', -- pending, active, failed
+    health_check_url TEXT,
+    last_health_check TIMESTAMPTZ,
+    
+    -- Audit
+    created_by UUID NOT NULL REFERENCES user_profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    CONSTRAINT valid_source_type CHECK (source_type IN ('gmail', 'slack', 'jira', 'confluence', 'bamboohr'))
+);
+
+-- Workstream source mappings
+CREATE TABLE workstream_sources (
+    workstream_id UUID NOT NULL REFERENCES workstreams(id) ON DELETE CASCADE,
+    source_id UUID NOT NULL REFERENCES source_integrations(id) ON DELETE CASCADE,
+    config JSONB NOT NULL, -- Filters: {"labels": ["sales-inbound"], "channels": ["#sales"]}
+    sync_frequency TEXT DEFAULT 'realtime', -- realtime, hourly, daily
+    last_sync_at TIMESTAMPTZ,
+    
+    -- Audit
+    created_by UUID NOT NULL REFERENCES user_profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    PRIMARY KEY (workstream_id, source_id)
+);
+
+-- ==========================================
+-- LOOPS (Core Artefact)
+-- ==========================================
+CREATE TABLE loops (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    workstream_id UUID NOT NULL REFERENCES workstreams(id) ON DELETE CASCADE,
+    
+    -- Identity
+    title TEXT NOT NULL,
+    type TEXT NOT NULL DEFAULT 'execution', -- planning, execution, retrospective
+    status TEXT NOT NULL DEFAULT 'active', -- active, completed, archived
+    
+    -- Content (structured)
+    objectives JSONB DEFAULT '[]',
+    tasks JSONB DEFAULT '[]', -- [{id, description, completed, assigned_to}]
+    execution_log JSONB DEFAULT '[]', -- [{timestamp, actor, action, details}]
+    memory_trace JSONB DEFAULT '[]', -- [{timestamp, description, context}]
+    
+    -- Content (unstructured for flexibility)
+    content_markdown TEXT, -- For additional notes/context
+    
+    -- Relationships
+    parent_loop_id UUID REFERENCES loops(id), -- For loop chains
+    program_id UUID, -- Future: when programs table exists
+    project_id UUID, -- Future: when projects table exists
+    
+    -- Metadata
+    tags TEXT[] DEFAULT '{}',
+    score NUMERIC DEFAULT 0, -- For ranking/priority
+    
+    -- Audit
+    created_by UUID NOT NULL REFERENCES user_profiles(id),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    completed_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ,
+    
+    -- Search
+    embedding vector(1536), -- For semantic search
+    
+    CONSTRAINT valid_type CHECK (type IN ('planning', 'execution', 'retrospective')),
+    CONSTRAINT valid_status CHECK (status IN ('active', 'completed', 'archived'))
+);
+
+-- Loop chat history (preserving conversation context)
+CREATE TABLE loop_chats (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    loop_id UUID NOT NULL REFERENCES loops(id) ON DELETE CASCADE,
+    actor_type TEXT NOT NULL, -- user, llm
+    actor_id UUID REFERENCES user_profiles(id), -- NULL if LLM
+    message TEXT NOT NULL,
+    metadata JSONB DEFAULT '{}', -- For LLM parameters, model used, etc.
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- SOURCE SIGNALS (Incoming data)
+-- ==========================================
+CREATE TABLE source_signals (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    source_id UUID NOT NULL REFERENCES source_integrations(id),
+    workstream_id UUID NOT NULL REFERENCES workstreams(id),
+    
+    -- Signal data
+    signal_type TEXT NOT NULL, -- email, message, ticket, document
+    external_id TEXT NOT NULL, -- ID from source system
+    title TEXT,
+    content TEXT,
+    metadata JSONB DEFAULT '{}', -- Full source data
+    
+    -- Processing
+    status TEXT NOT NULL DEFAULT 'pending', -- pending, processed, ignored
+    processed_at TIMESTAMPTZ,
+    loop_id UUID REFERENCES loops(id), -- If converted to loop
+    
+    -- Audit
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    UNIQUE(source_id, external_id) -- Prevent duplicates
+);
+
+-- ==========================================
+-- AUDIT LOG (Everything tracked)
+-- ==========================================
+CREATE TABLE audit_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    
+    -- What happened
+    entity_type TEXT NOT NULL, -- workstream, loop, source, user
+    entity_id UUID NOT NULL,
+    action TEXT NOT NULL, -- create, update, delete, approve
+    
+    -- Who did it
+    actor_type TEXT NOT NULL, -- user, llm, system
+    actor_id UUID REFERENCES user_profiles(id), -- NULL if system/LLM
+    
+    -- Details
+    changes JSONB DEFAULT '{}', -- Before/after for updates
+    metadata JSONB DEFAULT '{}', -- Additional context
+    
+    -- When
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- INDEXES FOR PERFORMANCE
+-- ==========================================
+CREATE INDEX idx_loops_workstream ON loops(workstream_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_loops_status ON loops(status) WHERE deleted_at IS NULL;
+CREATE INDEX idx_loops_type ON loops(type) WHERE deleted_at IS NULL;
+CREATE INDEX idx_loops_created ON loops(created_at DESC);
+CREATE INDEX idx_source_signals_pending ON source_signals(workstream_id, status) WHERE status = 'pending';
+CREATE INDEX idx_audit_log_entity ON audit_log(entity_type, entity_id);
+CREATE INDEX idx_audit_log_created ON audit_log(created_at DESC);
+
+-- For full-text search
+CREATE INDEX idx_loops_title_fts ON loops USING gin(to_tsvector('english', title));
+CREATE INDEX idx_loops_content_fts ON loops USING gin(to_tsvector('english', content_markdown));
+
+-- ==========================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- ==========================================
+-- Enable RLS on all tables
+ALTER TABLE workstreams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE loops ENABLE ROW LEVEL SECURITY;
+ALTER TABLE source_signals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
+
+-- Workstream access policy
+CREATE POLICY workstream_access ON workstreams
+    FOR ALL USING (
+        -- User is a member of the workstream
+        id IN (
+            SELECT workstream_id FROM workstream_members 
+            WHERE user_id = auth.uid()
+        )
+        OR
+        -- User is platform admin
+        EXISTS (
+            SELECT 1 FROM user_profiles 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+-- Loops inherit workstream access
+CREATE POLICY loop_access ON loops
+    FOR ALL USING (
+        -- User has access to the workstream
+        workstream_id IN (
+            SELECT workstream_id FROM workstream_members 
+            WHERE user_id = auth.uid()
+        )
+        OR
+        -- User is platform admin
+        EXISTS (
+            SELECT 1 FROM user_profiles 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+-- ==========================================
+-- HELPER FUNCTIONS
+-- ==========================================
+-- Function to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Apply updated_at trigger to all tables
+CREATE TRIGGER update_workstreams_updated_at BEFORE UPDATE ON workstreams 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_loops_updated_at BEFORE UPDATE ON loops 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_user_profiles_updated_at BEFORE UPDATE ON user_profiles 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
