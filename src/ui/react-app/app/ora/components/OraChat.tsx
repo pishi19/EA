@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, Trash2 } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -41,10 +41,12 @@ export default function OraChat() {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('/api/ora/chat?limit=20');
+      const response = await fetch('/api/ora/chat?limit=10');
       if (response.ok) {
         const data = await response.json();
-        setMessages(data.conversations || []);
+        // Reverse the order to show oldest first
+        const conversations = (data.conversations || []).reverse();
+        setMessages(conversations);
       }
     } catch (error) {
       console.error('Failed to fetch history:', error);
@@ -113,12 +115,30 @@ export default function OraChat() {
     sendMessage(suggestion);
   };
 
+  const clearChat = () => {
+    setMessages([]);
+    setSuggestions([]);
+  };
+
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Bot className="w-5 h-5" />
-          Chat with Ora
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bot className="w-5 h-5" />
+            Chat with Ora
+          </div>
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearChat}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Trash2 className="w-4 h-4 mr-1" />
+              Clear
+            </Button>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
@@ -167,7 +187,13 @@ export default function OraChat() {
                     <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
                     {msg.created_at && (
                       <p className="text-xs opacity-50 mt-1">
-                        {new Date(msg.created_at).toLocaleTimeString()}
+                        {new Date(msg.created_at).toLocaleString('en-US', {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          month: 'short',
+                          day: 'numeric',
+                          hour12: true
+                        })}
                       </p>
                     )}
                   </div>
