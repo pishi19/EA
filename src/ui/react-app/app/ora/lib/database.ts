@@ -6,8 +6,8 @@ const connectionConfig = {
   host: process.env.DATABASE_HOST || 'localhost',
   port: parseInt(process.env.DATABASE_PORT || '5432'),
   database: process.env.DATABASE_NAME || 'ora_development',
-  user: process.env.DATABASE_USER || 'postgres',
-  password: process.env.DATABASE_PASSWORD || 'postgres',
+  user: process.env.DATABASE_USER || 'air',
+  password: process.env.DATABASE_PASSWORD || '',
   // Connection pool settings
   max: 20, // maximum number of clients in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
@@ -113,7 +113,7 @@ export async function saveConversation(
   
   return {
     ...result.rows[0],
-    metadata: JSON.parse(result.rows[0].metadata || '{}')
+    metadata: result.rows[0].metadata || {}
   };
 }
 
@@ -130,13 +130,14 @@ export async function getConversationHistory(
   
   return result.rows.map(row => ({
     ...row,
-    metadata: JSON.parse(row.metadata || '{}')
+    metadata: row.metadata || {}
   }));
 }
 
 // Constitution functions
 export async function saveConstitution(
-  constitution: Omit<WorkstreamConstitution, 'id' | 'created_at' | 'updated_at'>
+  constitution: Omit<WorkstreamConstitution, 'id' | 'created_at' | 'updated_at'>,
+  client?: PoolClient
 ): Promise<WorkstreamConstitution> {
   const id = uuidv4();
   
@@ -146,7 +147,8 @@ export async function saveConstitution(
     RETURNING *
   `;
   
-  const result = await pool.query(query, [
+  const queryClient = client || pool;
+  const result = await queryClient.query(query, [
     id,
     constitution.workstream_id,
     constitution.vision,
@@ -158,8 +160,8 @@ export async function saveConstitution(
   
   return {
     ...result.rows[0],
-    okrs: JSON.parse(result.rows[0].okrs || '[]'),
-    kpis: JSON.parse(result.rows[0].kpis || '[]')
+    okrs: result.rows[0].okrs || [],
+    kpis: result.rows[0].kpis || []
   };
 }
 
@@ -171,8 +173,8 @@ export async function getConstitution(workstream_id: string): Promise<Workstream
   
   return {
     ...result.rows[0],
-    okrs: JSON.parse(result.rows[0].okrs || '[]'),
-    kpis: JSON.parse(result.rows[0].kpis || '[]')
+    okrs: result.rows[0].okrs || [],
+    kpis: result.rows[0].kpis || []
   };
 }
 
@@ -202,7 +204,7 @@ export async function savePattern(
     const result = await pool.query(updateQuery, [existing.rows[0].id]);
     return {
       ...result.rows[0],
-      examples: JSON.parse(result.rows[0].examples || '[]')
+      examples: result.rows[0].examples || []
     };
   }
   
@@ -224,7 +226,7 @@ export async function savePattern(
   
   return {
     ...result.rows[0],
-    examples: JSON.parse(result.rows[0].examples || '[]')
+    examples: result.rows[0].examples || []
   };
 }
 
@@ -241,7 +243,7 @@ export async function getPatterns(
   
   return result.rows.map(row => ({
     ...row,
-    examples: JSON.parse(row.examples || '[]')
+    examples: row.examples || []
   }));
 }
 

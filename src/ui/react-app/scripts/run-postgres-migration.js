@@ -9,7 +9,7 @@ async function runMigration() {
   console.log('🚀 Running PostgreSQL migration for Ora...\n');
   
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/ora_development'
+    connectionString: process.env.DATABASE_URL || 'postgresql://air@localhost:5432/ora_development'
   });
 
   try {
