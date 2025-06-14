@@ -1,12 +1,8 @@
 {
-  "/system-docs/page": "app/system-docs/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/admin/page": "app/admin/page.js",
-  "/workstream-filter-demo/page": "app/workstream-filter-demo/page.js",
-  "/planning/page": "app/planning/page.js",
+  "/system-docs/page": "app/system-docs/page.js",
   "/api/phases/route": "app/api/phases/route.js",
-  "/api/roles/route": "app/api/roles/route.js",
-  "/api/system-docs/route": "app/api/system-docs/route.js",
-  "/api/demo-loops/route": "app/api/demo-loops/route.js",
-  "/api/plan-tasks/route": "app/api/plan-tasks/route.js",
-  "/api/audit-logs/route": "app/api/audit-logs/route.js"
+  "/workstream-filter-demo/page": "app/workstream-filter-demo/page.js",
+  "/planning/page": "app/planning/page.js"
 }
