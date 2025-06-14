@@ -110,19 +110,18 @@ export function parseRoadmapContent(roadmapContent: string): RoadmapHierarchy {
         const line = lines[i].trim();
         
         // Start of expanded roadmap section - handle both HTML and markdown
-        if ((line.includes('Expanded System Roadmap') && line.includes('Exploded Systems View')) || 
-            line.match(/<h2[^>]*>.*?Expanded System Roadmap.*?Exploded Systems View.*?<\/h2>/)) {
+        if (line.includes('Expanded System Roadmap') || 
+            line.match(/<h2[^>]*>.*?Expanded System Roadmap.*?<\/h2>/)) {
             inExpandedRoadmap = true;
             continue;
         }
         
         // End of expanded roadmap section - only exit at actual end sections  
-        if (inExpandedRoadmap && (line.startsWith('## Status') || 
-                                  line.startsWith('## Phase 11 –') || 
-                                  line.startsWith('# Phase 11') ||
-                                  line.startsWith('# Project Roadmap') ||
-                                  line.match(/<h2[^>]*>.*?(Status|Project Roadmap).*?<\/h2>/) ||
-                                  line.match(/<h1[^>]*>.*?(Phase 11|Project Roadmap).*?<\/h1>/))) {
+        if (inExpandedRoadmap && (line.startsWith('## Change Log') || 
+                                  line.startsWith('## Audit and Execution Logs') ||
+                                  line.startsWith('# Change Log') ||
+                                  line.match(/<h2[^>]*>.*?(Change Log|Audit and Execution Logs).*?<\/h2>/) ||
+                                  line.match(/<h1[^>]*>.*?(Change Log|Audit and Execution Logs).*?<\/h1>/))) {
             inExpandedRoadmap = false;
             continue;
         }
@@ -322,6 +321,8 @@ export function getProjectsForProgram(hierarchy: RoadmapHierarchy, programId: st
 export function findProgramByPhase(hierarchy: RoadmapHierarchy, phase: string): RoadmapProgram | null {
     return hierarchy.programs.find(program => 
         program.phase === phase || 
+        program.phase === phase.split('.')[0] || // Handle sub-phases like "11.1" → "11"
+        phase.startsWith(program.phase + '.') || // Handle hierarchical matching like "11.2.3" → "11"
         program.fullName.includes(`Phase ${phase}`) ||
         program.id === `phase-${phase}`
     ) || null;

@@ -1,5 +1,22 @@
 "use client";
 
+/**
+ * @deprecated This component has been refactored into a modular architecture.
+ * 
+ * NEW ARCHITECTURE (system-docs/):
+ * - Service Layer: services/docService.ts
+ * - Custom Hooks: hooks/useDocs.ts, hooks/useDocFilters.ts  
+ * - UI Components: components/RoadmapPanel.tsx, DocFilterControls.tsx, etc.
+ * - Main Page: app/system-docs/page.tsx
+ * 
+ * This monolithic component (279 lines) has been transformed into:
+ * - Clean 121-line main component using custom hooks
+ * - 852+ lines of modular, reusable, testable code
+ * - Enhanced features: roadmap integration, advanced filtering, improved UX
+ * 
+ * See: app/system-docs/REFACTORING_GUIDE.md for complete documentation
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

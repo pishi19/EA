@@ -17,11 +17,20 @@ const config: Config = {
     '^@/data/(.*)$': '<rootDir>/data/$1',
     '^@/system/(.*)$': '<rootDir>/../../system/$1',
     '^@/(.*)$': '<rootDir>/$1',
+    // System mocks
+    '^../../../system/mutation-engine$': '<rootDir>/__mocks__/mutation-engine.js',
+    '^../../../../../system/mutation-engine$': '<rootDir>/__mocks__/mutation-engine.js',
+    '^../../system/mutation-engine$': '<rootDir>/__mocks__/mutation-engine.js',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testMatch: [
     '**/__tests__/**/*.(ts|tsx|js)',
     '**/*.(test|spec).(ts|tsx|js)',
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/e2e/',
+    '/__tests__/test-utils.tsx'
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   collectCoverageFrom: [
@@ -30,6 +39,10 @@ const config: Config = {
     'lib/**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    '!**/e2e/**',
+    '!**/__tests__/**',
+    '!**/*.test.{ts,tsx}',
+    '!**/*.spec.{ts,tsx}'
   ],
   transform: {
     // Use SWC for TypeScript transformation (faster than Babel)
@@ -46,6 +59,11 @@ const config: Config = {
   transformIgnorePatterns: [
     'node_modules/(?!(.*\\.mjs$))',
   ],
+  // Mock modules
+  moduleDirectories: ['node_modules', '<rootDir>'],
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true,
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

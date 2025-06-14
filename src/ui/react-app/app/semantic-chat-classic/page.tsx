@@ -1,88 +1,56 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import LoopCard from '@/components/LoopCard';
-import { useWorkstream } from '@/lib/workstream-context';
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import RoadmapPanel from './components/RoadmapPanel';
+import EnhancedLoopCard from './components/EnhancedLoopCard';
+import { useArtefacts } from './hooks/useArtefacts';
+import { useArtefactFilters } from './hooks/useArtefactFilters';
 
-// --- Types ---
-interface Loop {
-    id: string;
-    name: string;
-    title?: string;
-    phase?: string;
-    workstream?: string;
-    status?: string;
-    score?: number;
-    tags?: string[];
-    created?: string;
-    summary?: string;
-    filePath?: string;
-}
-
-// --- Component ---
+// Main page component
 export default function SemanticChatClassic() {
-    const [loops, setLoops] = useState<Loop[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    
-    // Use workstream context instead of local state
-    const { currentWorkstream, isValidWorkstream } = useWorkstream();
+    // Custom hooks for data management
+    const {
+        artefacts,
+        loading,
+        error,
+        totalCount,
+        currentWorkstream,
+        refreshArtefacts
+    } = useArtefacts();
 
-    // Load loops from API
-    const loadLoops = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            
-            // Use current workstream from context, fallback to 'ora' if not valid
-            const workstream = (currentWorkstream && isValidWorkstream(currentWorkstream)) 
-                ? currentWorkstream 
-                : 'ora';
-            
-            const response = await fetch(`/api/demo-loops?workstream=${workstream}`);
-            
-            if (!response.ok) {
-                throw new Error(`Failed to load loops: ${response.status}`);
-            }
-            
-            const response_data = await response.json();
-            setLoops(response_data.artefacts || []);
-            
-        } catch (err) {
-            console.error('Error loading loops:', err);
-            setError(err instanceof Error ? err.message : 'Failed to load loops');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Filtering capabilities (for future enhancement)
+    const {
+        filteredArtefacts,
+        activeFilterCount,
+        isFiltered
+    } = useArtefactFilters(artefacts);
 
-    useEffect(() => {
-        loadLoops();
-    }, [currentWorkstream]); // Re-load when workstream changes
+    // Use filtered artefacts if any filters are active, otherwise use all artefacts
+    const displayArtefacts = isFiltered ? filteredArtefacts : artefacts;
 
+    // Loading state
     if (loading) {
         return (
             <div className="container mx-auto p-6">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Artefacts</h1>
-                    <p className="text-muted-foreground">Loading loops with embedded contextual chat...</p>
+                    <h1 className="text-3xl font-bold mb-4">🤖 Semantic Chat</h1>
+                    <p className="text-muted-foreground">Loading artefacts with embedded contextual chat...</p>
                 </div>
             </div>
         );
     }
 
+    // Error state
     if (error) {
         return (
             <div className="container mx-auto p-6">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Artefacts</h1>
+                    <h1 className="text-3xl font-bold mb-4">🤖 Semantic Chat</h1>
                     <div className="text-red-600 mb-4">Error: {error}</div>
-                    <button 
-                        onClick={loadLoops} 
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
+                    <Button onClick={refreshArtefacts} className="bg-blue-500 hover:bg-blue-600">
                         Retry
-                    </button>
+                    </Button>
                 </div>
             </div>
         );
@@ -90,28 +58,55 @@ export default function SemanticChatClassic() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
+            {/* Roadmap Panel */}
+            <RoadmapPanel />
+
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold">Artefacts</h1>
+                <h1 className="text-3xl font-bold">🤖 Semantic Chat</h1>
                 <p className="text-lg text-muted-foreground">
                     Scoped GPT Chat Integration - Each Loop with Embedded Contextual Chat
                 </p>
+                <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+                    <span>{displayArtefacts.length} artefacts displayed</span>
+                    <span>•</span>
+                    <span>Total: {totalCount}</span>
+                    <span>•</span>
+                    <span>Workstream: {currentWorkstream}</span>
+                    {isFiltered && (
+                        <>
+                            <span>•</span>
+                            <span className="text-blue-600">{activeFilterCount} filter(s) active</span>
+                        </>
+                    )}
+                </div>
                 <p className="text-sm text-muted-foreground">
-                    {loops.length} loops loaded • Chat scoped by UUID and file path • Persistent conversation history
+                    Chat scoped by UUID and file path • Persistent conversation history
                 </p>
             </div>
 
-            {/* Loop Cards with Embedded Chat */}
+            {/* Artefact Cards with Embedded Chat */}
             <div className="space-y-6">
-                {loops.length === 0 ? (
+                {displayArtefacts.length === 0 ? (
                     <div className="text-center py-8">
-                        <p className="text-muted-foreground">No loops available.</p>
+                        <p className="text-muted-foreground">
+                            {isFiltered ? 'No artefacts match the current filters.' : 'No artefacts available.'}
+                        </p>
+                        {isFiltered && (
+                            <Button 
+                                onClick={() => window.location.reload()} 
+                                variant="outline" 
+                                className="mt-4"
+                            >
+                                Clear Filters
+                            </Button>
+                        )}
                     </div>
                 ) : (
-                    loops.map((loop) => (
-                        <LoopCard 
-                            key={loop.id} 
-                            loop={loop}
+                    displayArtefacts.map((artefact) => (
+                        <EnhancedLoopCard 
+                            key={artefact.id} 
+                            artefact={artefact}
                         />
                     ))
                 )}
@@ -125,6 +120,11 @@ export default function SemanticChatClassic() {
                 <p className="text-xs text-gray-500 mt-2">
                     Expand any chat section to interact with that specific loop context • Messages persist to loop files under ## 💬 Chat sections
                 </p>
+                {isFiltered && (
+                    <p className="text-xs text-blue-600 mt-2">
+                        ℹ️ Filtering is active - showing {displayArtefacts.length} of {totalCount} total artefacts
+                    </p>
+                )}
             </div>
         </div>
     );

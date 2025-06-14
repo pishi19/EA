@@ -241,8 +241,8 @@ export default function HomePage() {
             <Button asChild variant="outline" size="sm">
               <Link href="/workstream-filter-demo">Legacy Workstream</Link>
             </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/semantic-chat-classic">Legacy Chat</Link>
+            <Button asChild variant="outline" size="sm" className="bg-green-50 border-green-300 text-green-700">
+              <Link href="/workstream-filter-demo-test">🚀 Refactored Test</Link>
             </Button>
           </div>
         </div>

@@ -113,9 +113,12 @@ export default function useRoadmapHierarchy(): UseRoadmapHierarchyReturn {
             // Find valid program by phase or program field
             let validProgram = null;
             if (artefact.phase) {
+                // Ensure phase is converted to string for safe string operations
+                const phaseStr = String(artefact.phase);
                 validProgram = hierarchy.programs.find(p => 
-                    p.phase === artefact.phase ||
-                    p.phase === artefact.phase.split('.')[0] // Handle sub-phases like "11.1"
+                    p.phase === phaseStr ||
+                    p.phase === phaseStr.split('.')[0] || // Handle sub-phases like "11.1" → "11"
+                    phaseStr.startsWith(p.phase + '.') // Handle hierarchical matching like "11.2.3" → "11"
                 );
             }
             if (!validProgram && artefact.program) {

@@ -12,7 +12,7 @@ This document compares the structure, goals, and implementation details of the O
 | Primary Goal        | Decompose product features into steps for GPT-powered code generation | Extract signal from noisy org channels and turn it into structured, actionable insight |
 | Modality            | Cursor `.mdc` command files, step-by-step | Prompt-only GPT architecture, full memory + UI model |
 | Output              | Code features, via Cursor’s AI agent    | Semantic insight loops → roadmap impact             |
-
+always start the server on port 3000
 ---
 
 ## 🧱 System Architecture Comparison

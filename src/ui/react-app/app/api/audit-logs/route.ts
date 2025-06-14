@@ -60,17 +60,44 @@ async function getAuditLogs(
       for (const file of files) {
         try {
           const filePath = path.join(logsDir, file);
+          
+          // Check if file is being written to (size changes)
+          const stats = fs.statSync(filePath);
           const fileContent = fs.readFileSync(filePath, 'utf-8');
-          const logs: AuditLogEntry[] = JSON.parse(fileContent);
+          
+          // Trim whitespace and check if it's a valid JSON structure
+          const trimmedContent = fileContent.trim();
+          if (!trimmedContent.startsWith('[') || !trimmedContent.endsWith(']')) {
+            console.warn(`Skipping malformed audit log file ${file}: not a valid JSON array`);
+            continue;
+          }
+          
+          // Parse with additional error handling
+          let logs: AuditLogEntry[];
+          try {
+            logs = JSON.parse(trimmedContent);
+          } catch (parseError) {
+            console.warn(`Skipping audit log file ${file} due to JSON parse error:`, parseError);
+            continue;
+          }
+          
+          // Validate that it's an array
+          if (!Array.isArray(logs)) {
+            console.warn(`Skipping audit log file ${file}: parsed content is not an array`);
+            continue;
+          }
           
           logs.forEach(log => {
-            workstreams.add(log.workstream);
-            operations.add(log.operation);
+            if (log && typeof log === 'object' && log.workstream && log.operation) {
+              workstreams.add(log.workstream);
+              operations.add(log.operation);
+            }
           });
           
           allLogs.push(...logs);
         } catch (error) {
           console.error(`Error reading audit log file ${file}:`, error);
+          // Continue processing other files instead of failing completely
         }
       }
     }

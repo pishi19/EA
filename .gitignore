@@ -16,6 +16,25 @@ __pycache__/
 .vscode/
 Cursor/
 
+# Environment variables and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+*.env
+
+# Credentials and tokens
+credentials/
+*credentials*
+*token*
+*secret*
+*.key
+*.pem
+*.p12
+*.pfx
+
 # Local DB and archives
 *.db
 *.sqlite3
@@ -33,3 +52,8 @@ build/
 streamlit_ui_report.txt
 node_modules
 node_modules
+
+# Runtime directory with sensitive data
+runtime/credentials/
+runtime/db/
+runtime/logs/

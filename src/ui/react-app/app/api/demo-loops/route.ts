@@ -94,7 +94,8 @@ async function loadAllWorkstreamLoops(workstream: string): Promise<LoopMetadata[
     }
 
     const loopFiles = files.filter(file => 
-      (file.startsWith('loop-') || file.startsWith('task-')) && file.endsWith('.md')
+      (file.startsWith('loop-') || file.startsWith('task-') || 
+       file.startsWith('phase-') || file.startsWith('project-')) && file.endsWith('.md')
     );
 
     const loops = await Promise.all(
@@ -119,7 +120,8 @@ async function loadLegacyLoops(): Promise<LoopMetadata[]> {
     const LOOPS_DIR = path.join(BASE_DIR, 'runtime/loops');
     const files = await fs.readdir(LOOPS_DIR);
     const loopFiles = files.filter(file => 
-      (file.startsWith('loop-') || file.startsWith('task-')) && file.endsWith('.md')
+      (file.startsWith('loop-') || file.startsWith('task-') || 
+       file.startsWith('phase-') || file.startsWith('project-')) && file.endsWith('.md')
     );
 
     const loops = await Promise.all(
@@ -176,8 +178,11 @@ async function handleDemoLoopsRequest(
 ): Promise<NextResponse> {
   const { workstream, isValid } = workstreamContext;
   
+  // Validate workstream parameter format (alphanumeric only, 3-20 chars)
+  const workstreamRegex = /^[a-zA-Z][a-zA-Z0-9]{2,19}$/;
+  
   // Require explicit and valid workstream context
-  if (!isValid || !workstream) {
+  if (!isValid || !workstream || !workstreamRegex.test(workstream)) {
     await logWorkstreamOperation({
       workstream: workstream || 'unknown',
       operation: 'read',
@@ -187,7 +192,7 @@ async function handleDemoLoopsRequest(
     });
     
     return createWorkstreamErrorResponse(
-      'Missing or invalid workstream parameter. Please provide a valid workstream (ora, mecca, sales).',
+      'Missing or invalid workstream parameter. Must be alphanumeric, 3-20 characters.',
       workstreamContext,
       400
     );
@@ -212,9 +217,30 @@ async function handleDemoLoopsRequest(
 
   try {
     const { searchParams } = request.nextUrl;
-    const loopId = searchParams.get('id');
+    const rawLoopId = searchParams.get('id');
 
-    if (loopId) {
+    if (rawLoopId) {
+      // Sanitize loopId to prevent directory traversal
+      const loopId = rawLoopId.replace(/[^a-zA-Z0-9\-_.]/g, '');
+      
+      // Additional validation for loop ID format
+      if (loopId !== rawLoopId || loopId.includes('..') || loopId.includes('/')) {
+        await logWorkstreamOperation({
+          workstream,
+          operation: 'read',
+          endpoint: '/api/demo-loops',
+          data: { invalidLoopId: rawLoopId },
+          result: 'error',
+          error: 'Invalid loop ID format'
+        });
+        
+        return createWorkstreamErrorResponse(
+          'Invalid loop ID format. Only alphanumeric characters, hyphens, underscores, and dots allowed.',
+          workstreamContext,
+          400
+        );
+      }
+      
       // Load specific loop
       const fileName = loopId.endsWith('.md') ? loopId : `${loopId}.md`;
       const loop = await loadWorkstreamLoopMetadata(workstream, `artefacts/${fileName}`)

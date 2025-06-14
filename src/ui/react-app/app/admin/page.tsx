@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings, Users, Database, FileText, Layers, Archive, Shield, Activity, Building } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+
+// Import existing admin components
 import PhaseManagement from '@/components/admin/PhaseManagement';
 import ArtefactBulkOperations from '@/components/admin/ArtefactBulkOperations';
 import RoleManagement from '@/components/admin/RoleManagement';
@@ -11,12 +13,62 @@ import AuditLogViewer from '@/components/admin/AuditLogViewer';
 import WorkstreamWizard from '@/components/admin/WorkstreamWizard';
 import PhaseContextEditor from '@/components/PhaseContextEditor';
 
-type ActiveView = 'phases' | 'artefacts' | 'roles' | 'audit' | 'workstreams' | 'context' | 'status';
+// Import new modular components
+import AdminOverviewCards from './components/AdminOverviewCards';
+import AdminNavigation from './components/AdminNavigation';
+import SystemStatusView from './components/SystemStatusView';
+
+// Import custom hooks
+import { useAdmin } from './hooks/useAdmin';
+import { useAdminNavigation } from './hooks/useAdminNavigation';
 
 export default function AdminPage() {
-    const [activeView, setActiveView] = useState<ActiveView>('phases');
+    // Admin data and state management
+    const {
+        systemStatus,
+        adminStats,
+        loading,
+        error,
+        refreshSystemStatus,
+        refreshAll,
+        getStatusColor,
+        getStatusBadgeVariant,
+        isSystemHealthy
+    } = useAdmin();
 
+    // Navigation state management
+    const {
+        activeView,
+        navigationItems,
+        navigateTo
+    } = useAdminNavigation('phases');
+
+    // Error boundary component
+    const ErrorBoundary = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
+        <Card className="border-red-200 bg-red-50">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-700">
+                    <AlertTriangle className="w-5 h-5" />
+                    Admin System Error
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={onRetry} variant="outline" className="flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4" />
+                    Retry
+                </Button>
+            </CardContent>
+        </Card>
+    );
+
+    // Render active view content
     const renderActiveView = () => {
+        // Handle errors
+        if (error && activeView !== 'status') {
+            return <ErrorBoundary error={error} onRetry={refreshAll} />;
+        }
+
         switch (activeView) {
             case 'phases':
                 return <PhaseManagement />;
@@ -32,35 +84,13 @@ export default function AdminPage() {
                 return <PhaseContextEditor />;
             case 'status':
                 return (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>System Status</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                <div className="p-4 bg-green-50 rounded-lg">
-                                    <h4 className="font-medium text-green-900">✅ All Systems Operational</h4>
-                                    <p className="text-sm text-green-700 mt-1">
-                                        API endpoints, database connections, and core services are running normally.
-                                    </p>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <strong>API Status:</strong> Healthy
-                                    </div>
-                                    <div>
-                                        <strong>Database:</strong> Connected
-                                    </div>
-                                    <div>
-                                        <strong>Cache:</strong> Active
-                                    </div>
-                                    <div>
-                                        <strong>Background Jobs:</strong> Running
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <SystemStatusView
+                        systemStatus={systemStatus}
+                        loading={loading}
+                        onRefresh={refreshSystemStatus}
+                        getStatusColor={getStatusColor}
+                        getStatusBadgeVariant={getStatusBadgeVariant}
+                    />
                 );
             default:
                 return <PhaseManagement />;
@@ -71,128 +101,47 @@ export default function AdminPage() {
         <div className="container mx-auto px-4 py-8">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Ora System Administration</h1>
+                <div className="flex items-center justify-between mb-2">
+                    <h1 className="text-3xl font-bold">Ora System Administration</h1>
+                    <div className="flex items-center gap-2">
+                        {!isSystemHealthy && systemStatus && (
+                            <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">
+                                <AlertTriangle className="w-4 h-4" />
+                                System Issues Detected
+                            </div>
+                        )}
+                        <Button
+                            onClick={refreshAll}
+                            variant="outline"
+                            size="sm"
+                            disabled={loading}
+                            className="flex items-center gap-2"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                            Refresh All
+                        </Button>
+                    </div>
+                </div>
                 <p className="text-muted-foreground">
                     Comprehensive admin interface for phases, projects, artefacts, workstreams, roles, and system configuration
                 </p>
             </div>
 
             {/* Overview Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-                <Card className="border-2 border-blue-200">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="flex items-center text-sm">
-                            <Settings className="w-4 h-4 mr-2" />
-                            System Config
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                        <div className="text-2xl font-bold text-blue-600">Active</div>
-                        <p className="text-xs text-muted-foreground">Core systems operational</p>
-                    </CardContent>
-                </Card>
-
-                <Card className="border-2 border-green-200">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="flex items-center text-sm">
-                            <Users className="w-4 h-4 mr-2" />
-                            User Management
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                        <div className="text-2xl font-bold text-green-600">Ready</div>
-                        <p className="text-xs text-muted-foreground">Access control enabled</p>
-                    </CardContent>
-                </Card>
-
-                <Card className="border-2 border-orange-200">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="flex items-center text-sm">
-                            <Database className="w-4 h-4 mr-2" />
-                            Data Management
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                        <div className="text-2xl font-bold text-orange-600">Healthy</div>
-                        <p className="text-xs text-muted-foreground">All systems synced</p>
-                    </CardContent>
-                </Card>
-
-                <Card className="border-2 border-purple-200">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="flex items-center text-sm">
-                            <FileText className="w-4 h-4 mr-2" />
-                            CRUD Operations
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                        <div className="text-2xl font-bold text-purple-600">Live</div>
-                        <p className="text-xs text-muted-foreground">Full CRUD functionality</p>
-                    </CardContent>
-                </Card>
-            </div>
+            <AdminOverviewCards
+                systemStatus={systemStatus}
+                adminStats={adminStats}
+                loading={loading}
+                getStatusColor={getStatusColor}
+                getStatusBadgeVariant={getStatusBadgeVariant}
+            />
 
             {/* Navigation */}
-            <div className="mb-6">
-                <div className="flex flex-wrap gap-2 p-1 bg-gray-100 rounded-lg">
-                    <Button
-                        onClick={() => setActiveView('phases')}
-                        variant={activeView === 'phases' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Layers className="w-4 h-4" />
-                        Phase Management
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('artefacts')}
-                        variant={activeView === 'artefacts' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Archive className="w-4 h-4" />
-                        Artefact Operations
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('workstreams')}
-                        variant={activeView === 'workstreams' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Building className="w-4 h-4" />
-                        Workstream Management
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('roles')}
-                        variant={activeView === 'roles' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Shield className="w-4 h-4" />
-                        Role Management
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('audit')}
-                        variant={activeView === 'audit' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Activity className="w-4 h-4" />
-                        Audit Logs
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('context')}
-                        variant={activeView === 'context' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <FileText className="w-4 h-4" />
-                        Phase Context
-                    </Button>
-                    <Button
-                        onClick={() => setActiveView('status')}
-                        variant={activeView === 'status' ? 'default' : 'ghost'}
-                        className="flex items-center gap-2"
-                    >
-                        <Settings className="w-4 h-4" />
-                        System Status
-                    </Button>
-                </div>
-            </div>
+            <AdminNavigation
+                navigationItems={navigationItems}
+                activeView={activeView}
+                onNavigate={navigateTo}
+            />
 
             {/* Main Content Area */}
             <div className="mt-6">

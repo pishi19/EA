@@ -13,6 +13,8 @@ interface PhaseContext {
     successCriteria: string[];
     dependencies: string[];
     nextPhasePreparation: string;
+    owner: string;
+    status: string;
 }
 
 const BASE_DIR = path.resolve(process.cwd(), '../../..');
@@ -54,38 +56,49 @@ async function getPhaseContext(phase: string): Promise<PhaseContext | null> {
     try {
         const roadmapContent = await fs.readFile(ROADMAP_FILE, 'utf-8');
         
-        // Parse phase context from roadmap.md - capture full title
+        // Parse phase context from refactored roadmap.md structure
         const phaseHeaderPattern = new RegExp(`### Phase ${phase}: (.+?)$`, 'm');
         const headerMatch = roadmapContent.match(phaseHeaderPattern);
-        const phaseTitle = headerMatch ? headerMatch[1].trim() : '';
-        const fullPhaseTitle = phaseTitle ? `Phase ${phase}: ${phaseTitle}` : `Phase ${phase}`;
         
-        // Parse phase context section
-        const phasePattern = new RegExp(`### Phase ${phase}:([^#]+?)(?:#### LLM Prompt Context[\\s\\S]*?)(###|$)`, 'i');
-        const match = roadmapContent.match(phasePattern);
-        
-        if (!match) {
+        if (!headerMatch) {
+            console.log(`No phase header found for phase ${phase}`);
             return null;
         }
 
-        const contextSection = match[0];
+        const phaseTitle = headerMatch[1].trim();
+        const fullPhaseTitle = `Phase ${phase}: ${phaseTitle}`;
         
-        // Extract context fields
-        const strategicFocus = extractField(contextSection, 'Strategic Focus');
-        const keyObjectives = extractListField(contextSection, 'Key Objectives');
-        const currentChallenges = extractListField(contextSection, 'Current Challenges');
-        const successCriteria = extractListField(contextSection, 'Success Criteria');
-        const dependencies = extractListField(contextSection, 'Dependencies');
-        const nextPhasePreparation = extractField(contextSection, 'Next Phase Preparation');
+        // Extract the entire phase section until the next phase or section
+        const phasePattern = new RegExp(
+            `### Phase ${phase}: ${phaseTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([\\s\\S]*?)(?=### Phase \\d+:|## |$)`, 
+            'i'
+        );
+        const phaseMatch = roadmapContent.match(phasePattern);
+        
+        if (!phaseMatch) {
+            console.log(`No phase content found for phase ${phase}`);
+            return null;
+        }
 
+        const phaseContent = phaseMatch[1];
+        
+        // Parse the new simplified structure
+        const objectives = extractObjectives(phaseContent);
+        const owner = extractSimpleField(phaseContent, 'Owner');
+        const status = extractSimpleField(phaseContent, 'Status');
+        const dependencies = extractSimpleField(phaseContent, 'Dependencies');
+
+        // Create context with the new structure, providing fallbacks for UI compatibility
         return {
             phase: fullPhaseTitle,
-            strategicFocus,
-            keyObjectives,
-            currentChallenges,
-            successCriteria,
-            dependencies,
-            nextPhasePreparation
+            strategicFocus: objectives.length > 0 ? objectives[0] : phaseTitle, // Use first objective as strategic focus
+            keyObjectives: objectives,
+            currentChallenges: [], // Not available in new structure
+            successCriteria: [], // Not available in new structure
+            dependencies: dependencies ? [dependencies] : [],
+            nextPhasePreparation: '', // Not available in new structure
+            owner: owner || 'TBD',
+            status: status || 'Planning'
         };
 
     } catch (error) {
@@ -94,20 +107,20 @@ async function getPhaseContext(phase: string): Promise<PhaseContext | null> {
     }
 }
 
-function extractField(content: string, fieldName: string): string {
-    const pattern = new RegExp(`\\*\\*${fieldName}\\*\\*:\\s*(.+?)(?=\\n\\*\\*|\\n\\n|$)`, 's');
-    const match = content.match(pattern);
-    return match ? match[1].trim() : '';
-}
-
-function extractListField(content: string, fieldName: string): string[] {
-    const pattern = new RegExp(`\\*\\*${fieldName}\\*\\*:\\s*([\\s\\S]*?)(?=\\n\\*\\*|\\n\\n(?!\\s*-)|$)`, 's');
-    const match = content.match(pattern);
+function extractObjectives(content: string): string[] {
+    const objectivesPattern = /\*\*Objectives:\*\*\s*([\s\S]*?)(?=\*\*\w+:|  -|\n\n|$)/;
+    const match = content.match(objectivesPattern);
     
     if (!match) return [];
     
-    const listContent = match[1];
-    const items = listContent.match(/- (.+)/g);
+    const objectivesText = match[1];
+    const objectives = objectivesText.match(/^- (.+)$/gm);
     
-    return items ? items.map(item => item.replace(/^- /, '').trim()) : [];
+    return objectives ? objectives.map(obj => obj.replace(/^- /, '').trim()) : [];
+}
+
+function extractSimpleField(content: string, fieldName: string): string {
+    const pattern = new RegExp(`\\*\\*${fieldName}:\\*\\*\\s*(.+?)(?=\\n|$)`, 'i');
+    const match = content.match(pattern);
+    return match ? match[1].trim() : '';
 } 

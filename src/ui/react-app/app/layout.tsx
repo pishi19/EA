@@ -65,13 +65,7 @@ export default function RootLayout({
                       <List className="h-4 w-4" />
                       <span>Workstream</span>
                     </Link>
-                    <Link 
-                      href="/semantic-chat-classic" 
-                      className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center space-x-1"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      <span>Chat</span>
-                    </Link>
+                    {/* Removed: semantic-chat-classic - redundant with comprehensive workstream page */}
                     <Link 
                       href="/system-docs" 
                       className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center space-x-1"

@@ -180,6 +180,9 @@ export default function TreeNavigation({
             return []; // No tree until roadmap loads
         }
 
+        // Debug: Tree building stats
+        // console.log('TreeNavigation: Building tree with', artefacts.length, 'artefacts');
+
         const tree: TreeNode[] = [];
         
         // Create workstream nodes from roadmap
@@ -196,8 +199,10 @@ export default function TreeNavigation({
             
             // Add programs from roadmap for current workstream
             const workstreamPrograms = roadmapHierarchy.programs; // All programs available for current workstream context
+            // console.log(`TreeNavigation: Processing ${workstreamPrograms.length} programs for workstream ${workstream}`);
             
             workstreamPrograms.forEach(program => {
+                // console.log(`TreeNavigation: Processing program ${program.id} (phase: ${program.phase})`);
                 const programNode: TreeNode = {
                     id: `prog-${program.id}`,
                     label: program.displayLabel || program.fullName || program.name,
@@ -214,76 +219,115 @@ export default function TreeNavigation({
                     project.programId === program.id
                 );
                 
-                programProjects.forEach(project => {
-                    const projectNode: TreeNode = {
-                        id: `proj-${project.id}`,
-                        label: project.displayLabel || project.fullName || project.name,
-                        type: 'project',
-                        level: 2,
-                        children: [],
-                        count: 0,
-                        status: project.status,
-                        roadmapDefined: true
-                    };
-                    
-                    // Add artefacts that align with this project
+                if (programProjects.length === 0) {
+                    // If no projects exist for this program, add artefacts directly to the program
                     artefacts.forEach(artefact => {
                         if (validateArtefactAlignment) {
                             const alignment = validateArtefactAlignment(artefact);
-                            const isAlignedToProject = alignment.validProjects.some((proj: any) => proj.id === project.id);
+                            const isAlignedToProgram = alignment.validProgram?.id === program.id;
                             
-                            // Enhanced hierarchical matching for better project association
-                            let hierarchicalMatch = false;
-                            if (!isAlignedToProject && artefact.phase) {
-                                const projectNumber = project.id.replace('project-', ''); // e.g., "11.2"
-                                const artefactPhase = String(artefact.phase);
-                                
-                                // Check if artefact phase hierarchically matches project (e.g., "11.2.2.1" matches "11.2")
-                                hierarchicalMatch = artefactPhase.startsWith(projectNumber + '.') || 
-                                                  artefactPhase.startsWith(projectNumber) ||
-                                                  artefactPhase === projectNumber;
-                            }
-                            
-                            if (isAlignedToProject || hierarchicalMatch) {
+                            if (isAlignedToProgram) {
                                 const artefactNode: TreeNode = {
                                     id: `art-${artefact.id}`,
                                     label: artefact.title,
                                     type: 'artefact',
-                                    level: 3,
+                                    level: 2,
                                     children: [],
                                     artefact: artefact,
-                                    roadmapDefined: false // Artefacts are data, not roadmap structure
+                                    roadmapDefined: false
                                 };
-                                projectNode.children.push(artefactNode);
-                                projectNode.count = (projectNode.count || 0) + 1;
+                                programNode.children.push(artefactNode);
+                                programNode.count = (programNode.count || 0) + 1;
                             }
                         }
                     });
-                    
-                    programNode.children.push(projectNode);
-                });
-                
-                // Add artefacts that align with program but no specific project
-                artefacts.forEach(artefact => {
-                    if (validateArtefactAlignment) {
-                        const alignment = validateArtefactAlignment(artefact);
-                        const isAlignedToProgram = alignment.validProgram?.id === program.id;
-                        const hasProjectAlignment = alignment.validProjects.length > 0;
+                    // console.log(`TreeNavigation: Program ${program.id} (no projects) got ${programNode.children.length} artefacts`);
+                } else {
+                    programProjects.forEach(project => {
+                        const projectNode: TreeNode = {
+                            id: `proj-${project.id}`,
+                            label: project.displayLabel || project.fullName || project.name,
+                            type: 'project',
+                            level: 2,
+                            children: [],
+                            count: 0,
+                            status: project.status,
+                            roadmapDefined: true
+                        };
                         
-                        if (isAlignedToProgram && !hasProjectAlignment) {
-                            const artefactNode: TreeNode = {
-                                id: `art-${artefact.id}`,
-                                label: artefact.title,
-                                type: 'artefact',
-                                level: 2,
-                                children: [],
-                                artefact: artefact,
-                                roadmapDefined: false
-                            };
-                            programNode.children.push(artefactNode);
+                        // Add artefacts that align with this project
+                        let alignedCount = 0;
+                        artefacts.forEach(artefact => {
+                            if (validateArtefactAlignment) {
+                                const alignment = validateArtefactAlignment(artefact);
+                                const isAlignedToProject = alignment.validProjects.some((proj: any) => proj.id === project.id);
+                                
+                                // Enhanced hierarchical matching for better project association
+                                let hierarchicalMatch = false;
+                                if (!isAlignedToProject && artefact.phase) {
+                                    const projectNumber = project.id.replace('project-', ''); // e.g., "11.2"
+                                    const artefactPhase = String(artefact.phase);
+                                    
+                                    // Check if artefact phase hierarchically matches project (e.g., "11.2.2.1" matches "11.2")
+                                    // Use precise matching to avoid false positives (e.g., "14.1" should not match "15")
+                                    if (artefactPhase === projectNumber) {
+                                        // Exact match: "14" === "14"
+                                        hierarchicalMatch = true;
+                                    } else if (artefactPhase.startsWith(projectNumber + '.')) {
+                                        // Hierarchical match with dot separator: "14.1.2" starts with "14."
+                                        hierarchicalMatch = true;
+                                    } else {
+                                        // No match - avoid loose startsWith that could cause false positives
+                                        hierarchicalMatch = false;
+                                    }
+                                }
+                                
+                                if (isAlignedToProject || hierarchicalMatch) {
+                                    const artefactNode: TreeNode = {
+                                        id: `art-${artefact.id}`,
+                                        label: artefact.title,
+                                        type: 'artefact',
+                                        level: 3,
+                                        children: [],
+                                        artefact: artefact,
+                                        roadmapDefined: false // Artefacts are data, not roadmap structure
+                                    };
+                                    projectNode.children.push(artefactNode);
+                                    projectNode.count = (projectNode.count || 0) + 1;
+                                    alignedCount++;
+                                }
+                            }
+                        });
+                        // console.log(`TreeNavigation: Project ${project.id} got ${alignedCount} aligned artefacts`);
+                        
+                        programNode.children.push(projectNode);
+                    });
+                    
+                    // Add artefacts that align with program but no specific project
+                    let programArtefactCount = 0;
+                    artefacts.forEach(artefact => {
+                        if (validateArtefactAlignment) {
+                            const alignment = validateArtefactAlignment(artefact);
+                            const isAlignedToProgram = alignment.validProgram?.id === program.id;
+                            const hasProjectAlignment = alignment.validProjects.length > 0;
+                            
+                            if (isAlignedToProgram && !hasProjectAlignment) {
+                                const artefactNode: TreeNode = {
+                                    id: `art-${artefact.id}`,
+                                    label: artefact.title,
+                                    type: 'artefact',
+                                    level: 2,
+                                    children: [],
+                                    artefact: artefact,
+                                    roadmapDefined: false
+                                };
+                                programNode.children.push(artefactNode);
+                                programArtefactCount++;
+                            }
                         }
-                    }
-                });
+                    });
+                    // console.log(`TreeNavigation: Program ${program.id} got ${programArtefactCount} direct artefacts`);
+                }
                 
                 // Calculate program count
                 programNode.count = programNode.children.reduce((sum, child) => {
