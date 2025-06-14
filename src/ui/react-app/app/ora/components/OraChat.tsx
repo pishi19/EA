@@ -145,8 +145,8 @@ export default function OraChat() {
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
+      <CardContent className="flex-1 flex flex-col overflow-hidden p-0">
+        <ScrollArea className="flex-1 px-6 py-4" ref={scrollRef}>
           <div className="space-y-4">
             {isLoadingHistory && (
               <div className="text-center py-8">
@@ -195,7 +195,7 @@ export default function OraChat() {
                         : 'bg-primary text-primary-foreground'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                    <p className="text-sm whitespace-pre-wrap break-words">{msg.message}</p>
                     {msg.created_at && (
                       <p className="text-xs opacity-50 mt-1">
                         {new Date(msg.created_at).toLocaleString('en-US', {
@@ -230,7 +230,7 @@ export default function OraChat() {
         </ScrollArea>
 
         {suggestions.length > 0 && (
-          <div className="mt-4 p-3 bg-muted rounded-lg">
+          <div className="mx-6 mb-4 p-3 bg-muted rounded-lg">
             <p className="text-xs text-muted-foreground mb-2">Suggestions:</p>
             <div className="flex flex-wrap gap-2">
               {suggestions.map((suggestion, i) => (
@@ -247,7 +247,7 @@ export default function OraChat() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
+        <form onSubmit={handleSubmit} className="px-6 pb-4 flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}

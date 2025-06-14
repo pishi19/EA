@@ -24,7 +24,7 @@ export default function OraPage() {
 
         {/* Ora Conversation */}
         <div className="lg:col-span-2">
-          <div className="h-[600px]">
+          <div className="h-[600px] overflow-hidden">
             <OraChat />
           </div>
         </div>
