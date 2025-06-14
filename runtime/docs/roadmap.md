@@ -22,6 +22,22 @@ tags: [roadmap, phases, planning, documentation]
 - **Priority:** High
 - **Notes:** Task 11.3.3 Node-based Mutation/Consultation successfully completed. Enhanced TreeNavigation now features direct artefact mutations from tree nodes with hover-activated controls, comprehensive ContextPane with AI consultation and smart suggestions, real-time optimistic updates, and complete audit trails. Users can now perform status changes, tagging, edit, and delete operations directly from any tree node, plus get context-aware AI recommendations. Full integration with existing mutation infrastructure and memory trace system. Next focus is completing any remaining Project 11.3 tasks or moving to Phase 12.
 
+## Ora's Constitutional OKRs - Q1 2025
+
+### Objective 1: Establish Ora as an effective workstream creation partner
+- KR1: Achieve 90% workstream creation completion rate (9 of 10 started workstreams get valid constitutions)
+- KR2: Reduce average creation time from 30 minutes to 10 minutes through learned patterns
+- KR3: Generate 20+ reusable patterns from workstream creation conversations
+
+### Objective 2: Prove constitutional enforcement drives workstream success
+- KR1: 100% of workstreams have vision, mission, and cadence defined
+- KR2: 80% of workstreams add OKRs within 2 weeks of creation
+- KR3: Track 5 workstreams for 30 days - measure constitution compliance vs. activity level
+
+### Weekly Tracking
+[ ] Week 1: _/10 workstreams, avg time: __ min, patterns: _/20
+[ ] Week 2: _/10 workstreams, avg time: __ min, patterns: _/20
+
 # Ora Roadmap
 
 ## Current Major Phases
