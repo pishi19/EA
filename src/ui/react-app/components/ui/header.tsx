@@ -3,14 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Sparkles } from 'lucide-react';
 
 export function Header() {
     const pathname = usePathname();
 
     const navLinks = [
+        { href: '/ora', label: 'Ora', icon: Sparkles },
         { href: '/planning', label: 'Planning' },
         { href: '/workstream-filter-demo', label: 'Workstream' },
-        { href: '/ora', label: 'Ora' },
         // Removed: semantic-chat-classic - redundant with comprehensive workstream page
         // Archived: task-executor, system-view, phase-doc, contextual-chat-demo, system-docs
     ];
@@ -29,7 +30,10 @@ export function Header() {
                                 pathname === link.href ? "" : "text-muted-foreground"
                             )}
                         >
-                            {link.label}
+                            <span className="flex items-center gap-1">
+                                {link.icon && <link.icon className="w-4 h-4" />}
+                                {link.label}
+                            </span>
                         </Link>
                     ))}
                 </nav>
