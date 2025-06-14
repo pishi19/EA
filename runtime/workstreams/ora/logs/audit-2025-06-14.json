@@ -795,5 +795,16 @@
     },
     "result": "success",
     "timestamp": "2025-06-14T04:38:33.801Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T04:42:46.166Z"
   }
 ]

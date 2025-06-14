@@ -1,8 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/admin/page": "app/admin/page.js",
   "/system-docs/page": "app/system-docs/page.js",
-  "/api/phases/route": "app/api/phases/route.js",
+  "/admin/page": "app/admin/page.js",
   "/workstream-filter-demo/page": "app/workstream-filter-demo/page.js",
-  "/planning/page": "app/planning/page.js"
+  "/planning/page": "app/planning/page.js",
+  "/api/phases/route": "app/api/phases/route.js",
+  "/api/roles/route": "app/api/roles/route.js"
 }
