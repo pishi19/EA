@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Brain, TrendingUp, Lightbulb, Target, Calendar, BarChart, Briefcase } from 'lucide-react';
+import { Brain, TrendingUp, Lightbulb, Target, Calendar, BarChart, Briefcase, DollarSign } from 'lucide-react';
 
 interface Pattern {
   id: string;
@@ -27,6 +27,7 @@ const patternIcons: Record<string, any> = {
   workstream_type: Lightbulb,
   okr_template: BarChart,
   kpi_suggestion: BarChart,
+  pnl_summary: DollarSign,
 };
 
 const patternLabels: Record<string, string> = {
@@ -37,6 +38,7 @@ const patternLabels: Record<string, string> = {
   workstream_type: 'Workstream Types',
   okr_template: 'OKR Templates',
   kpi_suggestion: 'KPI Suggestions',
+  pnl_summary: 'P&L Summary',
 };
 
 export default function OraPatterns() {
@@ -77,8 +79,8 @@ export default function OraPatterns() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((i) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
@@ -111,7 +113,7 @@ export default function OraPatterns() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {patternTypes.map((type) => {
                 const Icon = patternIcons[type] || Brain;
                 const count = groupedPatterns[type].length;

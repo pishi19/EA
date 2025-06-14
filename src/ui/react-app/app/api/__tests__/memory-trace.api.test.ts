@@ -273,7 +273,7 @@ describe('/api/memory-trace API', () => {
         
         const data = await response.json();
         expect(data).toHaveProperty('error');
-      });
+      }
     });
 
     test('handles invalid JSON in request body', async () => {

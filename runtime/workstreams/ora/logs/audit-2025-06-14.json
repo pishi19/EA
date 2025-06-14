@@ -2,689 +2,13 @@
   {
     "workstream": "ora",
     "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:02:45.841Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:07:45.839Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:12:45.839Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:17:45.868Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:22:45.872Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:27:45.863Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:32:45.875Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:37:45.865Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:42:45.863Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:47:45.819Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:52:45.819Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T00:57:45.815Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:02:45.821Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:07:45.810Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:12:45.804Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:17:45.799Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:22:45.798Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:27:45.799Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:28:35.841Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:28:35.849Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:30:45.071Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/audit-logs",
-    "data": {
-      "filters": {},
-      "resultCount": 838
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:30:45.081Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:30:45.081Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:31:25.239Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:31:25.246Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:32:45.794Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:37:45.852Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:42:45.846Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:47:45.847Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:52:45.840Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T01:57:45.790Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:02:45.781Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:07:45.783Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:12:45.778Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:17:45.770Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:22:45.783Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:27:45.785Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:32:45.780Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:37:45.785Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:42:45.788Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:47:45.779Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:52:45.795Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T02:57:45.794Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:02:45.800Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:07:45.834Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:12:45.838Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:17:45.830Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:22:45.849Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:27:45.840Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:31:22.361Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/demo-loops",
-    "data": {
-      "count": 80
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:31:22.373Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:32:45.846Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:37:45.840Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:42:45.848Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:47:45.836Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:52:45.870Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T03:57:45.873Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:02:45.879Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:07:45.831Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:12:45.826Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/audit-logs",
-    "data": {
-      "filters": {},
-      "resultCount": 877
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:13:33.018Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/roles",
-    "data": {
-      "roleCount": 3,
-      "userCount": 3
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:13:33.029Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
     "endpoint": "/api/audit-logs",
     "data": {
       "filters": {},
       "resultCount": 817
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:13:33.033Z"
+    "timestamp": "2025-06-14T08:51:39.431Z"
   },
   {
     "workstream": "ora",
@@ -695,7 +19,27 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:17:45.821Z"
+    "timestamp": "2025-06-14T08:52:45.887Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 80
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T08:53:22.401Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 80
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T08:53:22.421Z"
   },
   {
     "workstream": "ora",
@@ -706,7 +50,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:18:33.018Z"
+    "timestamp": "2025-06-14T08:57:46.012Z"
   },
   {
     "workstream": "ora",
@@ -717,7 +61,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:22:45.814Z"
+    "timestamp": "2025-06-14T09:02:45.923Z"
   },
   {
     "workstream": "ora",
@@ -728,7 +72,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:23:32.997Z"
+    "timestamp": "2025-06-14T09:07:45.927Z"
   },
   {
     "workstream": "ora",
@@ -739,7 +83,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:27:45.826Z"
+    "timestamp": "2025-06-14T09:12:45.922Z"
   },
   {
     "workstream": "ora",
@@ -750,7 +94,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:28:33.796Z"
+    "timestamp": "2025-06-14T09:17:45.957Z"
   },
   {
     "workstream": "ora",
@@ -761,7 +105,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:32:45.814Z"
+    "timestamp": "2025-06-14T09:22:45.958Z"
   },
   {
     "workstream": "ora",
@@ -772,7 +116,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:33:33.794Z"
+    "timestamp": "2025-06-14T09:27:45.950Z"
   },
   {
     "workstream": "ora",
@@ -783,7 +127,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:37:45.818Z"
+    "timestamp": "2025-06-14T09:32:45.943Z"
   },
   {
     "workstream": "ora",
@@ -794,7 +138,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:38:33.801Z"
+    "timestamp": "2025-06-14T09:37:45.937Z"
   },
   {
     "workstream": "ora",
@@ -805,7 +149,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:42:46.166Z"
+    "timestamp": "2025-06-14T09:42:45.942Z"
   },
   {
     "workstream": "ora",
@@ -816,7 +160,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:47:45.823Z"
+    "timestamp": "2025-06-14T09:47:45.919Z"
   },
   {
     "workstream": "ora",
@@ -827,18 +171,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:50:28.642Z"
-  },
-  {
-    "workstream": "ora",
-    "operation": "read",
-    "endpoint": "/api/audit-logs",
-    "data": {
-      "filters": {},
-      "resultCount": 893
-    },
-    "result": "success",
-    "timestamp": "2025-06-14T04:50:28.657Z"
+    "timestamp": "2025-06-14T09:52:45.920Z"
   },
   {
     "workstream": "ora",
@@ -849,7 +182,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:50:28.659Z"
+    "timestamp": "2025-06-14T09:57:45.935Z"
   },
   {
     "workstream": "ora",
@@ -860,7 +193,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:52:45.961Z"
+    "timestamp": "2025-06-14T10:02:45.955Z"
   },
   {
     "workstream": "ora",
@@ -871,7 +204,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T04:57:45.822Z"
+    "timestamp": "2025-06-14T10:07:45.956Z"
   },
   {
     "workstream": "ora",
@@ -882,7 +215,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:02:45.950Z"
+    "timestamp": "2025-06-14T10:12:45.950Z"
   },
   {
     "workstream": "ora",
@@ -893,7 +226,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:07:45.908Z"
+    "timestamp": "2025-06-14T10:17:45.927Z"
   },
   {
     "workstream": "ora",
@@ -904,7 +237,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:12:45.979Z"
+    "timestamp": "2025-06-14T10:22:45.928Z"
   },
   {
     "workstream": "ora",
@@ -915,7 +248,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:17:46.009Z"
+    "timestamp": "2025-06-14T10:27:45.932Z"
   },
   {
     "workstream": "ora",
@@ -926,7 +259,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:22:45.952Z"
+    "timestamp": "2025-06-14T10:32:45.946Z"
   },
   {
     "workstream": "ora",
@@ -937,7 +270,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:27:45.782Z"
+    "timestamp": "2025-06-14T10:37:45.954Z"
   },
   {
     "workstream": "ora",
@@ -948,7 +281,7 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:32:45.930Z"
+    "timestamp": "2025-06-14T10:42:45.959Z"
   },
   {
     "workstream": "ora",
@@ -959,6 +292,83 @@
       "userCount": 3
     },
     "result": "success",
-    "timestamp": "2025-06-14T05:37:45.911Z"
+    "timestamp": "2025-06-14T10:47:45.896Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T10:52:45.894Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T10:57:45.906Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T11:02:45.848Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T11:07:45.855Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T11:12:45.840Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T11:17:45.877Z"
+  },
+  {
+    "workstream": "ora",
+    "operation": "read",
+    "endpoint": "/api/roles",
+    "data": {
+      "roleCount": 3,
+      "userCount": 3
+    },
+    "result": "success",
+    "timestamp": "2025-06-14T23:52:24.036Z"
   }
 ]

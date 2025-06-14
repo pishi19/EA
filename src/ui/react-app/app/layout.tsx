@@ -52,6 +52,13 @@ export default function RootLayout({
                   {/* Legacy Navigation (for backwards compatibility) */}
                   <nav className="hidden md:flex items-center space-x-6">
                     <Link 
+                      href="/ora" 
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center space-x-1"
+                    >
+                      <span>✨</span>
+                      <span>Ora</span>
+                    </Link>
+                    <Link 
                       href="/planning" 
                       className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center space-x-1"
                     >

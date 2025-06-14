@@ -9,9 +9,6 @@ marked.setOptions({
     gfm: true, // GitHub Flavored Markdown
     breaks: true, // Convert \n to <br>
     pedantic: false,
-    sanitize: false, // We'll sanitize on the frontend if needed
-    smartLists: true,
-    smartypants: false,
 });
 
 export async function POST(request: Request) {

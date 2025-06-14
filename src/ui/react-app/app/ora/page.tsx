@@ -3,7 +3,6 @@
 import OraChat from './components/OraChat';
 import WorkstreamList from './components/WorkstreamList';
 import OraPatterns from './components/OraPatterns';
-import OraPnL from './components/OraPnL';
 
 export default function OraPage() {
   return (
@@ -11,7 +10,7 @@ export default function OraPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Ora - Workstream Creation Assistant</h1>
         <p className="text-muted-foreground">
-          I'll help you create and manage workstreams with clear vision, mission, and cadence.
+          I&apos;ll help you create and manage workstreams with clear vision, mission, and cadence.
         </p>
       </div>
 
@@ -31,14 +30,9 @@ export default function OraPage() {
         </div>
       </div>
 
-      {/* Learning Patterns and P&L */}
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <OraPatterns />
-        </div>
-        <div>
-          <OraPnL />
-        </div>
+      {/* Learning Patterns */}
+      <div className="mt-6">
+        <OraPatterns />
       </div>
     </div>
   );

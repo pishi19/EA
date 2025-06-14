@@ -122,7 +122,10 @@ export default function SystemDocsPage() {
                                 <CardHeader>
                                     <DocHeader
                                         document={selectedDocument}
+                                        isEditing={false}
                                         onDownload={handleDownload}
+                                        onEdit={() => {}}
+                                        onDelete={() => {}}
                                         formatFileSize={formatFileSize}
                                         formatDate={formatDate}
                                     />

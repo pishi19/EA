@@ -172,9 +172,9 @@ export default function OraChat() {
             {!isLoadingHistory && messages.length === 0 && (
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
-                <p>Hi! I'm Ora, your workstream creation guide.</p>
+                <p>Hi! I&apos;m Ora, your workstream creation guide.</p>
                 <p className="text-sm mt-2">
-                  Tell me about the workstream you'd like to create.
+                  Tell me about the workstream you&apos;d like to create.
                 </p>
               </div>
             )}

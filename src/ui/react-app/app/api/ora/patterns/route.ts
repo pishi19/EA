@@ -12,7 +12,7 @@ interface CreatePatternRequest {
 }
 
 // Common pattern types that Ora learns
-export const PATTERN_TYPES = {
+const PATTERN_TYPES = {
   VISION_TEMPLATE: 'vision_template',
   MISSION_TEMPLATE: 'mission_template',
   CADENCE_SUGGESTION: 'cadence_suggestion',
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       pattern,
-      message: pattern.occurrence_count > 1 
+      message: pattern.occurrence_count && pattern.occurrence_count > 1 
         ? `Pattern reinforced (seen ${pattern.occurrence_count} times)`
         : 'New pattern learned'
     });
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Seed some initial patterns for Ora
-export async function seedInitialPatterns() {
+async function seedInitialPatterns() {
   const initialPatterns = [
     {
       pattern_type: PATTERN_TYPES.VISION_TEMPLATE,
