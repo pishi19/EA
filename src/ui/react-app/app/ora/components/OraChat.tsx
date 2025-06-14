@@ -24,6 +24,7 @@ export default function OraChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +42,7 @@ export default function OraChat() {
 
   const fetchHistory = async () => {
     try {
+      setIsLoadingHistory(true);
       const response = await fetch('/api/ora/chat?limit=10');
       if (response.ok) {
         const data = await response.json();
@@ -50,6 +52,8 @@ export default function OraChat() {
       }
     } catch (error) {
       console.error('Failed to fetch history:', error);
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
@@ -144,7 +148,14 @@ export default function OraChat() {
       <CardContent className="flex-1 flex flex-col">
         <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
           <div className="space-y-4">
-            {messages.length === 0 && (
+            {isLoadingHistory && (
+              <div className="text-center py-8">
+                <Bot className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50 animate-pulse" />
+                <p className="text-muted-foreground">Loading conversation history...</p>
+              </div>
+            )}
+            
+            {!isLoadingHistory && messages.length === 0 && (
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
                 <p>Hi! I'm Ora, your workstream creation guide.</p>

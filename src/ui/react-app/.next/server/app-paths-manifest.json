@@ -1,6 +1,8 @@
 {
-  "/admin/page": "app/admin/page.js",
   "/ora/page": "app/ora/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/api/phases/route": "app/api/phases/route.js",
   "/api/ora/patterns/route": "app/api/ora/patterns/route.js",
-  "/api/phases/route": "app/api/phases/route.js"
+  "/api/ora/chat/route": "app/api/ora/chat/route.js",
+  "/api/roles/route": "app/api/roles/route.js"
 }
