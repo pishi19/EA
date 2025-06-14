@@ -1,0 +1,76 @@
+[
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/test",
+    "data": {
+      "filter": "Sales filter"
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T10:51:07.910Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T10:51:40.079Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 15,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:01:43.483Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "crossWorkstreamReference": true,
+      "otherWorkstreams": [
+        "ora",
+        "mecca"
+      ]
+    },
+    "result": "error",
+    "error": "Cross-workstream reference detected",
+    "timestamp": "2025-06-10T11:01:43.483Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 15,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:02.499Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "crossWorkstreamReference": true,
+      "otherWorkstreams": [
+        "ora",
+        "mecca"
+      ]
+    },
+    "result": "error",
+    "error": "Cross-workstream reference detected",
+    "timestamp": "2025-06-10T11:02:02.499Z"
+  }
+]

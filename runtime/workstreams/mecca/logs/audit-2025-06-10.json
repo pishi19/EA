@@ -1,0 +1,134 @@
+[
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T10:51:30.426Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "mutate",
+    "endpoint": "/api/task-mutations",
+    "data": {
+      "action": "add",
+      "fileName": "task-1749552717155-v0ou1fmpw.md"
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T10:51:57.156Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 16,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:01:43.482Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 6,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:01:43.488Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 16,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:02.498Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 6,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:02.501Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 15,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:25.404Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "crossWorkstreamReference": true,
+      "otherWorkstreams": [
+        "ora",
+        "sales"
+      ]
+    },
+    "result": "error",
+    "error": "Cross-workstream reference detected",
+    "timestamp": "2025-06-10T11:02:25.405Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "agentic_action",
+    "endpoint": "/api/workstream-llm",
+    "data": {
+      "actionType": "chat",
+      "description": "Artefact chat interaction: what can you do...",
+      "artefactId": "test-456",
+      "hasMutation": false,
+      "reasoning": "Providing workstream-specific capabilities and context overview."
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:25.405Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/artefact-chat",
+    "data": {
+      "artefactId": "test-456",
+      "messageLength": 15,
+      "hasMutation": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T11:02:25.405Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-10T23:02:35.245Z"
+  }
+]

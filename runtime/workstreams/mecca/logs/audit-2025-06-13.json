@@ -1,0 +1,156 @@
+[
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 16,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T05:34:21.584Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 6,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T05:34:21.593Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:00.642Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:00.801Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:00.868Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:02.151Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:02.182Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:08.976Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:09.122Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:09.160Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:14.992Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:13:24.370Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:14:31.776Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:14:31.808Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T06:14:31.843Z"
+  }
+]

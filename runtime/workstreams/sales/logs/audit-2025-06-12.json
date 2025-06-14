@@ -1,0 +1,32 @@
+[
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T06:59:56.763Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T06:59:56.768Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T06:59:56.821Z"
+  }
+]

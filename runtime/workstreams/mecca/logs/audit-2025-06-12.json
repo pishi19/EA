@@ -1,0 +1,32 @@
+[
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T00:05:03.794Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T00:05:03.799Z"
+  },
+  {
+    "workstream": "mecca",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 2
+    },
+    "result": "success",
+    "timestamp": "2025-06-12T00:05:03.837Z"
+  }
+]

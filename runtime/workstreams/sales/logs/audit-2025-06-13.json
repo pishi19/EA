@@ -1,0 +1,229 @@
+[
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T00:09:38.398Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T00:09:38.450Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T00:09:38.478Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T00:09:40.232Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T00:09:40.246Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:22.392Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:22.437Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:22.443Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:25.344Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:25.355Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:30.577Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:30.586Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:31.565Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:31.593Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T02:27:31.603Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T04:40:51.796Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T04:40:51.814Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T04:40:51.831Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/demo-loops",
+    "data": {
+      "count": 1
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T04:40:54.001Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "read",
+    "endpoint": "/api/test",
+    "data": {
+      "filter": "Sales filter"
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T05:34:16.951Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "messageLength": 15,
+      "hasArtefactContext": true,
+      "hasPhaseContext": false
+    },
+    "result": "success",
+    "timestamp": "2025-06-13T05:34:21.585Z"
+  },
+  {
+    "workstream": "sales",
+    "operation": "chat",
+    "endpoint": "/api/workstream-chat",
+    "data": {
+      "crossWorkstreamReference": true,
+      "otherWorkstreams": [
+        "ora",
+        "mecca"
+      ]
+    },
+    "result": "error",
+    "error": "Cross-workstream reference detected",
+    "timestamp": "2025-06-13T05:34:21.586Z"
+  }
+]
