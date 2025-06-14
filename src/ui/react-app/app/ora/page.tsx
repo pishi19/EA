@@ -3,6 +3,7 @@
 import OraChat from './components/OraChat';
 import WorkstreamList from './components/WorkstreamList';
 import OraPatterns from './components/OraPatterns';
+import OraPnL from './components/OraPnL';
 
 export default function OraPage() {
   return (
@@ -30,9 +31,14 @@ export default function OraPage() {
         </div>
       </div>
 
-      {/* Learning Patterns */}
-      <div className="mt-6">
-        <OraPatterns />
+      {/* Learning Patterns and P&L */}
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <OraPatterns />
+        </div>
+        <div>
+          <OraPnL />
+        </div>
       </div>
     </div>
   );
