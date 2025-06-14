@@ -62,6 +62,13 @@ export default function WorkstreamList() {
     setSelectedWorkstream(selectedWorkstream === workstreamId ? null : workstreamId);
   };
 
+  const startNewWorkstream = () => {
+    // Dispatch event to send message to chat
+    window.dispatchEvent(new CustomEvent('ora-send-message', {
+      detail: { message: 'I want to create a new workstream' }
+    }));
+  };
+
   if (isLoading) {
     return (
       <Card className="h-full">
@@ -93,15 +100,31 @@ export default function WorkstreamList() {
           <Badge variant="secondary">{workstreams.length}</Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1">
-        <ScrollArea className="h-full pr-4">
+      <CardContent className="flex-1 flex flex-col">
+        <Button 
+          onClick={startNewWorkstream}
+          className="mb-4 w-full"
+          size="default"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Create New Workstream
+        </Button>
+        <ScrollArea className="flex-1 pr-4">
           {workstreams.length === 0 ? (
             <div className="text-center py-8">
               <Briefcase className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
               <p className="text-muted-foreground">No workstreams yet</p>
               <p className="text-sm text-muted-foreground mt-2">
-                Chat with Ora to create your first workstream
+                Click below to get started
               </p>
+              <Button 
+                onClick={startNewWorkstream}
+                className="mt-4"
+                size="default"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create Your First Workstream
+              </Button>
             </div>
           ) : (
             <div className="space-y-3">

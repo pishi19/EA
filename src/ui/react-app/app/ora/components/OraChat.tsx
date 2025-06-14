@@ -33,6 +33,20 @@ export default function OraChat() {
     fetchHistory();
   }, []);
 
+  // Listen for messages from other components
+  useEffect(() => {
+    const handleOraMessage = (event: CustomEvent) => {
+      if (event.detail?.message) {
+        sendMessage(event.detail.message);
+      }
+    };
+
+    window.addEventListener('ora-send-message', handleOraMessage as EventListener);
+    return () => {
+      window.removeEventListener('ora-send-message', handleOraMessage as EventListener);
+    };
+  }, []);
+
   // Scroll to bottom when messages change
   useEffect(() => {
     if (scrollRef.current) {
