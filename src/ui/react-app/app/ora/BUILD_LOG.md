@@ -42,6 +42,31 @@
   - Created trigger for auto-updating timestamps
 - **Verified**: Tables created successfully in ora.db
 
+### Phase 3.5: Database Migration to PostgreSQL ✅
+- **Date**: 2025-06-14
+- **Status**: Complete
+- **Actions**:
+  - Uninstalled better-sqlite3 dependencies
+  - Installed pg and @types/pg for PostgreSQL support
+  - Completely rewrote database.ts to use PostgreSQL with connection pooling
+  - Updated migration file to use PostgreSQL syntax (UUID, JSONB, TIMESTAMPTZ)
+  - Added proper indexes and constraints
+  - Added database connection health check
+  - Created .env.example with PostgreSQL configuration
+  - Updated .env.local with database connection details
+- **Key Changes**:
+  - Using connection pool with 20 max connections
+  - Proper transaction support with rollback
+  - JSONB for metadata storage instead of TEXT
+  - UUID primary keys with uuid-ossp extension
+  - Better error handling and connection management
+- **Connection Details**:
+  - Host: localhost
+  - Port: 5432
+  - Database: ora_development
+  - User: postgres
+  - Supports both DATABASE_URL and individual config
+
 ### Phase 4: API Endpoints ⏳
 - **Status**: Pending
 - **Endpoints to create**:

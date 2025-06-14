@@ -82,10 +82,27 @@
 - No need to reinvent authentication
 - Leverages existing audit system
 
+### 11. Database Switch from SQLite to PostgreSQL
+**Decision**: Switch from SQLite to PostgreSQL before building features
+**Date**: 2025-06-14
+**Rationale**:
+- **Production readiness**: PostgreSQL is the production database, better to develop against it from the start
+- **Feature parity**: JSONB support, better concurrent access, advanced indexing
+- **Type safety**: UUID native support, proper timestamp with timezone
+- **Scalability**: Connection pooling, better performance under load
+- **Future features**: Ready for pgvector extension for embeddings later
+**Migration approach**:
+- Clean switch before any data was created
+- Updated all queries to use parameterized PostgreSQL syntax
+- Proper connection pooling configured
+**Alternative considered**: Continue with SQLite for development
+**Why rejected**: Would require query rewrites later, better to use production DB from start
+
 ## Future Considerations
 
 1. **Multi-language support**: Currently English only
-2. **Advanced ML patterns**: Could use embeddings for better pattern matching
+2. **Advanced ML patterns**: Could use embeddings for better pattern matching (pgvector ready)
 3. **Voice interface**: Could add speech-to-text for accessibility
 4. **Mobile optimization**: Current focus is desktop-first
 5. **Batch operations**: Could allow creating multiple workstreams
+6. **pgvector extension**: Add for semantic search when needed
