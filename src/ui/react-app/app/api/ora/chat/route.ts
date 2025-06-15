@@ -27,7 +27,8 @@ Guidelines:
 Remember: You're helping birth something that will guide a team's work. 
 Make sure it has a strong foundation.`;
 
-// Mock LLM response for now (will integrate OpenAI later)
+// Mock LLM response for now (will integrate Anthropic Claude later)
+// Model to use: claude-3-5-sonnet-20241022
 async function generateOraResponse(
   message: string, 
   conversationHistory: any[],
