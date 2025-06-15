@@ -60,3 +60,4 @@ runtime/logs/
 
 # Test files
 test-anthropic.js
+test-ora-chat.js
