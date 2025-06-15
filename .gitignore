@@ -57,3 +57,6 @@ node_modules
 runtime/credentials/
 runtime/db/
 runtime/logs/
+
+# Test files
+test-anthropic.js

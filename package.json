@@ -24,8 +24,26 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
     "@types/marked": "^5.0.2",
+    "dotenv": "^16.5.0",
     "marked": "^15.0.12",
     "react-markdown": "^10.1.0"
-  }
+  },
+  "main": "test-anthropic.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pishi19/EA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pishi19/EA/issues"
+  },
+  "homepage": "https://github.com/pishi19/EA#readme"
 }
